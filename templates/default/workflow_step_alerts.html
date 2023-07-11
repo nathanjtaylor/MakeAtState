@@ -1,0 +1,20 @@
+
+
+ <div class="card prime_alert_card prime_marginbottom20px {{(workflow_step_alerts['success_message'])? 'prime_border_success' : 'prime_border_warning'}} ">
+       <div class="card-body">
+       		{% if workflow_step_alerts['success_message'] %}
+ 		 
+	         	<p class="card-text"><i data-feather = "check-square" class = "prime_text_success" style="bottom:-5px;position:relative" ></i>   {{ workflow_step_alerts['success_message'] }} </p>
+
+		 {% elseif  workflow_step_alerts['warning_message'] %}
+	         	<p class="card-text"><i data-feather = "alert-triangle" class = "prime_text_warning" style="bottom:-5px;position:relative" ></i>   {{ workflow_step_alerts['warning_message'] }} </p>
+
+			<ul class="list-group list-group-flush">
+				{% for warning in workflow_step_alerts['warnings'] %} 
+			 	 <li class="list-group-item">{{ warning }}</li>
+				{% endfor %}
+			</ul>
+			
+		 {% endif %}
+	</div>
+ </div>

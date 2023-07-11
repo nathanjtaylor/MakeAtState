@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<div class="jumbotron">
+	<h1 class="display-4">Hollander MakeCentral</h1>
+  	<p class="lead">Choose what services to logout.</p>
+  	<hr class="my-4">
+
+</div>
+
+
+{% include 'prime_alerts.html' %}
+<p class="text-center fw-bolder">Choose which services to logout from! Logging out of MakeAtState keeps you logged in on all other MSU services that use Okta authentication.</p>
+<div class="d-flex justify-content-center">
+    <a href="/?t=user_signout" class="p-4 m-3 btn btn-danger">Log out of MakeAtState</a>
+    <a href="/?t=okta_signout" class="p-4 m-3 btn btn-success">Log out of all MSU Okta applications on this browser</a>
+</div>
+
+
+
+{% endblock %}
+
+

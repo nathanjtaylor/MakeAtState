@@ -1,0 +1,181 @@
+{% for workflow_step in workflow_steps %}
+	<div id="workflow_step_{{ workflow_step['work_step_id']}}" >
+		<div class="card prime_long_card" >
+			<div class="prime_card_solid_form" >
+				<div class="card-header prime_background_teal">
+					{{ workflow_step['step_type_name'] }}
+				<a   href="#" class="btn btn-outline-light prime_icon_btn workflow_edit  edit_btn" id="edit_workflow_step_{{ workflow_step['work_step_id']}}" aria-label="Edit workflow step"i data-toggle="tooltip" data-placement="top" title="Edit workflow step"><i data-feather="edit-2"></i></a>
+				</div>
+
+				<div class="card-body row">
+					<div class="col-md-3 prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
+						<small  class="text-muted" style="display:block">
+							Step name
+						</small>
+						{{ workflow_step['name'] }}
+
+					</div>
+
+					<div class="col-md-3 prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
+						<small  class="text-muted" style="display:block">
+							Order
+						</small>
+						{{ workflow_step['ordering'] }}
+
+					</div>
+
+					<div class="col-md-3 prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
+						<small  class="text-muted" style="display:block">
+							Admin badge
+						</small>
+						{{ workflow_step['admin_status'] }}
+
+					</div>
+
+
+					<div class="col-md-3 prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
+						<small  class="text-muted" style="display:block">
+							User badge
+						</small>
+						{{ workflow_step['user_status'] }}
+					</div>
+
+
+					<div class="col-md-3 prime_textalign_center prime_margintop10px">
+						<small  class="text-muted" style="display:block">
+							Manage level
+						</small>
+						{{ workflow_step['manage_level_name'] }}
+
+					</div>
+					
+                    <div class="col-md-3 prime_textalign_center prime_margintop10px">
+						<small  class="text-muted" style="display:block">
+							Allow cancelation by user
+						</small>
+						{% if (workflow_step['allow_cancellation'] == 1)  %}
+							<i data-feather="check-circle" class="prime_text_success" ></i>
+						{% else %}
+							<i data-feather="x-circle" class="prime_text_danger"></i>
+						{% endif %}
+
+					</div>
+					
+                    <div class="col-md-3 prime_textalign_center prime_margintop10px">
+						<small  class="text-muted" style="display:block">
+							Send email confirmation to user
+						</small>
+						{% if (workflow_step['email_confirmation'] == 1)  %}
+							<i data-feather="check-circle" class="prime_text_success" ></i>
+						{% else %}
+							<i data-feather="x-circle" class="prime_text_danger"></i>
+						{% endif %}
+
+					</div>
+				</div>
+
+				<div class="card-footer">
+					<a   href="/?t=remove_workflow_step&wid={{ workflow_step['workflow_id']}}&printer={{ workflow_step['printer_name'] }}&work_step_id={{ workflow_step['work_step_id'] }}"  class="btn btn-danger prime_white_text" aria-label="Delete workflow step" data-toggle="tooltip" data-placement="top" title="Delete workflow step"><i data-feather="trash-2"></i></a>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="card prime_long_card prime_card_hidden_form" >
+			<form action="/" enctype="multipart/form-data" method="POST"  novalidate="" class="prime_workflow_step_validate_form" id="prime_workflow_step_validate_form_{{ loop.index }}" >
+				<input type="hidden" name="t" value="edit_workflow_steps">
+				<input type="hidden" name="work_step_id"value="{{ workflow_step['work_step_id'] }}">
+
+
+				<div class="card-header prime_background_teal">
+					{{ workflow_step['step_type_name'] }}
+				<a   href="#" class="btn btn-outline-light prime_icon_btn workflow_edit  edit_btn" id="edit_workflow_step_{{ workflow_step['work_step_id']}}" aria-label="Edit workflow step"i data-toggle="tooltip" data-placement="top" title="Edit workflow step"><i data-feather="edit-2"></i></a>
+				</div>
+
+				<div class="card-body row">
+					<div class="col-md-3 prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
+						<small  class="text-muted" style="display:block">
+							Step name
+						</small>
+						<input class="form-control"  aria-label="step name" type="text" pattern=".*\S+.*" name="name" value="{{ workflow_step['name'] }}" required>
+						<div class ="invalid-feedback">
+							Step name cannot be empty
+						</div>
+					</div>
+
+				    <div class="col-md-3 prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
+						<small  class="text-muted" style="display:block">
+							Order
+						</small>
+						<input type="text" name="ordering" class="form-control" aria-label="step order"  name="order"  maxlength="3" pattern="^[1-9][0-9]*$" value="{{ workflow_step['ordering'] }}" required>
+						<div class ="invalid-feedback">
+							Invalid order . order should be a number between 1-999
+						</div>
+					</div>
+
+					<div class="col-md-3  prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
+						<small  class="text-muted" style="display:block">
+							Admin badge
+						</small>
+						<input type="text" name ="admin_status" class="form-control"aria-label="step admin status" pattern=".*\S+.*" name="admin_badge" value="{{ workflow_step['admin_status'] }}" required>
+						<div class ="invalid-feedback">
+							Admin badge cannot be empty
+						</div>
+					</div>
+
+					<div class="col-md-3 prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
+						<small  class="text-muted" style="display:block">
+							User badge
+						</small>
+						<input type="text" name ="user_status" class="form-control" pattern=".*\S+.*" name="user_badge" aria-label="step user status" value="{{ workflow_step['user_status'] }}" required>
+						<div class ="invalid-feedback">
+							User badge cannot be empty
+						</div>
+					</div>
+
+					<div class="col-md-3 prime_textalign_center prime_margintop10px">
+						<small  class="text-muted" style="display:block">
+							Manage level
+						</small>
+						<select name="manage_level" class="form-select"aria-label="Manage level">
+						    {% for key, name  in edit_permissions  %}
+							<option value="{{ key }}"  {{ (workflow_step['manage_level_name']  ==  name  ) ? 'selected': '' }} >{{ name }}</option>
+
+						    {% endfor %}
+						</select>
+					</div>
+					
+                    <div class="col-md-3 prime_textalign_center prime_margintop10px">
+						<small  class="text-muted" style="display:block">
+							Allow cancelation by user
+						</small>
+						<select name="allow_cancellation" class="form-select"aria-label=" Allow cancelation by user">
+							<option value="1"  {{ (workflow_step['allow_cancellation'] == 1 ) ? 'selected': '' }} >Yes</option>
+							<option value="0"  {{ (workflow_step['allow_cancellation'] == 0 ) ? 'selected': '' }} >No</option>
+						</select>
+
+					</div>
+
+					<div class="col-md-3 prime_textalign_center prime_margintop10px">
+						<small  class="text-muted" style="display:block">
+							Send email confirmation to user
+						</small>
+						<select name="email_confirmation" class="form-select"aria-label="Send email confirmation to user">
+							<option value="1"  {{ (workflow_step['email_confirmation'] == 1 ) ? 'selected': '' }} >Yes</option>
+							<option value="0"  {{ (workflow_step['email_confirmation'] == 0 ) ? 'selected': '' }} >No</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="card-footer">
+					<input type="button" class="btn btn-danger cancel_edit_status back_btn" id="back_workflow_step_{{ workflow_step['work_step_id']}} "value="Cancel">
+					<input type="submit" class="btn btn-success prime_float_right prime_workflow_step_validate_btn" id="prime_workflow_step_validate_btn_{{ loop.index }}" value="Update">
+				</div>
+
+			</form>
+		</div>
+
+	</div>
+{% endfor %}
+
+

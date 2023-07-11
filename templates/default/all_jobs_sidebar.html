@@ -1,0 +1,29 @@
+{% if view_all_jobs %}    
+    <form action ="/" method ="GET" enctype="multipart/form-data" class ="prime_margintop10px" novalidate="">
+        <input type="hidden" name ="t" value ="go_to_job">
+        <div class="input-group">
+            <label class="sr-only" for="goToJob">Enter the job id</label>
+            <input style="margin-left: 10px;margin-right: 10px;" type="text" name ="go_to_job_id" class ="form-control" id="goToJob" aria-label = "Enter the job_id"  placeholder="Enter the job id" pattern="^[0-9]*$" required>
+            <div class ="invalid-feedback">
+                Invalid job id. Job id can only contain a numeric value.
+            </div>
+        </div>
+        <input class="btn btn-primary margin" style="margin: 5px 0 10px 0;" type="submit" value="Go to job">
+
+    </form>		
+
+{% endif %}
+<p>Sort</p>
+ <ul class="list-group">
+    {% for sort_field, value in sort_options  %}
+        <li class="text-left"><a href="/?t={{(current_tab == 1) ?'all_jobs' : 'my_jobs' }}&type={{(current_type == 1 ) ? 'n' : (current_type == 2 ) ? 'h' : (current_type == 3 ) ? 'o' :'c' }}&sort={{sort_field}}&dir={{sort_array['sort_dir']}}" class="list-group-item d-flex justify-content-between align-items-center list-group-item-action {{sort_field == sort_array['sort_field'] ? ' list-group-item-info' : '' }}">{{ value }}</a></li>
+    {% endfor %}
+ </ul>
+<p>Sort order</p>
+ <ul class="list-group">
+    
+    {% for sort_dir, value in sort_dir_options  %}
+        <li class="text-left"><a href="/?t={{(current_tab == 1) ?'all_jobs' : 'my_jobs' }}&type={{(current_type == 1 ) ? 'n' : (current_type == 2 ) ? 'h' : (current_type == 3 ) ? 'o' :'c' }}&sort={{sort_array['sort_field']}}&dir={{sort_dir}}" class="list-group-item d-flex justify-content-between align-items-center list-group-item-action  {{sort_dir == sort_array['sort_dir'] ? ' list-group-item-info' : '' }}">{{ value}}</a></li>
+    {% endfor %}
+ </ul>
+

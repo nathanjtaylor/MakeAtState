@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<div class="jumbotron">
+	<h1 class="display-4">Hollander Makerspace</h1>
+  	<p class="lead">MSU users can sign in through single sign on, all other users can create an account or log in to access the Makerspace fabrication services.</p>
+  	<hr class="my-4">
+
+</div>
+
+
+{% include 'prime_alerts.html' %}
+
+<div class="d-flex justify-content-center">
+    {% for type in auth_options %} 
+        {% if type == "Okta" %}
+            <a href="/?t=okta-login" class="col-md-4 col-12 p-4 m-3 btn btn-success"><i data-feather="user"></i>  MSU Users <small>(Sign in with MSU credentials)</small></a>
+        {% endif %}
+    {% endfor %}
+</div>
+
+<form class = "row justify-content-center prime_margintop20px " action="/" method= "POST">
+	<input type="hidden" name="t" value="signin">
+	<input type="hidden" name="sn" value={{sn}}>
+
+<div class = "col-md-4 prime_borderlightgrey prime_padding20px">
+    <p class="text-center p-2 m-2 prime_info_background rounded text-dark"><i data-feather="users"></i>  Community Users <small>(Sign in with MakeAtState credentials)</small></p>
+
+	<div class="input-group mb-2 mr-sm-2 prime_margintop10px prime_center_padding">
+        <label class="input-group-text" id="login_email">Email</label>
+	    <input type="email" class="form-control" placeholder="Email" name ="email" value="{{ email }}"  aria-label = "Enter your email address" required>
+	 </div>
+
+	<div class="input-group mb-2 mr-sm-2 prime_margintop20px prime_center_padding">
+        <label class="input-group-text" id="login_password">Password</label>
+	    <input type="password" class="form-control" placeholder="password" name = "signin_password" aria-label = "Enter your password" required>
+	 </div>
+	<div class ="text-center prime_margintop20px">
+		<input type="submit" class="btn btn-primary  prime_pill_btn_lg prime_pill_green" value ="Sign in" aria-label = "Sign in  to your account"/>
+	</div>
+
+	<div class ="text-center prime_margintop20px">
+		<a href = "/?t=register" class="btn btn-primary  prime_pill_btn_lg prime_pill_purple">Register</a>
+	</div>
+
+	<div class ="text-center prime_margintop20px">
+		<a href = "/?t=reset" class="prime_pill_btn ">Reset my password!</a>
+	</div>
+
+
+</div>
+
+</form>
+
+
+{% endblock %}
+

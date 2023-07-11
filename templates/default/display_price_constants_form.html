@@ -1,0 +1,134 @@
+<input type="hidden" name="price_structure_{{ file_id }}" value="modular">
+<p class="badge prime_background_teal m-3">File name: {{ " " }}{{ file['file_name'] }}</p>
+<div class="border-bottom mb-4 abc">
+
+{% for label, value in edit_price['files'][file_id]['price_constants'] %}
+        <div class="row justify-content-md-center">
+            {% if loop.first %}
+                <p class="prime_price_char ps-5">(</p>
+            {% else %}
+                <p class="prime_price_char ps-5">+</p>
+            {% endif %}
+            <div class="col-md-3" style="display: flex">
+                <div class="prime_textalign_center">
+                    <small class="text-muted" style="display:block">
+                        Quantity
+                    </small>
+                    <div class="input-group mb-2 mr-sm-2 prime_margintop10px">
+                        <input type="number" min="0.00" step=1 pattern="^[0-9\.]*$"
+                               class="form-control quantity_input quantity_input_{{ file_id }}" data-file_id={{ file_id }} placeholder="0"
+                               aria-label="unit quantity"
+                               name="price_quantity_{{ label | replace({' ':'_'}) }}_{{ file_id }}"
+                               id="price_quantity_{{ loop.index }}" required>
+                        <div class="invalid-feedback">
+                            Invalid quantity. Quantity should not be empty and must be a valid Integer. 
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1"><p
+                        class="prime_price_char prime_price_operator">
+                    ×</p></div>
+            <div class="col-md-3 prime_textalign_center">
+                <small class="text-muted" style="display:block">
+                    {{ label }}
+                </small>
+                <div class="input-group mb-2 mr-sm-2 prime_margintop10px ">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text input-group-text-small">$</div>
+                    </div>
+                    <input type="text" class="form-control const_price" placeholder="{{ label }}"
+                           name="price_const_{{ label | replace({' ':'_'}) }}_{{ file_id }}"
+                           id="price_const_{{ loop.index }}_{{ file_id }}"
+                           aria-label="{{ label }}" value="{{ value }}" readonly>
+                </div>
+            </div>
+            {% if loop.last %}
+                <p class="prime_price_char ps-5">)</p>
+            {% else %}
+                <p class="prime_price_char"></p>
+            {% endif %}
+        </div>
+    {% endfor %}
+    <div class="row justify-content-md-center">
+        <div class="col-md-1 " style="display: flex"><p class="prime_price_char prime_price_operator">
+                ×</p></div>
+        <div class="col-md-3 prime_textalign_center">
+            <small class="text-muted" style="display:block">
+                Number of copies
+            </small>
+            <div class="input-group mb-2 mr-sm-2 prime_margintop10px ">
+                <input type="text" class="form-control print_count_{{ file_id }}" placeholder="count"
+                       name="price_count_{{ file_id }}"
+                       aria-label="number of copies" value="{{ edit_price['files'][file_id]['Copies'] ? edit_price['files'][file_id]['Copies'] : price_details[file_id]['count'] }}" readonly>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-md-center">
+        <div class="col-md-1 " style="display: flex"><p class="prime_price_char prime_price_operator">
+                =</p></div>
+        <div class="col-md-3 prime_textalign_center">
+            <small class="text-muted" style="display:block">
+                Price before discount
+            </small>
+            <div class="input-group mb-2 mr-sm-2 prime_margintop10px ">
+                <div class="input-group-prepend">
+                    <div class="input-group-text input-group-text-small">$</div>
+                </div>
+                <input type="number" min="0.00" step=0.01 class="form-control total_price_before_discount total_price_before_discount_{{ file_id }}"
+                       aria-label="total price before discount" pattern="^[0-9\.]*$" placeholder="0.00"
+                       data-file_id={{ file_id }}
+                       name="total_price_before_discount_{{ file_id }}">
+                <div class="invalid-feedback">
+                    Invalid price . Price should not be empty and in 0.00 format
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-md-center">
+        <div class="col-md-1 " style="display: flex"><p class="prime_price_char prime_price_operator">
+                %</p></div>
+        <div class="col-md-3 prime_textalign_center">
+            <small class="text-muted" style="display:block">
+                Discount
+            </small>
+            <div class="input-group mb-2 mr-sm-2 prime_margintop10px ">
+                <input type="float" min="0" max="100" step=0.01 class="form-control discount discount_{{ file_id }}"
+                       aria-label="discount"  placeholder="0"
+                       name="discount_{{ file_id }}"
+                       pattern="^[0-9\.]*$"
+                       data-file_id={{ file_id }}
+                       required>
+                <div class="input-group-append">
+                    <div class="input-group-text input-group-text-small">%</div>
+                </div>
+                <div class="invalid-feedback">
+                    Invalid discount %. Discount % should not be empty and less than or equal to 100
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-md-center">
+        <div class="col-md-1 " style="display: flex"><p class="prime_price_char prime_price_operator">
+                =</p></div>
+        <div class="col-md-3 prime_textalign_center">
+            <small class="text-muted" style="display:block">
+                Total price
+            </small>
+            <div class="input-group mb-2 mr-sm-2 prime_margintop10px ">
+                <div class="input-group-prepend">
+                    <div class="input-group-text input-group-text-small">$</div>
+                </div>
+                <input type="float" min="0.00" step=0.01 class="form-control total_price total_price_{{ file_id }}"
+                       aria-label="total price" pattern="^[0-9\.]*$" placeholder="0.00"
+                       data-file_id={{ file_id }}
+                       name="total_price_{{ file_id }}">
+                <div class="invalid-feedback">
+                    Invalid price . Price should not be empty and in 0.00 format
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

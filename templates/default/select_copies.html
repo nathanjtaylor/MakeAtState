@@ -1,0 +1,19 @@
+{% block display_copies %}
+    {% if copies %}
+        {% if price %}
+            <p> Price per gram: ${{ price }} </p>
+        {% endif %}
+        <div class="input-group mb-3 prime_margintop20px">
+            <div class="input-group-prepend">
+                <label class="input-group-text prime_no_background border-0" for="prime_set_dimensions_{{ id }}">Dimensions</label>
+            </div>
+            <input type="text" id="prime_set_dimensions_{{ id }}" class="form-control rounded prime_set_dimensions" aria-label="name" placeholder="{{ placeholder }}" name="dimensions[]">
+        </div>
+        <div class="input-group mb-3 prime_margintop20px">
+            <div class="input-group-prepend">
+                <label class="input-group-text prime_no_background border-0" for="prime_set_copies_{{ id }}">Copies</label>
+            </div>
+            <input type="number" min="1" max="99"  minlength="1" pattern="^(0?[1-9]|[1-9][0-9])$" id="prime_set_copies_{{ id }}" class="form-control rounded prime_set_copies" aria-label="name" placeholder="Please enter the number of copies" name="copies[]" title="Please enter a valid number between 1-99" required>
+        </div>
+    {% endif %}
+{% endblock %}

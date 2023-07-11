@@ -1,0 +1,6 @@
+---
+
+traefik_service_name: proxy
+traefik_network: proxy
+traefik_devel: false
+traefik_read_timeout: 60s

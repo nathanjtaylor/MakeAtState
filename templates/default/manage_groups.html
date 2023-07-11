@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="jumbotron">
+        <h1 class="display-4">View Groups</h1>
+        <p class="lead">Add groups or edit existing ones. </p>
+
+    </div>
+    {% include 'prime_alerts.html' %}
+    <div class="row justify-content-center prime_margintop20px">
+
+        <div class="col-md-11 text-center" style= "display: contents;" >
+            {% if groups %}
+                {% include 'view_groups.html' %}
+            {% endif %}
+
+
+            <div class="card prime_card prime_add_card">
+
+                <div class="card-body">
+                    <i data-feather="plus-square" class ="prime_card_add_icon" style="width:75px;height:75px;"></i>
+                    <p class = "prime_add_card_text">Add groups</p>
+                </div>
+
+            </div>
+
+            <div class="card prime_card prime_add_hidden_card" id = "group_{{ group['group_id']}}">
+                <div class="card-header prime_background_teal">
+                    Add group
+                </div>
+
+                <div class="card-body">
+                    <!-- Hidden edit form for edit group -->
+                    <div class = "prime_card_details prime_paddingbottom10px" >
+                        <form action="/" enctype="multipart/form-data" method="POST">
+                            <input type="hidden" name="t" value="add_group">
+                            <small class="text-muted" style="display:block">Group name  </small>
+                            <input class ="form-control" aria-label = "add group name" type=text name = "g_name"  />
+                            <small class="text-muted" style="display:block">Admin Email  </small>
+                            <input class ="form-control" aria-label = "add group admin email" type=text name = "g_email"  />
+                            <small class="text-muted" style="display:block">Group tag  </small>
+                            <input class ="form-control" aria-label = "add group tag" type=text name = "g_tag"  />
+
+                            <a   href = "#" class="btn btn-info prime_card_body_btn prime_icon_btn  add_back_btn" id = "back_group_{{ group['group_id']}}" aria-label = "Cancel add group"  data-toggle="tooltip" data-placement="top" title="Cancel add group"><i data-feather="corner-down-left"></i></a>
+                            <input type="submit" class="btn btn-success prime_margintop20px " value="Add group">
+                        </form>
+
+                    </div>
+                    <!-- Hidden edit form for edit group  ends here -->
+
+                </div>
+
+
+            </div>
+
+            <!--  End of add group card -->
+        </div>
+    </div>
+{% endblock %}

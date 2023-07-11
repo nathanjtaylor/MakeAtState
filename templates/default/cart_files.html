@@ -1,0 +1,17 @@
+{% block cart_file %}
+    {% for key, file in files %}
+        <div class = "row prime_padding10px  {{loop.index%2 ? 'prime_no_background' : 'prime_background_lightblue' }} prime_borderlightgrey">
+                <div class = "col-md-1 prime_borderright_grey">
+                    {{ loop.index }}
+                </div>
+
+                <div class = "col-md-9 prime_borderright_grey" >
+                    {{ file.file_name }}
+                </div>
+                <div class = "col-md-2">
+                    <button aria-label ="Remove file" id="button_remove_from_cart" type="submit" class ="btn btn-danger prime_icon_btn" value ="" data-toggle="tooltip" data-placement="top" title="Remove" ><i data-feather="delete"></i>
+                    <input type ="hidden" id="ind" value ={{ key }}></button>
+                </div>
+        </div>
+    {% endfor %}
+{% endblock %}

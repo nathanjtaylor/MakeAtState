@@ -1,0 +1,45 @@
+
+<div class = "col-md-9 prime_padding0px prime_margin10px">   
+	 <div class="card prime_borderlightgrey mb-3">
+		<div class="card-header prime_background_teal"> Job messages</div>
+		 <div class="card-body" >
+		{% for messages in job_messages  %}
+			<div class = "row  prime_padding10px {{loop.index%2 ? '' : 'prime_background_lightblue' }}" >
+				 <div class = "col-md-9 prime_borderright_grey">
+						
+					<small class="text-muted">subject:  </small>{{ messages['subject'] }}
+				</div>
+
+				 <div class = "col-md-2 prime_borderright_grey">
+						
+					<small class="text-muted"> {{ messages['sent'] }}</small>
+				</div>
+				{% if messages['read'] %}
+				 <div class = "col-md-1 ">
+						
+					<small class="text-muted"> Read</small>
+				</div>
+				{% else %}
+				 <div class = "col-md-1 ">
+						
+					<small class="text-muted"> Not yet read</small>
+				</div>
+				
+				{% endif %}
+
+				 <div class = "col-md-8 ">
+						
+				<small class="text-muted">message: </small>{{ messages['message_text']|raw }}
+				</div>
+				
+			</div>
+
+
+		{% endfor %}
+		</div>
+	</div>
+
+
+
+ </div>
+

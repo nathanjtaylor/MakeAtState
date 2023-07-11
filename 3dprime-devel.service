@@ -1,0 +1,13 @@
+[Unit]
+Description=3dPrime Web application
+Requires=docker.service
+After=docker.service
+Conflicts=apache2.service
+
+[Service]
+ExecStart=docker-compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.devel.yml up --build
+Restart=on-failure
+WorkingDirectory=/opt/3dprime
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+
+<div class="jumbotron">
+	<h1 class="display-4">Your Messages </h1>
+  	<p class="lead">View all messages here.</p>
+  	<hr class="my-4">
+  	<p>Messages are grouped by project. Click on the message thread to view all messages.</p>
+</div>
+
+{% include 'prime_alerts.html' %}
+<div class="container-fluid px-0">
+<div class = "row no-gutters justify-content-center prime_margintop20px" >
+
+	{% if pagination_array['status'] %}
+		<div class = "col-4 prime_padding0px prime_margin10px  prime_textalign_center prime_border_twinkleblue prime_borderradius5px">  
+			 {{pagination_array['status']}} message threads
+		</div>
+
+	{% endif %}
+	
+	<div class = "col-md-11 prime_padding0px prime_margin10px ">   
+	{% for messages in user_messages  %}
+        {% set counter = ( (messages['message_count']  <3 ) ? messages['message_count'] : 3) %}
+        {% for i in 0..counter-1  %}
+            <div class = "row prime_margintop10px prime_padding10px prime_messages {{ (loop.index == 1)  ?  ' prime_foreground_message' : ' prime_background_message'}}" style = "width:{{100-((loop.index -1)*5)}}%; top:{{  ((loop.index-1) * 10) *-1 }}px; z-index:{{(loop.index-1) * -1}}" data-message-job-id="{{ messages['job_id'] }}" data-message-user-id= "{{ messages['user_id']}}" >
+                {% if loop.index == 1 %}                
+                     <div class = "col-md-9 prime_borderright_grey">
+                            
+                        <small class="text-muted">Messages for project:</small>{{ " "}}{{ messages['project_name'] }}
+                    </div>
+
+                     <div class = "col-md-2 ">
+                            
+                        <small class="text-muted"> {{ messages['messages_sent'] }}</small>
+                    </div>
+                    
+                     <div class = "prime_small_col ">
+                     </div>
+                     <div class = "col-md-6 prime_ellipsis">
+                            
+                    {{ messages['message_count']  |striptags}} <small class="text-muted"> messages for the job </small>
+
+                    </div>
+                {% endif %}
+                
+            </div>
+        {% endfor %}
+
+	{% else %}
+		 <div class = "row  prime_padding10px justify-content-center">
+
+		 	
+		
+			<div class = "col-md-11 prime_padding0px prime_margin10px">
+			
+				<div class="card prime_borderlightgrey mb-3">
+				  <div class="card-header">No messages</div>
+				  <div class="card-body text-secondary">
+				    <p class="card-text">No messages available.</p>
+				  </div>
+				</div>
+				
+			</div>
+		 </div>
+
+
+	{% endfor %}
+
+	{% if pagination_array %}
+
+		{% include 'page_list.html' %}
+	{% endif %}
+
+
+
+
+
+	</div>
+</div>
+</div>
+{% endblock %}
+

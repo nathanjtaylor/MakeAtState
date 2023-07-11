@@ -1,0 +1,108 @@
+<div class="col-md-9 prime_padding0px prime_margin10px">
+    <div id="price_details">
+        <div class="card prime_long_card mb-9 prime_card_solid_form">
+            <div class="card-header prime_background_teal">
+                Price Details
+                <a href="#" class="btn btn-outline-light prime_icon_btn workflow_edit  edit_btn" id="edit_price_details"
+                   aria-label="Edit price details" data-toggle="tooltip" data-placement="top"
+                   title="Edit workflow step"><i data-feather="edit-2"></i></a>
+            </div>
+            {% for file_id, file in job_files %}
+                <p class="badge prime_background_teal m-3 prime_width_fit_content">File name: {{ " " }}{{ file['file_name'] }}</p>
+                <div class="card-body row">
+                    <div class="col-md-3">
+                        <small class="text-muted" style="display:block">
+                            Unit price
+                        </small>
+                        $ {{ price_details[file_id]['unit_price'] }}
+                    </div>
+                    <div class="col-md-3">
+                        <small class="text-muted" style="display:block">
+                            Number of copies
+                        </small>
+                        {{ price_details[file_id]['count'] }}
+                    </div>
+                    {% if price_details[file_id]['discount'] and price_details[file_id]['discount'] > 0 %}
+                    <div class = "col-md-3">
+                        <small  class="text-muted" style="display:block">
+                            Price before discount
+                        </small>
+                        $ {{ price_details[file_id]['total_price_before_discount'] }}
+                    </div>
+                    <div class = "col-md-3">
+                        <small  class="text-muted" style="display:block">
+                            Discount
+                        </small>
+                        {{ price_details[file_id]['discount'] }}%
+                    </div>
+                    {% endif %}
+                    <div class="col-md-3">
+                        <small class="text-muted" style="display:block">
+                            Pre-tax total
+                        </small>
+                        $ {{ price_details[file_id]['total_pretax'] }}
+                    </div>
+                    <div class="col-md-3">
+                        <small class="text-muted" style="display:block">
+                            Total with tax
+                        </small>
+                        $ {{ price_details[file_id]['total'] }}
+                    </div>
+                </div>
+            {% endfor %}
+            <p class="prime_background_lightblue m-3 p-3 rounded text-end">Grand total: ${{ price_details['grand_total'] }}</p>
+        </div>
+        <div class="card prime_long_card mb-9 prime_card_hidden_form ">
+            <form class="form-row prime_form_row" novalidate="" id="setPriceForm" action="/" method="post">
+                <div class="card-header prime_background_teal">
+                    Edit print Details
+                </div>
+                <div class="card-body container-fluid ">
+                    <input type="hidden" name="t" value="setprice">
+                    <input type="hidden" name="job_id" value="{{ admin_edit_price['job_id'] }}">
+                    <input type="hidden" name="uid" value="{{ admin_edit_price['user_id'] }}">
+                    <input type="hidden" name="next" value="{{ admin_edit_price['next'] }}">
+                    <input type="hidden" name="reset" value="{{ admin_edit_price['next'] }}">
+                </div>
+                {% set edit_price = admin_edit_price %}
+                {% for file_id, file in job_files %}
+
+                    <!-- check if price contatints exist -->
+                    {% if edit_price['files'][file_id]['price_constants'] %}
+                         {% include 'display_price_constants_form.html' %}
+                    <!-- When price constants are not set -->
+                    {% else %}
+                         {% include 'display_unit_price_form.html' %}
+                    {% endif %}
+                
+                {% endfor %}
+                <!-- End for loop -->
+                <div class="row justify-content-center">
+                    <div class="col-md-3 prime_textalign_center">
+                        <small class="text-muted" style="display:block">
+                            Grand total price
+                        </small>
+                        <div class="input-group mb-2 mr-sm-2 prime_margintop10px ">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text input-group-text-small">$</div>
+                            </div>
+                            <input type="float" min="0.00" step=0.01 class="form-control prime_grand_total"
+                                   aria-label="grand total price" pattern="^[0-9\.]*$" placeholder="0.00"
+                                   name="grand_total">
+                            <div class="invalid-feedback">
+                                Invalid price . Price should not be empty and in 0.00 format
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <input class="btn btn-success set_price_btn prime_margin20px" type="submit" name="save_cart"
+                           value="Update price"/>
+                    <input type="button" class="btn btn-danger back_btn  prime_margin20px" id="back_price_details"
+                           value="Cancel"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

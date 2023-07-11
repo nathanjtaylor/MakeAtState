@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<script src = "../openseadragon/openseadragon.min.js"></script>
+
+<div class="jumbotron">
+	<h1 class="display-4">Message Details </h1>
+  	<p class="lead">View your messages from MakeAtState.</p>
+  	<hr class="my-4">
+  	<p>To view more details and take actions on this job click the “Job Info” button</p>
+</div>
+
+{% include 'prime_alerts.html' %}
+
+<div class = "container-fluid px-0">
+<div class = "row no-gutters justify-content-center prime_margintop20px">
+		
+		{% if messages %}
+			{% include 'view_message.html' %}
+		{% else %}
+			<div class = "col-md-9 prime_padding0px prime_margin10px">
+		
+				<div class="card prime_borderlightgrey mb-3">
+				  <div class="card-header">No messages for the job</div>
+				  <div class="card-body text-secondary">
+				    <p class="card-text">No messages available.</p>
+				  </div>
+				</div>
+				
+			</div>
+            <div class = "col-md-9 prime_padding0px prime_margin10px">
+                <form action="/" method="post" enctype="multipart/form-data" class = "prime_borderlightgrey prime_padding10px">
+                    <div class = "form-row">
+                        <input type="hidden" name="t" value="send_message">
+                        <input type=hidden name = "message_job_id" value={{message_actions['job_id']}} />
+                        <input type=hidden name = "message_step_id" value={{message_actions['job_step_id']}} />
+                        <input type=hidden name = "target_page" value="message_details" />
+
+                        <textarea aria-label="notes" class="form-control rounded-0" rows="5"  name="message_text" ></textarea>
+
+                        <div class="custom-file" style="margin-top: 10px;">
+                            <input type="file"  name = "files[]" multiple="multiple" class="custom-file-input form-control" id="customFile" >
+                        </div>
+
+                        <input class = "btn btn-success prime_margintop20px " style = "margin-left:auto" type="submit" value="Send a message" />
+                    </div>
+                </form>
+            </div>
+
+		{% endif %}
+
+		{% if print_details %}
+				
+			{% include 'print_details.html' %}
+		{% else %}
+			<div class = "col-md-9 prime_padding0px prime_margin10px">
+		
+				<div class="card prime_borderlightgrey mb-3">
+				  <div class="card-header">Print details</div>
+				  <div class="card-body text-secondary">
+				    <p class="card-text">There are no details available.</p>
+				  </div>
+				</div>
+				
+			</div>
+		{% endif %}
+
+
+
+
+		{% if message_actions %}
+			{% include 'message_actions.html' %}
+		{% else %}
+			<div class = "col-md-9 prime_padding0px prime_margin10px">
+			
+				<div class="card prime_borderlightgrey mb-3">
+				  <div class="card-header">Actions</div>
+				  <div class="card-body text-secondary">
+				    <p class="card-text">There are no further actions available.</p>
+				  </div>
+				</div>
+				
+			</div>
+
+			
+		{% endif %}	
+
+
+</div>
+</div>
+{% endblock %}
+
+
+

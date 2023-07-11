@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="jumbotron">
+	<h1 class="display-4">Hollander MakeCentral</h1>
+  	<p class="lead">Create an account or sign in to access all make central services.</p>
+  	<hr class="my-4">
+
+</div>
+
+
+{% include 'prime_alerts.html' %} 
+<form class = "row justify-content-center prime_margintop20px " novalidate="" id ="registerForm"  action="/"  method ="post">
+
+	<input type="hidden" name="t" value="register">  
+	<input type="hidden" name="rn" value={{sn}}>  
+
+<div class = "col-md-4 prime_borderlightgrey prime_padding20px">
+
+	<div class="input-group mb-2 mr-sm-2 prime_margintop10px prime_center_padding">
+        <label class="input-group-text prime_min_width120px">Email <small class="text-muted text-center" >&nbsp * </small></label>
+        <input type="email" class="form-control " aria-label="email" placeholder="Email" name ="email"   id="validationTooltip01" required>
+		<div class ="invalid-feedback">
+			Invalid email entry. Email should be in  "me@example.com" format
+		</div>
+	 </div>
+
+	<div class="input-group mb-2 mr-sm-2 prime_margintop10px prime_center_padding">
+        <label class="input-group-text prime_min_width120px">First Name <small class="text-muted text-center" >&nbsp * </small></label>
+        <input type="text" class="form-control" aria-label="name"  placeholder="First Name" name ="first_name" required>
+	 </div>
+	<div class="input-group mb-2 mr-sm-2 prime_margintop10px prime_center_padding">
+        <label class="input-group-text prime_min_width120px">Last Name <small class="text-muted text-center" >&nbsp * </small></label>
+        <input type="text" class="form-control" aria-label="name"  placeholder="Last Name" name ="last_name" required>
+	 </div>
+
+	<div class="input-group mb-2 prime_margintop20px prime_center_padding">
+	    <label class="input-group-text prime_min_width120px ">Affiliation <small class="text-muted text-center" >&nbsp * </small> </label>
+        <select name = "affiliation"aria-label="affiliation"  class="form-select form-control">
+            <option value="1">Community user</option>
+            <option value="2">Faculty</option>
+            <option value="3">Staff</option>
+            <option value="4" selected>Student</option>
+        </select>
+	</div>
+	
+	<div class="input-group mb-2 mr-sm-2 prime_margintop10px prime_center_padding">
+        <label class="input-group-text prime_min_width120px">Department</label>
+        <input type="text" class="form-control" aria-label="department"   placeholder="Major/Department" name ="dep" >
+	 </div>
+
+
+	
+	<div class="input-group mb-2 mr-sm-2 prime_margintop10px prime_center_padding">
+	    <label class="input-group-text prime_min_width120px">Phone <small class="text-muted text-center" >&nbsp * </small></label>
+	    <input type="tel" minlength="12" pattern="^[0-9\-]*$" aria-label="phone number"  class="form-control" placeholder="xxx-xxx-xxxx" name ="phone" required>
+		<div class ="invalid-feedback">
+			Invalid phone number . Phone number should be in xxx-xxx-xxxx format
+		</div>
+	 </div>
+	<small  class="text-muted text-center" style="display:block">
+		Must be in xxx-xxx-xxxx format.
+	</small>
+	
+	<div class="input-group mb-2 mr-sm-2 prime_margintop20px prime_center_padding">
+	      	<label class="input-group-text prime_min_width120px">Password <small class="text-muted text-center" >&nbsp * </small></label>
+	    	<input type="password" class="form-control" id ="registerPassword" aria-label="password"   minlength="8" name ="password" placeholder="password" required>
+		<div class ="invalid-feedback">
+			Password should be atleast 8 characters long	
+		</div>
+		
+	 </div>
+	<small  class="text-muted text-center" style="display:block">
+      	Must be 8-20 characters long.
+    </small>
+
+	<div class="input-group mb-2 mr-sm-2 prime_margintop20px prime_center_padding">
+	      	<label class="input-group-text prime_min_width120px">Confirm Password <small class="text-muted text-center" >&nbsp * </small></label>
+	    	<input type="password" class="form-control" name = "cpassword" id="confirmPassword" aria-label="confirm password"   placeholder="password" required>
+		<div class ="invalid-feedback" id="confirmInvalid">
+			Comfirm password filed cannot be empty and should match the password field	
+		</div>
+		
+	 </div>
+	<small  class="text-muted text-center" style="display:block">
+		Must be 8-20 characters long and same as the password entered in the "Password" field
+    	</small>
+
+			
+	
+	<div class ="text-center prime_margintop20px">
+		<input type="submit" class="btn btn-primary  prime_pill_btn_lg prime_pill_purple register_btn"aria-label="Register"  value ="Register"/>
+	</div>
+
+	<div class ="text-center prime_margintop20px">
+		<a href = "/?t=login" class="prime_pill_btn ">Back to sign in</a>
+	</div>
+	
+	
+</div>
+
+</form>
+
+
+
+
+{% endblock %}
+

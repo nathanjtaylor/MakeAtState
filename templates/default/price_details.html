@@ -1,0 +1,51 @@
+<div class = "col-md-9 prime_padding0px prime_margin10px">
+	<div class="card prime_long_card mb-9 prime_card_solid_form">
+		<div class="card-header prime_background_teal">
+			Price Details
+		</div>
+        {% for file_id, file in job_files %}
+            <p class="badge prime_background_teal m-3 prime_width_fit_content">File name: {{ " " }}{{ file['file_name'] }}</p>
+            <div class="card-body row">
+                <div class="col-md-3">
+                    <small class="text-muted" style="display:block">
+                        Unit price
+                    </small>
+                    $ {{ price_details[file_id]['unit_price'] }}
+                </div>
+                <div class="col-md-3">
+                    <small class="text-muted" style="display:block">
+                        Number of copies
+                    </small>
+                    {{ price_details[file_id]['count'] }}
+                </div>
+                {% if price_details[file_id]['discount'] and price_details[file_id]['discount'] > 0 %}
+                <div class = "col-md-3">
+                    <small  class="text-muted" style="display:block">
+                        Price before discount
+                    </small>
+                    $ {{ price_details[file_id]['total_price_before_discount'] }}
+                </div>
+                <div class = "col-md-3">
+                    <small  class="text-muted" style="display:block">
+                        Discount
+                    </small>
+                    {{ price_details[file_id]['discount'] }}%
+                </div>
+                {% endif %}
+                <div class="col-md-3">
+                    <small class="text-muted" style="display:block">
+                        Pre-tax total
+                    </small>
+                    $ {{ price_details[file_id]['total_pretax'] }}
+                </div>
+                <div class="col-md-3">
+                    <small class="text-muted" style="display:block">
+                        Total with tax
+                    </small>
+                    $ {{ price_details[file_id]['total'] }}
+                </div>
+            </div>
+        {% endfor %}
+        <p class="prime_background_lightblue m-3 p-3 rounded text-end">Grand total: ${{ price_details['grand_total'] }}</p>
+	</div>
+</div>

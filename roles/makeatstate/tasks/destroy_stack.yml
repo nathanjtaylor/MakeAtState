@@ -1,0 +1,34 @@
+---
+
+- name: Check conditions.
+  assert:
+    that:
+      - destroy_stack_name_pattern is defined
+      - stack_name is match(destroy_stack_name_pattern)
+
+- name: Destroy stack.
+  docker_stack:
+    name: "{{ stack_name }}"
+    state: absent
+    absent_retries: 60
+  become: true
+  register: _r
+
+- name: Wait for containers to stop.
+  command:
+    cmd: "docker ps --quiet --all --no-trunc
+            -f label=com.docker.stack.namespace={{ stack_name | quote }}"
+  until: _r.stdout_lines | count == 0
+  delay: 1
+  retries: 60
+  check_mode: false
+  become: true
+  register: _r
+  changed_when: false
+
+- name: Prune volumes.
+  docker_prune:
+    volumes: true
+    volumes_filters:
+      label: "com.docker.stack.namespace={{ stack_name }}"
+  become: true

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MakeAtState | {{ page_title }}  </title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link type="text/css" rel="stylesheet" href="../css/makeatstate.css">
+</head>
+<body style="padding-right: 8%;
+    padding-left: 8%;">
+<h1 style="font-size: 8rem;">Order {{ " " }}{{ job_id }}-{{ project_name }}</h1>
+
+{% if (label == 'files') %}
+    {%for file_id, file in job_files %}
+        <div class="prime_print_section">
+            <table class="prime_print_table">
+                <tr>
+                    <td><h2 style="font-size: 6rem;">{{loop.index}} - {{ file['file_name'] }}</h2></td>
+                </tr>
+            </table>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="prime_print_section">
+        <table class="prime_print_table">
+            <tr>
+                <td><h2 style="font-size: 6rem;">Name: {{ " " }}{{ first_name }}{{ " " }}{{ last_name }}</h2></td>
+            </tr>
+        </table>
+    </div>
+
+{% endif %}
+</body>
+</html>
+

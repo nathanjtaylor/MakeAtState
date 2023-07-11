@@ -1,0 +1,67 @@
+<div class="input-group mb-3 prime_margintop20px">
+    <div class="input-group-prepend">
+        <label class="input-group-text prime_no_background border-0" for="inputGroupDelivery">Pickup Option</label>
+    </div>
+    <select name="delivery" aria-label="Select delivery option" class="form-control rounded" id="inputGroupDelivery">
+        <option disabled selected>Choose delivery option ...</option>
+        <!-- <option value="shipping">Ship to your address</option> -->
+        <option value="campus-mail">Ship to a campus mail address</option>
+        <option value="ServiceDesk-pickup">Pick up at MakeCentral: Service Desk</option>
+    </select>
+</div>
+<div class="prime_center_padding prime_marginbottom10px" id="inputCampus" style="display:none;">
+    <div style="padding-bottom: 20px;">
+        <label for="ship-field-info" style="color: gray">For faculty and staff. Please list name, room number, campus address, and campus phone number</label>
+        <textarea class="form-control rounded" name="ship-field-info" id="ship-field-info" rows="5"></textarea>
+    </div>
+</div>
+<div class="prime_center_padding prime_marginbottom10px" id="inputShipping" style="display:none;">
+    <p style="color: gray">Shipping Information</p>
+    <div class="input-group mb-3 ">
+        <div class="input-group-prepend"><label class="input-group-text prime_no_background border-0"
+                                                for="inputGroupAddress">Street Address</label>
+        </div>
+        <input type="text" id="inputGroupAddress" placeholder="366 W Circle Dr" class="form-control rounded"
+               aria-label="name" autocomplete="shipping street-address" name="ship-address">
+    </div>
+    <div class="input-group mb-3 prime_margintop20px">
+        <div class="input-group-prepend"><label class="input-group-text prime_no_background border-0"
+                                                for="inputGroupCity">City</label>
+        </div>
+        <input type="text" id="inputGroupCity" placeholder="East Lansing" class="form-control rounded" aria-label="name"
+               autocomplete="shipping locality" name="ship-city">
+    </div>
+    <div class="input-group mb-3 prime_margintop20px">
+        <div class="input-group-prepend"><label class="input-group-text prime_no_background border-0"
+                                                for="inputGroupState">State</label>
+        </div>
+        <input type="text" id="inputGroupState" placeholder="Michigan" class="form-control rounded" aria-label="name"
+               autocomplete="shipping region" name="ship-state">
+    </div>
+    <div class="input-group mb-3 prime_margintop20px">
+        <div class="input-group-prepend"><label class="input-group-text prime_no_background border-0"
+                                                for="inputGroupZip">Zip</label>
+        </div>
+        <input type="text" id="inputGroupZip" placeholder="48824" class="form-control rounded" aria-label="name"
+               autocomplete="shipping postal-code" name="ship-zip">
+    </div>
+</div>
+
+
+<div class="modal fade" id="InvalidAddressModal" tabindex="-1" aria-labelledby="addressvalidationTitle" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addressvalidationTitle">Warning</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+            We were unable to validate your address.<br> Are you sure you wish to continue?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <input class="save_cart_modal btn btn-success " type="submit" name="save_cart_modal" value="{{ cart_id ? 'Update cart' : 'Add to cart' }}"/>
+      </div>
+    </div>
+  </div>
+</div>

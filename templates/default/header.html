@@ -1,0 +1,43 @@
+{% block header %}
+
+<div class = "prime_header ">
+	<div class = "container-fluid">
+		<div class = "row">
+			<div class = "col-md-3 prime_mast_image">
+				<a href = "https://www.msu.edu"><img class = "prime_masthead" alt = "Michigan State University" src = "../images/msu-masthead.png"></a>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<div class = "prime_block">
+	<div class = "container-fluid">
+		<div class = "row">
+			<div class = "col-auto prime_block_icon">
+				<a class="prime_header_text" href = "https://www.lib.msu.edu">MSU Libraries</a>
+			</div>
+			<div class = "col-auto">
+				<a class ="prime_header_text" href="/?t=home">MakeAtState</a>
+			</div>
+			<div class = "col text-end">
+				{% if fullname %}
+				<div class ="prime_margintop10px">
+					<span class="text-justify prime_white_text prime_margintop10px"> Hello, {{ " " }}{{ fullname }} </span>
+					<a href = "/?t=view_cart" data-toggle="tooltip" data-placement="top" aria-label="View cart" class = "btn btn-outline-light prime_icon_btn prime_heading_icon"><i data-feather="shopping-cart"></i></a>
+					<a href="/?t=settings" class = "btn btn-outline-light prime_icon_btn prime_heading_icon" aria-label="settings" data-toggle="tooltip" data-placement="top" ><i data-feather="settings"></i></a>
+					<a href="/?t=signout" class = "btn btn-outline-light prime_icon_btn prime_heading_icon" data-toggle="tooltip" aria-label="log out"  data-placement="top" ><i data-feather="log-out"></i></a>
+				</div>
+
+				{% endif %}
+
+			</div>
+
+		</div>
+	</div>
+			
+</div>
+
+{% include 'nav_bar.html'  %}
+{% include 'alerts.html'  %}
+{% endblock %}

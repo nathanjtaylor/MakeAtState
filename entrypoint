@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+CONFIG_FILE_PARTS=/run/secrets/makeatstate.cfg.d/*
+
+set -u
+
+[[ -n ${MAIL_SMTP_HOST-} ]] && sed 's/^ \{4\}//' <<MSMTPRC >/etc/msmtprc
+    account default
+    host $MAIL_SMTP_HOST
+    port 25
+    logfile /dev/stdout
+    from ${MAIL_FROM:-root@localhost}
+MSMTPRC
+
+install -d -o www-data -g www-data /mnt/makeatstate
+
+compgen -G "$CONFIG_FILE_PARTS" >&- &&
+    ( umask 0222; cat $CONFIG_FILE_PARTS >/var/www/MakeAtState/makeatstate.cfg )
+
+# Invoke the entrypoint that ships with the upstream image.
+exec docker-php-entrypoint "$@"

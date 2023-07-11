@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+
+<div class="jumbotron">
+	<h1 class="display-4">Your Cart, </h1>
+  	<p class="lead">Showing all items in cart. Submit items to MakeCentral for a price quote.</p>
+  	<hr class="my-4">
+  	<p>Submitted projects can be viewed using “Jobs” menu.</p>
+</div>
+{% include 'prime_alerts.html' %}
+
+{% if cart_details is not empty %}
+    <div class="row my-3 justify-content-center">
+        <div class="col-auto">
+            <div class="px-3 rounded-pill prime_background_success">Upload Files</div>
+        </div>
+        <div class="col-auto">
+            <i data-feather="arrow-right"></i>
+        </div>
+        <div class="col-auto">
+            <div class="px-3 prime_background_success rounded-pill">Add Files to Cart</div>
+        </div>
+        <div class="col-auto">
+            <i data-feather="arrow-right"></i>
+        </div>
+        <div class="col-auto">
+            <div class="px-3 prime_background_success rounded-pill">Select Options</div>
+        </div>
+        <div class="col-auto">
+            <i data-feather="arrow-right"></i>
+        </div>
+        <div class="col-auto">
+            <div class="px-3 prime_bg_primary_border rounded-pill">Submit Projects</div>
+        </div>
+    </div>
+{% endif %}
+
+<div class = "row justify-content-center  prime_margintop20px">
+	<div class = "col-md-9">
+	    {% for project_id , project in cart_details %}
+            <div class="card mb-4 border p-4">
+                {% set project_name = project[0]['project_name'] %}
+                <h2>{{ project_name  }}</h2>
+                {% for idx , val in project %}
+                    <div class="accordion rounded-0" id="accordion{{ val['project_id'] }}">
+                        <div class="accordion-item">
+                            <h3 class="accordion-header" id="heading{{ val['project_id'] }}-{{ val['file_id'] }}">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ val['project_id'] }}-{{ val['file_id'] }}" aria-expanded="false" aria-controls="collapse{{ val['file_id'] }}">
+                                    {{ val['file_name'] }}
+                                </button>
+                            </h3>
+                            <div id="collapse{{ val['project_id'] }}-{{ val['file_id'] }}" class="accordion-collapse collapse" aria-labelledby="heading{{ val['project_id'] }}-{{ val['file_id'] }}" data-bs-parent="#accordion{{ val['project_id'] }}">
+                                <div class="accordion-body">
+                                    {% for cart_key, cart_val in val['data'] %}
+                                        <div class = "row">
+                                            <p class="col-2 col-md-4 col-lg-3 fw-bold">{{ cart_key }}</p>
+                                            <p class="col-12 col-md-8 col-lg-9">{{ cart_val|slice(0, 50) }}</p>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                <div class="d-inline">
+                    <a href = "/?t=remove_cart_item&rpid={{ project_id }}" class="btn btn-danger prime_white_text mt-3" aria-label = "Delete item" style="width: max-content;">Remove</a>
+                    <a href = "/?t=workflow&uid={{ user_id }}&project_id={{ project_id }}&step=1" class="btn btn-success mt-3" aria-label = "Submit item" style="width: max-content;">Submit Project</a>
+                </div>
+            </div>
+		{% else %}
+			<div class="card prime_borderlightgrey mb-3">
+			    <div class="card-header">Your cart is empty</div>
+			    <div class="card-body text-secondary">
+			        <p class="card-text">Please visit this page after you add items into your cart</p>
+			    </div>
+			</div>
+		{% endfor %}
+	</div>
+</div>
+
+{% endblock %}

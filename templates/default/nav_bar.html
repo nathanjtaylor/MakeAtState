@@ -1,0 +1,12 @@
+{% if nav_array %}
+<nav class = "navbar prime_nav">
+<ul class="nav nav-pills">
+  {% for nav , nav_link in  nav_array %}
+  <li class="nav-item">
+    <a class="nav-link " href="{{ nav_link }}">{{ nav }}</a>
+  </li>
+  {% endfor %}
+</ul>
+</nav>
+
+{% endif %}

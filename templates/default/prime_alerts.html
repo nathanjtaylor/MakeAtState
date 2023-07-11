@@ -1,0 +1,23 @@
+<div class="container-fluid">
+	<div class = "prime_alerts row  justify-content-center">
+        
+        <div class="col-auto">
+            {% if success_messages %}
+                {% for message in success_messages %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                       {{ message | raw}}
+                       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            {% if error_messages %}
+                {% for message in error_messages %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                       {{ message | raw }}
+                       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+	</div>
+</div>

@@ -1,0 +1,31 @@
+---
+
+- name: Install better inputrc.
+  copy:
+    src: inputrc
+    dest: /etc/inputrc
+    owner: root
+    mode: 0644
+
+- name: Make the Vagrant user automatically sudo to root on log-in.
+  lineinfile:
+    path: .bash_profile
+    line: "[[ $(id -u) == 0 ]] || exec sudo -s"
+    state: present
+    create: true
+  become: false
+
+- name: Make the Vagrant user automatically change directory on log-in.
+  lineinfile:
+    path: .bash_profile
+    line: "cd {{ app_dir }}"
+    state: present
+    create: true
+  become: false
+  when: app_dir is defined
+
+- name: Make vim the default editor for the Vagrant user.
+  lineinfile:
+    path: .bashrc
+    line: "export EDITOR=vim"
+    state: present

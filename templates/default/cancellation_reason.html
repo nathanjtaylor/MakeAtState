@@ -1,0 +1,39 @@
+<div class = "col-md-9 prime_padding0px prime_margin10px">
+
+    <div class="card prime_long_card mb-9 prime_card_solid_form">
+        <div class="card-header prime_warning_background">
+
+            Cancellation Reason
+
+        </div>
+        <div class="card-body row">
+            <div class = "col-md-4">
+                <small  class="text-muted" style="display:block">
+                    Reason
+                </small>
+                {% if cancellation['reason'] %}
+                {{cancellation['reason']}}
+                {% else %}
+                Other
+                {% endif %}
+            </div>
+            {% if cancellation['other'] %}
+            <div class = "col-md-4">
+                <small  class="text-muted" style="display:block">
+                    Reason
+                </small>
+                {{cancellation['other']}}
+            </div>
+            {%  endif %}
+
+
+
+        </div>
+
+        <div class="card-footer">
+
+
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,11 @@
+---
+
+# This is necessary when a cert or key has changed, but the corresponding
+# configuration file has not.
+- name: Trigger Traefik to reload its configuration.
+  file:
+    path: /etc/traefik/conf.d
+    state: directory
+    modification_time: now
+  listen: reconfigure_traefik
+  become: true

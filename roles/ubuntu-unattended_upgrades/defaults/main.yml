@@ -1,0 +1,10 @@
+---
+
+ubuntu_unattended_upgrades_install_updates: true
+ubuntu_unattended_upgrades_install_backports: false
+ubuntu_unattended_upgrades_install_esm: true
+ubuntu_unattended_upgrades_remove_unused: false
+ubuntu_unattended_upgrades_reboot: false
+ubuntu_unattended_upgrades_reboot_time: "02:00"
+ubuntu_unattended_upgrades_email_address: root
+ubuntu_unattended_upgrades_email_quiet: true

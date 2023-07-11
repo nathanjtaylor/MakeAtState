@@ -1,0 +1,138 @@
+<div class="card prime_long_card mb-9 prime_user_status">  
+	<div class="card-header prime_background_teal"> 
+
+	 	User status
+		<a   href = "#" class="btn btn-outline-light prime_icon_btn edit_user_status prime_float_right" aria-label = "Edit item" data-toggle="tooltip" data-placement="top" title="Edit user status"><i data-feather="edit-2"></i></a>
+
+	</div>
+	 <div class="card-body row">
+		
+		 <div class = "col-md-4 prime_textalign_center">   
+			{% if user_details['blocked']  %}
+				<small  class="text-muted" style="display:block">
+					Blocked
+				</small>   
+				
+				<i data-feather = "x-circle" class = "prime_text_danger" ></i>
+						
+			{% elseif user_details['verified']  %}
+				<small  class="text-muted" style="display:block">
+					Verified
+				</small>   
+				
+				<i data-feather = "check-circle" class = "prime_text_success" ></i>
+			{% else %}
+				<small  class="text-muted" style="display:block">
+					Verified
+				</small>   
+
+				<a aria-label="Verify user" href="/?t=verify_user&amp;euid={{edit_user_options['euid']}}" class="btn btn-success prime_margintop10px">Verify</a>
+				
+			{% endif %}
+		</div>
+
+		 <div class = "col-md-4 prime_textalign_center">
+			<small  class="text-muted" style="display:block">
+				Allocated size
+			</small>   
+			{{ edit_user_options['total_allocated_size'] }}
+		</div>
+
+		 <div class = "col-md-4 prime_textalign_center">   
+			<small  class="text-muted" style="display:block">
+				Files expire after
+			</small>   
+			{{ edit_user_options['expire_after'] }} days
+			
+		</div>
+		
+		
+
+	</div>
+
+	<div class="card-footer">
+		
+	</div>
+</div>
+		
+
+
+
+<div class="card prime_long_card mb-9 prime_edit_user_status">  
+	<form action="/" enctype="multipart/form-data" method="POST">
+	<input type="hidden" name="t" value="edit_user_status">
+	<input type="hidden" name="euid" value="{{ edit_user_options['euid'] }}">
+	<div class="card-header prime_background_teal"> 
+
+		 Edit user status
+	 
+
+	</div>
+	 <div class="card-body row">
+
+		 <div class = "col-md-4 prime_textalign_center">   
+			
+			{% if user_details['blocked']  %}
+				<small  class="text-muted" style="display:block">
+					Blocked
+				</small>   
+				
+				<i data-feather = "x-circle" class = "prime_text_danger" ></i>
+						
+			{% elseif user_details['verified']  %}
+				<small  class="text-muted" style="display:block">
+					Verified
+				</small>   
+				
+				<i data-feather = "check-circle" class = "prime_text_success" ></i>
+			{% else %}
+				<small  class="text-muted" style="display:block">
+					Verified
+				</small>   
+
+				<i data-feather = "x-circle" class = "prime_text_danger"></i>
+			{% endif %}
+		</div>
+
+	 	
+		 <div class = "col-md-4 prime_textalign_center">
+			<small  class="text-muted" style="display:block">
+				Select allocated size
+			</small>
+			  <select name = "size" aria-label = " Select allocated size" class="form-control">
+			    {% for sizes  in edit_user_options['all_sizes']  %} 
+				<option value="{{ sizes['size_key'] }}"  {{ (edit_user_options['total_allocated_size']  == sizes['size_val'] ) ? 'selected': '' }} >{{ sizes['size_val']}}</option>
+
+			    {% endfor %}
+			  </select>
+			
+		</div>
+
+		 <div class = "col-md-4 prime_textalign_center">   
+			<small  class="text-muted" style="display:block">
+				Select files expiration duration
+			</small>
+			  <select name = "days" aria-label = "Select files expiration duration" class="form-control">
+			    {% for days  in edit_user_options['exp_days']  %} 
+				<option value="{{ days }}"  {{ (edit_user_options['expire_after']   == days ) ? 'selected': '' }} >{{ days }} days</option>
+
+			    {% endfor %}
+			  </select>
+		</div>
+		
+		
+
+	</div>
+
+	<div class="card-footer">
+		<input type="button" class="btn btn-danger cancel_edit_status" value="Cancel">	
+		<input type="submit" class="btn btn-success prime_float_right" value="Update">	
+	</div>
+	</form>
+</div>
+		
+
+
+
+
+

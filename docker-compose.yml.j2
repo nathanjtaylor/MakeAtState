@@ -1,0 +1,139 @@
+---
+
+version: '3.7'
+
+services:
+  webapp:
+    image: "{{ makeatstate_image_id }}"
+    environment:
+      MAIL_SMTP_HOST: "{{ makeatstate_mail_smtp_host }}"
+      MAIL_FROM: "{{ makeatstate_mail_from }}"
+    secrets:
+      - source: makeatstate_config
+        target: /run/secrets/makeatstate.cfg.d/makeatstate.cfg
+        mode: 0444
+      - source: makeatstate_secret_config
+        target: /run/secrets/makeatstate.cfg.d/makeatstate.secret.cfg
+        mode: 0444
+    volumes:
+      - data:/mnt/makeatstate
+    networks:
+      - default
+      - proxy
+    deploy:
+      labels:
+         - "traefik.enable=true"
+
+         #
+         # Middlewares.
+         #
+
+         - "traefik.http.middlewares.{{ makeatstate_stack_name }}-to_https\
+            .redirectscheme.scheme=https"
+         - "traefik.http.middlewares.{{ makeatstate_stack_name }}-to_https\
+            .redirectscheme.permanent=true"
+         # Because Traefik won't redirect when the replacement URL is the same
+         # as the original, we don't need to match the alternative hostnames
+         # here: we match everything.
+         - "traefik.http.middlewares.{{ makeatstate_stack_name }}-redirect\
+            .redirectregex.regex=^(https?://)[^/]*/(.*)"
+         - "traefik.http.middlewares.{{ makeatstate_stack_name }}-redirect\
+            .redirectregex.replacement=\
+            $${1}{{ makeatstate_hostname | default(inventory_hostname) }}/$${2}"
+         - "traefik.http.middlewares.{{ makeatstate_stack_name }}-redirect\
+            .redirectregex.permanent=true"
+
+         #
+         # HTTP.
+         #
+
+         - "traefik.http.routers.{{ makeatstate_stack_name }}-insecure\
+            .entrypoints=http"
+         - "traefik.http.routers.{{ makeatstate_stack_name }}-insecure.rule=\
+            Host({{
+              ([makeatstate_hostname | default(inventory_hostname)]
+                 + makeatstate_alternative_hostnames)
+              | map('regex_replace', '^(.*)$', '`\\1`') | join (',')
+            }})"
+         - "traefik.http.routers.{{ makeatstate_stack_name }}-insecure\
+            .middlewares={{ makeatstate_stack_name }}-to_https"
+
+         #
+         # HTTPS.
+         #
+
+         - "traefik.http.routers.{{ makeatstate_stack_name }}\
+            .entrypoints=https"
+         - "traefik.http.routers.{{ makeatstate_stack_name }}.tls=true"
+{% if makeatstate_use_letsencrypt %}
+         - "traefik.http.routers.{{ makeatstate_stack_name }}\
+            .tls.certresolver=letsencrypt"
+{% endif %}
+         - "traefik.http.routers.{{ makeatstate_stack_name }}.rule=Host({{
+              ([makeatstate_hostname | default(inventory_hostname)]
+                 + makeatstate_alternative_hostnames)
+              | map('regex_replace', '^(.*)$', '`\\1`') | join (',')
+            }})"
+         - "traefik.http.routers.{{ makeatstate_stack_name }}\
+            .middlewares={{ makeatstate_stack_name }}-redirect"
+         - "traefik.http.routers.{{ makeatstate_stack_name }}\
+            .service={{ makeatstate_stack_name }}"
+         - "traefik.http.services.{{ makeatstate_stack_name }}\
+            .loadbalancer.server.port=80"
+      update_config:
+        order: start-first
+        failure_action: rollback
+
+  database:
+    image: mariadb:10
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "--silent"]
+      interval: 10s
+      timeout: 10s
+      retries: 2
+      start_period: 120s
+    environment:
+      MYSQL_USER: makeatstate
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: makeatstate
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      MARIADB_ROOT_HOST: localhost
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 1
+    configs:
+      - source: db_init
+        target: /docker-entrypoint-initdb.d/db-init.sql
+        mode: 0444
+    volumes:
+      - db:/var/lib/mysql
+    deploy:
+      replicas: 1
+      resources:
+        reservations:
+          memory: 64M
+        limits:
+          cpus: "1"
+          memory: 512M
+      update_config:
+        failure_action: rollback
+
+volumes:
+  data:
+  db:
+
+networks:
+  proxy:
+    name: "{{ makeatstate_traefik_network }}"
+    external: true
+
+configs:
+  db_init:
+    name: "{{ makeatstate_sql_config_name }}"
+    external: true
+
+secrets:
+  makeatstate_config:
+    name: "{{ makeatstate_config_secret_name }}"
+    external: true
+  makeatstate_secret_config:
+    name: "{{ makeatstate_secret_config_secret_name }}"
+    external: true

@@ -1,0 +1,23 @@
+<div class = "col-md-11 prime_padding0px prime_margin10px prime_margintop20px">
+ 	<nav aria-label="3dPrime Pagination">
+		 <ul class="pagination prime_pagination justify-content-center">
+		 	{% if pagination_array['first'] %}
+			<li class="page-item"><a class="page-link" href="{{pagination_array['first']['target']}}">First page ({{pagination_array['first']['page']}})</a></li>
+			{% endif %}
+
+			{% for page in pagination_array['pages'] %}
+			<li class="page-item"><a class="page-link {{ page['current'] ? 'prime_current_page' : '' }}" href="{{page['target']}}">{{page['page']}}</a></li>
+
+			{% endfor %}
+		 	{% if pagination_array['last'] %}
+			<li class="page-item"><a class="page-link" href="{{pagination_array['last']['target']}}">Last page ({{pagination_array['last']['page']}})</a></li>
+			{% endif %}
+
+
+
+		 </ul>
+	</nav>
+
+</div>
+
+

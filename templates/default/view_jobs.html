@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+{% if current_tab %}
+<div class="jumbotron">
+	<h1 class="display-4">Current Jobs </h1>
+  	<p class="lead">View all your project submissions here. After submitting your project, Makerspace Staff will set your price and estimated delivery date within one to three business days.</p>
+  	<hr class="my-4">
+  	<p>Once your price is set, your job will move from the New Jobs tab to the Open Jobs tab. Click on the “Job Info” button to check project status, send messages, or cancel your project.</p>
+</div>
+
+{% else %}
+<div class="jumbotron">
+	<h1 class="display-4">User Jobs, </h1>
+  	<p class="lead">View all user jobs here.</p> 
+  	<hr class="my-4">
+  	<p>More information about your job can be viewed by clicking the "more info" icon.</p>
+</div>
+
+
+
+{% endif %}
+{% include 'prime_alerts.html' %}
+<div class="container-fluid p-0">
+<div class = "row no-gutters justify-content-center prime_margintop20px">
+
+<div class = "col-md-2 prime_padding0px prime_textalign_center prime_sidebar">
+	<!--  Check to if a user id to view a particular users jobs has been set -->
+	{%if juid %}
+		{% include 'user_jobs_sidebar.html' %}
+	{% else %}
+		{% include 'all_jobs_sidebar.html' %}
+	{% endif %}
+
+</div>
+
+<div class = "col-md-9 prime_padding0px">
+
+{% if view_all_jobs %}
+<div class = "row no-gutters justify-content-center prime_margintop20px prime_tabs">
+  <div class="col-4 prime_border_twinkleblue prime_textalign_center prime_borderradius20px  prime_no_right_radius {{(current_tab ==1) ? ' prime_background_twinkleblue':'' }}  "> <a href="/?t=all_jobs">All Jobs</a></div>
+  <div class="col-4 prime_border_twinkleblue prime_textalign_center prime_borderradius20px prime_no_left_radius {{(current_tab ==2) ? ' prime_background_twinkleblue':'' }} "> <a href="/?t=my_jobs">My Jobs</a></div>
+</div>
+
+
+{% endif %}
+
+{% if current_tab %}
+<div class = "row no-gutters justify-content-center prime_margintop20px prime_tabs">
+  <div class="col-2 prime_border_twinkleblue prime_textalign_center prime_borderradius20px  prime_no_right_radius {{(current_type ==1) ? ' prime_background_twinkleblue':'' }}  "> <a href="/?t={{(current_tab == 1) ?'all_jobs' : 'my_jobs' }}&type=n">New jobs</a></div>
+	{% if view_all_jobs %}
+	<div class="col-2 prime_border_twinkleblue prime_textalign_center prime_borderradius20px  prime_no_radius {{(current_type ==2) ? ' prime_background_twinkleblue':'' }}  "> <a href="/?t={{(current_tab == 1) ?'all_jobs' : 'my_jobs' }}&type=h">Held jobs</a></div>
+	{% endif %}
+	<div class="col-2 prime_border_twinkleblue prime_textalign_center prime_borderradius20px  prime_no_radius {{(current_type ==3) ? ' prime_background_twinkleblue':'' }}  "> <a href="/?t={{(current_tab == 1) ?'all_jobs' : 'my_jobs' }}&type=o">Open jobs</a></div>
+  <div class="col-2 prime_border_twinkleblue prime_textalign_center prime_borderradius20px prime_no_left_radius {{(current_type ==4) ? ' prime_background_twinkleblue':'' }} "> <a href="/?t={{(current_tab == 1) ?'all_jobs' : 'my_jobs' }}&type=c">Closed jobs</a></div>
+</div>
+ {% endif %}
+
+
+
+<div class = "row no-gutters justify-content-center prime_margintop20px">
+	{% if pagination_array['status'] %}
+		<div class = "col-md-3 prime_padding0px prime_margin10px  prime_textalign_center prime_border_twinkleblue prime_borderradius5px">  
+			 {{pagination_array['status']}} jobs
+		</div>
+
+	{% endif %}
+</div>
+<div class = "row no-gutters justify-content-center prime_margintop20px">
+	
+	<div class = col-md-9>
+		
+		{% if jobs %}
+				
+			{% for job in jobs %}
+				{% include 'display_jobs.html' %}
+			{% endfor %}
+		{% else %}
+			<div class="card prime_borderlightgrey mb-3">
+				{% if current_tab == 1 %}
+			 	<div class="card-header">No jobs submitted </div>
+			  		<div class="card-body text-secondary">
+					{% if current_type == 1 %}
+						<p class="card-text">No newly submitted jobs. Use the "Submit Item" option for the items in your cart to queue your jobs</p>
+					{% elseif current_type == 2 %}
+						<p class="card-text">No currently held jobs.</p>
+					{% elseif current_type == 3 %}
+						<p class="card-text">No open jobs. Use the "Submit Item" option for the items in your cart to queue your jobs</p>
+					{% else %}
+						 <p class="card-text">No current closed jobs at this time. Select "Open jobs" tab to view all open jobs</p>
+					{% endif %}
+			  		</div>
+				</div>
+				{% else %}
+			 	<div class="card-header">No jobs available </div>
+			  		<div class="card-body text-secondary prime_textalign_center">
+					{% if current_type == 1 %}
+						<p class="card-text">No newly submitted jobs. Use the "Submit Item" option for the items in your cart to queue your jobs</p>
+					{% elseif current_type == 2 %}
+						<p class="card-text">No open jobs. Use the "Submit Item" option for the items in your cart to queue your jobs</p>
+					{% elseif current_type %}
+
+						 <p class="card-text">No current closed jobs at this time. Select "Open Jobs" tab to view all open jobs</p>
+					{% else %}
+						 <i data-feather="printer"></i>
+						 <p class="card-text">User has no jobs.</p>
+						
+					{% endif %}
+					
+			   		 
+			  		</div>
+				</div>
+				
+
+				{% endif %}
+			
+
+		{% endif %}
+	</div>
+	{% if pagination_array['pages'] %}
+
+		{% include 'page_list.html' %}
+	{% endif %}
+   </div>
+
+</div>
+</div>
+</div>
+{% endblock %}
+

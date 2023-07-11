@@ -1,0 +1,68 @@
+<div class="card prime_long_card mb-9">
+	<div class="card-header prime_background_teal">
+
+	 {{ job['project_name'] }}
+	<span class = "badge badge-pill badge-light prime_float_right">{{ job['short_message'] }}</span>
+
+	</div>
+	 <div class="card-body row">
+		 <div class = "col-md-3">
+			<small  class="text-muted" style="display:block">
+      			Submitted by
+    		</small>
+			{{ job['fullname'] }}{{ " " }}{{ job['lastname'] }}
+		</div>
+		 <div class = "col-md-3">
+			<small  class="text-muted" style="display:block">
+      			Number of Files
+    		</small>
+            {{ job['file_count'] }}
+		</div>
+		 <div class = "col-md-3">
+			<small  class="text-muted" style="display:block">
+      			Price
+    		</small>
+			{{ job['price'] ? "$ " ~ job['price'] | number_format(2, '.', ',') : 'Not yet calculated' }}
+		</div>
+		 <div class = "col-md-3">
+			<small  class="text-muted" style="display:block">
+      			Estimated delivery
+    		</small>
+			{{ job['estimated_delivery'] ? job['estimated_delivery'] : 'Not yet determined' }}
+		</div>
+
+		 <div class = "col-md-3">
+			<small  class="text-muted" style="display:block">
+      			Submitted on
+    		</small>
+			{{ job['created_formatted_date']  }}
+		</div>
+		<div class = "col-md-3">
+			<small  class="text-muted" style="display:block">
+      			Updated on
+    		</small>
+			{{ job['formatted_date']  }}
+		</div>
+		<div class = "col-md-3">
+			<small  class="text-muted" style="display:block">
+      			Order code
+    		</small>
+			<span class="badge bg-secondary">{{ job['job_id']  }}-{{ job['project_name'] }}</span>
+		</div>
+
+	</div>
+
+	<div class="card-footer">
+		{% if not job['deleted']  %}
+			{% if view_all_jobs %}
+			<a  aria-label = "View user" href = "/?t=user_details&euid={{job['user_id']}}"  class ="btn btn-light prime_icon_btn" data-toggle="tooltip" data-placement="top" title="View user"><i  data-feather="user" ></i></a>
+			<a  aria-label = "View user jobs" href = "/?t=user_jobs&juid={{job['user_id']}}"  class ="btn btn-info prime_icon_btn" data-toggle="tooltip" data-placement="top" title="View user jobs"><i  data-feather="printer" ></i></a>
+			{% endif %}
+		{% endif %}
+
+		<a href = "/?t=job_updates&job_id={{job['job_id']}}" class = "btn btn-info prime_float_right" >Job Updates</a>
+		<a href = "/?t=message_details&job_id={{job['job_id']}}" class = "btn btn-success prime_float_right" style="margin-right:10px">Job Messages</a>
+		<a href = "/?t=workflow&uid={{job['user_id']}}&job_id={{job['job_id']}}" class = "btn btn-dark prime_float_right" style="margin-right:10px">Job Info</a>
+
+	</div>
+</div>

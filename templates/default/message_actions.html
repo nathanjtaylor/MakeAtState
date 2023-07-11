@@ -1,0 +1,30 @@
+<div class = "col-md-9 prime_padding0px prime_margin10px">
+	<div class="card prime_borderlightgrey mb-3">
+		 <div class="card-header prime_background_teal">More Actions</div>
+		  <div class="card-body row">
+
+			 <div class = "col-md-6 prime_textalign_center">   
+			 	{%if previous_page_number %}
+				<a  aria-label = "Go Back" href = "/?t=messages&page={{ previous_page_number }}"  class ="btn btn-light prime_margintop10px prime_go_back">Back</a>	
+				{% else %}
+				<a  aria-label = "Go Back" href = "/?t=messages"  class ="btn btn-light prime_margintop10px prime_go_back">Back</a>	
+
+				{% endif %}
+			</div>
+
+			 <div class = "col-md-6 prime_textalign_center">   
+
+				<a  aria-label = "Job Info" href = "/?t=workflow&uid={{message_actions['user_id']}}&job_id={{message_actions['job_id']}}"  class ="btn btn-dark prime_margintop10px">Job Info</a>	
+			</div>
+
+			
+			
+		</div>
+			
+			
+			
+
+	</div>
+</div>
+
+

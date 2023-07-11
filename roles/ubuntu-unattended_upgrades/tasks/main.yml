@@ -1,0 +1,82 @@
+---
+
+- name: Install unattended-upgrades package.
+  apt:
+    name: unattended-upgrades
+    update_cache: true
+
+- name: Install Apt configuration file.
+  blockinfile:
+    path: /etc/apt/apt.conf.d/99-local-unattended-upgrades
+    state: present
+    create: true
+    owner: root
+    group: root
+    mode: 0644
+    block: |
+      APT::Periodic::Update-Package-Lists "1";
+      APT::Periodic::Unattended-Upgrade "1";
+
+      # See <https://wiki.ubuntu.com/SecurityTeam/FAQ> for details.
+      Unattended-Upgrade::Allowed-Origins {
+          # This is the "release" pocket: the Ubuntu release's main packages.
+          # This is included in case something in one of the other pockets
+          # should add a dependency.
+          "${distro_id}:${distro_codename}";
+
+          # This pocket has packages updated for security reasons.
+          "${distro_id}:${distro_codename}-security";
+      {% if ubuntu_unattended_upgrades_install_updates %}
+
+          # This pocket has packages updated to incorporate important bug
+          # corrections. Updates and security do not conflict.
+          "${distro_id}:${distro_codename}-updates";
+      {% endif %}
+      {% if ubuntu_unattended_upgrades_install_backports %}
+
+          # This provides packages that have been backported to provide new
+          # features.
+          "${distro_id}:${distro_codename}-backports";
+      {% endif %}
+      {% if ubuntu_unattended_upgrades_install_esm %}
+
+          # These are the so-called extended security maintenance ("ESM")
+          # packages. We may not have access to these, but they're included in
+          # this list should they be available to us.
+          "${distro_id}ESMApps:${distro_codename}-apps-security";
+          "${distro_id}ESM:${distro_codename}-infra-security";
+      {% endif %}
+      }
+      Unattended-Upgrade::Mail "{{ ubuntu_unattended_upgrades_email_address }}";
+      Unattended-Upgrade::MailOnlyOnError
+      {% if ubuntu_unattended_upgrades_email_quiet %}
+          "true";
+      {% else %}
+          "false";
+      {% endif %}
+      Unattended-Upgrade::Remove-Unused-Dependencies
+      {% if ubuntu_unattended_upgrades_remove_unused %}
+          "true";
+      {% else %}
+          "false";
+      {% endif %}
+      Unattended-Upgrade::Automatic-Reboot
+      {% if ubuntu_unattended_upgrades_reboot %}
+          "true";
+      {% else %}
+          "false";
+      {% endif %}
+      Unattended-Upgrade::Automatic-Reboot-Time
+          "{{ ubuntu_unattended_upgrades_reboot_time }}";
+
+- name: Get apt-config value of APT::Periodic::Unattended-Upgrade.
+  command:
+    cmd: apt-config dump APT::Periodic::Unattended-Upgrade
+  changed_when: false
+  check_mode: false
+  register: r
+
+- name: Verify that automatic updates are enabled.
+  assert:
+    that: r.stdout == 'APT::Periodic::Unattended-Upgrade "1";'
+    quiet: true

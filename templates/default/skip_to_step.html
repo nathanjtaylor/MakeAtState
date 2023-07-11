@@ -1,0 +1,35 @@
+<div class = "col-md-9 prime_padding0px prime_margin10px">
+<div class="card prime_borderlightgrey mb-3">
+	<div class="card-header prime_background_teal"> 
+		Skip to step
+	</div>
+	 <div class="card-body row  justify-content-center">
+		<form action ="/" method ="post" enctype="multipart/form-data" class = "col-md-9">
+			<input type="hidden" name ="t" value ="move_to_step">
+			<input type="hidden" name ="uid" value ="{{ action_details['uid'] }}">
+			<input type="hidden" name ="job_id" value ="{{ action_details['job_id'] }}">
+			<div class="form-group">
+				<div>	
+					<div class="input-group mb-3 prime_margintop20px">
+					  <div class="input-group-prepend">
+					    <label class="input-group-text prime_input_group_purple" for="inputGroupStep">Move to</label>
+					  </div>
+					  <select name = "move" class="form-control" id="inputGroupStep">
+					    {% for step in workflow_step_list %} 
+						<option value ="{{ step['work_step_id'] }}">{{ step['name']}}</option>
+					    {% endfor %}
+					  </select>
+					</div>
+				</div>
+					
+			</div>
+			<input class = "btn btn-success  prime_margintop20px prime_marginbottom20px" type = "submit" name="move_to_step" value="Complete step" />
+
+		</form>		
+	</div>
+
+	<div class="card-footer">
+	</div>
+
+</div>
+</div>

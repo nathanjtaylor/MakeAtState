@@ -1,0 +1,56 @@
+<div class="card prime_long_card mb-9 prime_user_status">  
+	<div class="card-header prime_background_teal"> 
+
+	 	My status
+
+	</div>
+	 <div class="card-body row">
+		
+		 <div class = "col-md-4 prime_textalign_center">   
+			{% if user_options['blocked']  %}
+				<small  class="text-muted" style="display:block">
+					Blocked
+				</small>   
+				
+				<i data-feather = "x-circle" class = "prime_text_danger" ></i>
+						
+			{% elseif user_options['verified']  %}
+				<small  class="text-muted" style="display:block">
+					Verified
+				</small>   
+				
+				<i data-feather = "check-circle" class = "prime_text_success" ></i>
+			{% else %}
+				<small  class="text-muted" style="display:block">
+					Verified
+				</small>   
+
+				<i data-feather = "x-circle" class = "prime_text_danger"></i>
+			{% endif %}
+		</div>
+
+		 <div class = "col-md-4 prime_textalign_center">
+			<small  class="text-muted" style="display:block">
+				Allocated size
+			</small>   
+			{{ user_options['total_allocated_size'] }}
+		</div>
+
+		 <div class = "col-md-4 prime_textalign_center">   
+			<small  class="text-muted" style="display:block">
+				Files expire after
+			</small>   
+			{{ user_options['expire_after'] }} days
+			
+		</div>
+		
+		
+
+	</div>
+
+	<div class="card-footer">
+		
+	</div>
+</div>
+		
+

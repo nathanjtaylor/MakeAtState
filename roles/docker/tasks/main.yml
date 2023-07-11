@@ -1,0 +1,103 @@
+---
+
+- name: Install vendor-supplied Docker (Ubuntu 18.04).
+  block:
+  - name: Add GPG key for Docker repository (Ubuntu).
+    apt_key:
+      state: present
+      id: "{{ docker_gpg_key['Ubuntu']['id'] }}"
+      url: "{{ docker_gpg_key['Ubuntu']['url'] }}"
+
+  - name: Add Docker repository (Ubuntu).
+    apt_repository:
+      repo: "deb {{ docker_repo_url['Ubuntu'] }} {{ ansible_lsb.codename }}
+             stable"
+  when: ansible_distribution == "Ubuntu"
+        and ansible_distribution_version == "18.04"
+
+- name: Add Docker repository (CentOS).
+  yum_repository:
+    name: docker-ce
+    description: Docker CE
+    state: present
+    baseurl: "{{ docker_repo_url['CentOS'] }}"
+    gpgkey: "{{ docker_gpg_key['CentOS']['url'] }}"
+    gpgcheck: true
+  when: ansible_distribution == "CentOS"
+
+- name: Update Apt repository (Ubuntu).
+  apt:
+    update_cache: true
+    cache_valid_time: 86400
+
+- name: Install Docker (Ubuntu).
+  block:
+  - name: Install packages.
+    package:
+      name: "{{ item.name }}"
+      state: present
+    when: item.do is not defined or item.do
+    loop:
+      - name: docker-ce=5:19.03.*
+        do: "{{ ansible_distribution_version == '18.04' }}"
+      - name: docker-ce-cli=5:19.03.*
+        do: "{{ ansible_distribution_version == '18.04' }}"
+      - name: containerd.io=1.2.*
+        do: "{{ ansible_distribution_version == '18.04' }}"
+      - name: docker.io=20.*
+        do: "{{ ansible_distribution_version == '20.04' }}"
+      - name: docker.io=20.*
+        do: "{{ ansible_distribution_version == '22.04' }}"
+      # Needed for Ansible's Docker modules.
+      - name: python3-docker
+      - name: python3-distutils
+        do: "{{ ansible_distribution_version == '20.04' }}"
+    loop_control:
+      label: "{{ item.name }}"
+  when: ansible_distribution == "Ubuntu"
+
+- name: Install Docker (CentOS).
+  package:
+    name:
+      - docker-ce-19.03.*
+      - docker-ce-cli-19.03.*
+      - containerd.io-1.2.*
+      - python-docker-py    # Needed for Ansible's Docker modules.
+    state: present
+  when: ansible_distribution == "CentOS"
+
+- name: Install python3-docker (CentOS).
+  vars:
+    ansible_python_interpreter: python3
+  pip:
+    name:
+      - docker>=2.1.0,<3.0
+    state: present
+  when: ansible_distribution == "CentOS"
+
+- name: Get daemon configuration.
+  slurp:
+    src: /etc/docker/daemon.json
+  register: _r
+  failed_when: false
+
+# This is recommended by the documentation.
+- name: "Set default log driver to \"local\"."
+  set_fact:
+    docker_current_config: "{{ _r.content | b64decode | from_json
+                                 if _r.content is defined
+                               else '{}' }}"
+
+- name: Write daemon configuration.
+  copy:
+    dest: /etc/docker/daemon.json
+    mode: 0644
+    content: |
+      {{ docker_current_config | combine({'log-driver': 'local'}) | to_json }}
+  notify: restart_docker
+
+- name: Enable and start Docker service.
+  service:
+    name: docker.service
+    enabled: true
+    state: started

@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- upload_files.html -->
+<div class="jumbotron">
+	<h1 class="display-4">Hello, </h1>
+  	<p class="lead">Welcome to MakeAtState, the Hollander Makerspace’s new online submission system! You can now submit multiple files in a project!</p>
+  	<hr class="my-4">
+    <p>Upload and submit your files to the Hollander Makerspace.</p>
+    <p>Select your file(s) then click the "upload Files" button.</p>
+  	<p>We accept files up to 100mb, if your file is larger, contact the Makerspace for assistance.</p>
+  	<p>Add each file to your project, you can put multiple files in a project or just one file.</p>
+  	<p>Then add your project to cart, you will then be prompted to select options for each file.</p>
+  	<p>You can submit one project at a time, each with a project name.</p>
+</div>
+{% include 'prime_alerts.html' %}
+
+ {% if file_rows %}
+<div class="row my-3 justify-content-center align-items-center">
+    <div class="col-auto">
+        <div class="px-3 rounded-pill prime_background_success">Upload Files</div>
+    </div>
+    <div class="col-auto">
+        <i data-feather="arrow-right"></i>
+    </div>
+    <div class="col-auto">
+        <div class="px-3 prime_bg_primary_border rounded-pill">Add project to Cart</div>
+    </div>
+    <div class="col-auto">
+        <i data-feather="arrow-right"></i>
+    </div>
+    <div class="col-auto">
+        <div class="px-3 border rounded-pill">Select Options</div>
+    </div>
+    <div class="col-auto">
+        <i data-feather="arrow-right"></i>
+    </div>
+    <div class="col-auto">
+        <div class="px-3 border rounded-pill">Submit Projects</div>
+    </div>
+</div>
+{% else %}
+<div class="row my-3 justify-content-center align-items-center">
+    <div class="col-auto">
+        <div class="px-3 rounded-pill prime_bg_primary_border">Upload Files</div>
+    </div>
+    <div class="col-auto">
+        <i data-feather="arrow-right"></i>
+    </div>
+    <div class="col-auto">
+        <div class="px-3 border rounded-pill">Add project to Cart</div>
+    </div>
+    <div class="col-auto">
+        <i data-feather="arrow-right"></i>
+    </div>
+    <div class="col-auto">
+        <div class="px-3 border rounded-pill">Select Options</div>
+    </div>
+    <div class="col-auto">
+        <i data-feather="arrow-right"></i>
+    </div>
+    <div class="col-auto">
+        <div class="px-3 border rounded-pill">Submit Projects</div>
+    </div>
+</div>
+{% endif %}
+{% if memory_array['fill_percent'] < 100 %}
+<div class="row justify-content-center prime_margintop20px">
+<form action="/" method="post" enctype="multipart/form-data" class="col-md-9 prime_borderlightgrey prime_padding10px">
+	<div class="form-row">
+		<input type="hidden" name="t" value="add_files">
+		<input type="hidden" name="pn" value={{pNonce}}>
+		<div class="custom-file">
+			<label id="add_file_label" class="custom-file-label" for="customFile">Select Files</label>
+			<input type="file"  name="files[]" multiple="multiple" class="custom-file-input form-control" id="customFile" required>
+			<div class ="invalid-tooltip">Please select a file</div>
+		</div>
+		<input class="btn btn-primary prime_margintop20px" type="submit" value="Upload Files"/>
+	</div>
+</form>
+</div>
+{% else %}
+<div class="row justify-content-center prime_margintop20px">
+	<p class="col-9 p-4 prime_bg_danger_border">You have used up all your space, to get more space please contact MakeCentral. </p>
+</div>
+{% endif %}
+{% include 'memory_bar.html' %}
+<div class="row justify-content-center prime_margintop20px">
+	<div class=col-md-9>
+		{% if file_rows %}
+			<div class="row prime_padding10px prime_background_teal">
+				<div class="col-md-1 prime_borderright_grey">
+				</div>
+				<div class="col-md-3 prime_borderright_grey" >
+					File name
+				</div>
+				<div class="col-md-2 prime_borderright_grey">
+					File size
+				</div>
+				<div class="col-md-2 prime_borderright_grey">
+					Expires on
+				</div>
+				<div class="col-md-4">
+					Actions
+				</div>
+			</div>
+			{% for files in file_rows %}
+				{% include 'display_files.html' %}
+			{% endfor %}
+		{% else %}
+			<div class="card prime_borderlightgrey mb-3">
+			  <div class="card-header">Start using MakeAtState</div>
+			  <div class="card-body text-secondary">
+			    <p class="card-text">Please use the "Add files" button to upload your files"</p>
+			  </div>
+			</div>
+		{% endif %}
+        {% include 'display_orders.html' %}
+	</div>
+</div>
+
+{% endblock %}

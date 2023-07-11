@@ -1,0 +1,43 @@
+
+
+<div class="row prime_padding10px  {{loop.index%2 ? '' : ' prime_background_lightblue' }} ">
+	
+	<div class="col-md-1 prime_borderright_grey">
+		{{ loop.index }}
+	</div>
+
+	<div class="col-md-3 prime_borderright_grey prime_break_word" id="file-{{files.file_id}}">
+		{{ files.file_name }}
+        <br>
+        <span class="badge prime_background_purple d-none">File in existing project</span>
+	</div>
+	
+	<div class="col-md-2 prime_borderright_grey">
+		{{ files.formatted_size }}
+	</div>
+	<div class="col-md-2 prime_borderright_grey">
+		{{ files.expires_in ? files.expires_in : 'expired' }}
+	</div>
+
+	<div class="col-md-4">
+		{% if files.expires_in %}
+		<!--<a  aria-label="Add to cart" href="/?t=add_to_cart&file_id[]={{ files.file_id }}"  class ="btn btn-success prime_icon_btn" data-toggle="tooltip" data-placement="top" title="Add to cart"> <i  data-feather="shopping-cart" ></i></a>-->
+		<a  aria-label="Add to project" data-fileid="{{files.file_id}}" data-filename="{{ files.file_name }}"  class ="btn btn-success prime_icon_btn add_to_order" id="order-{{files.file_id}}" data-toggle="tooltip" data-placement="top" title="Add to project"> <i  data-feather="file-plus"></i></a>	
+		{% endif %}
+		<form action ="/" method="POST" enctype="multipart/form-data" class="prime_display_inlineblock">
+			<input type ="hidden" name="t" value="delete_files">
+			<input type="hidden" name="pn" value={{pNonce}}>
+			<input type ="hidden" name="d_fid" value="{{ files.file_id}}">
+		
+			<button aria-label ="Delete file" type="submit" class ="btn btn-danger prime_icon_btn" value ="" data-toggle="tooltip" data-placement="top" title="Delete" ><i data-feather="trash-2"></i></button>	
+		</form>	
+		{% if files.expires_in %}
+            {% if files.allow_viewing %}
+		        <a  aria-label="View file" href="/?t=view_file&fid={{ files.file_id }}"  class ="btn btn-info prime_icon_btn" data-toggle="tooltip" data-placement="top" title="View file"><i  data-feather="eye" ></i></a>	
+            {% endif %}
+		    <a  aria-label= "Download file" href="/?t=stream_file&fid={{ files.file_id }}&disposition=attachment"  class ="btn btn-warning prime_icon_btn" data-toggle="tooltip" data-placement="top" title="Download file"><i  data-feather="download" ></i></a>
+		{% endif %}
+		
+	</div>
+</div>
+

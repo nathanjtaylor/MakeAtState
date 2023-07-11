@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Template: user_settings.html -->
+<div class="jumbotron">
+	<h1 class="display-4">Settings </h1>
+  	<p class="lead">Viewing your detalis.</p>
+  	<hr class="my-4">
+
+    {% if user_details['okta_token'] is empty %}
+  	    <p>Use edit options to change your name, email, phone number, etc. You can also reset your password using the options below.</p>
+    {% else %}
+  	    <p>Use this page to view  your name, email, etc.</p>
+    {% endif %}
+</div>
+
+{% include 'prime_alerts.html' %}
+
+<div class = "row justify-content-center prime_margintop20px">
+	
+	<div class = "col-md-9 prime_padding0px prime_margin10px ">   
+	{% if user_details  %}
+		{% include 'user_details_settings_section.html' %}	
+	{% else %}
+		 <div class = "row  prime_padding10px justify-content-center">
+			<div class = "col-md-9 prime_padding0px prime_margin10px">
+			
+				<div class="card prime_borderlightgrey mb-3">
+				  <div class="card-header">User details</div>
+				  <div class="card-body text-secondary prime_textalign_center">
+				    <i data-feather="search"></i>
+				    <p class="card-text">User details not available.</p>
+				  </div>
+				</div>
+			</div>
+		 </div>
+
+	{% endif %}
+	{% if user_options %}
+		{% include 'user_options_settings_section.html' %}
+	{% endif %}
+    {% if user_details['okta_token'] is empty %}
+	    {% include 'user_settings_pass_reset.html' %}
+    {% endif %}
+	</div>
+
+	
+</div>
+{% endblock %}
+
+
+
+

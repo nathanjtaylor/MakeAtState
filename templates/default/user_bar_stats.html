@@ -1,0 +1,103 @@
+<div class = "col-md-9 prime_padding0px prime_margin10px">
+<div class="row  prime_background_lightgrey">
+	<div class = "col-md-12 prime_padding10px ">All user stats</div>
+</div>
+	<div class = "col-md-12 prime_padding10px ">
+		<div class="prime_background_twinkleblue prime_stats_bar prime_margintop20px">
+			<div class="prime_success_background prime_stats_bar prime_float_left  prime_no_right_radius" style="width:{{ (user_stats['all']['Public users'] / user_stats['all']['Total users'] ) * 100}}% "></div>
+			<div class="prime_warning_background prime_stats_bar prime_float_left prime_no_left_radius" style="width:{{ (user_stats['all']['Administrators'] / user_stats['all']['Total users'] ) * 100}}% "></div>
+			<div class="prime_dark_background prime_stats_bar prime_float_left prime_no_left_radius" style="width:{{ (user_stats['all']['Staff'] / user_stats['all']['Total users'] ) * 100}}% "></div>
+			<div class="prime_info_background prime_stats_bar prime_float_left prime_no_left_radius" style="width:{{ (user_stats['all']['Student staff'] / user_stats['all']['Total users'] ) * 100}}% "></div>
+			<span class="prime_float_right prime_font12px">{{ user_stats['all']['Total users'] }} total users</span>
+		</div>
+
+	</div>
+
+	<div class = "col-md-2 prime_padding10px  prime_display_inlinetable">
+		<div class = "prime_bar_block prime_success_background">
+		</div>
+		<div class = "prime_bar_block_info prime_font12px">
+			{{ user_stats['all']['Public users'] }} Public users
+		</div>
+	</div>
+	<div class = "col-md-2 prime_padding10px  prime_display_inlinetable">
+		<div class = "prime_bar_block prime_warning_background">
+		</div>
+		<div class = "prime_bar_block_info prime_font12px">
+			{{ user_stats['all']['Administrators']  }} Administrators
+		</div>
+	</div>
+	<div class = "col-md-2 prime_padding10px  prime_display_inlinetable">
+		<div class = "prime_bar_block prime_dark_background">
+		</div>
+		<div class = "prime_bar_block_info prime_font12px">
+			{{ user_stats['all']['Staff'] }} Staff
+		</div>
+	</div>
+	<div class = "col-md-2 prime_padding10px  prime_display_inlinetable">
+		<div class = "prime_bar_block prime_info_background">
+		</div>
+		<div class = "prime_bar_block_info prime_font12px">
+			{{user_stats['all']['Student staff'] }} Student staff
+		</div>
+	</div>
+</div>
+
+
+<div class = "col-md-9 prime_padding0px prime_margin10px">
+	<div class="row  prime_background_lightgrey">
+		<div class = "col-md-12 prime_padding10px ">Public user stats</div>
+	</div>
+	<div class = "col-md-12 prime_padding10px ">
+		<div class="prime_background_twinkleblue prime_stats_bar prime_margintop20px">
+			<div class="prime_success_background prime_stats_bar prime_float_left  prime_no_right_radius" style="width:{{( user_stats['all']['Public users'] == 0)? 0 : (user_stats['public_user']['Verified users'] / user_stats['all']['Public users'] ) * 100}}% "></div>
+			<div class="prime_dark_background prime_stats_bar prime_float_left prime_no_left_radius" style="width:{{ ( user_stats['all']['Public users'] == 0)? 0 :  (user_stats['public_user']['Unverified users'] / user_stats['all']['Public users'] ) * 100}}% "></div>
+			<span class="prime_float_right prime_font12px">{{ user_stats['all']['Public users'] }} public users</span>
+		</div>
+
+	</div>
+
+	<div class = "col-md-2 prime_padding10px  prime_display_inlinetable">
+		<div class = "prime_bar_block prime_success_background">
+		</div>
+		<div class = "prime_bar_block_info prime_font12px">
+			{{ user_stats['public_user']['Verified users'] }} Verified users
+		</div>
+	</div>
+	<div class = "col-md-2 prime_padding10px  prime_display_inlinetable">
+		<div class = "prime_bar_block prime_dark_background">
+		</div>
+		<div class = "prime_bar_block_info prime_font12px">
+			{{ user_stats['public_user']['Unverified users'] }} Unverified users
+		</div>
+	</div>
+
+
+	<div class = "col-md-12 prime_padding10px ">
+		<div class="prime_background_twinkleblue prime_stats_bar prime_margintop20px">
+			<div class="prime_success_background prime_stats_bar prime_float_left  prime_no_right_radius" style="width:{{ ( (user_stats['public_user']['Active users'] + user_stats['public_user']['Blocked users']) == 0)? 0 : (user_stats['public_user']['Active users'] / (user_stats['public_user']['Active users'] + user_stats['public_user']['Blocked users'] ) ) * 100}}% "></div>
+			<div class="prime_danger_background prime_stats_bar prime_float_left prime_no_left_radius" style="width:{{ ( (user_stats['public_user']['Active users'] + user_stats['public_user']['Blocked users']) == 0)? 0 :  (user_stats['public_user']['Blocked users'] / (user_stats['public_user']['Active users'] + user_stats['public_user']['Blocked users'] )) * 100}}% "></div>
+			<span class="prime_float_right prime_font12px">{{ user_stats['public_user']['Active users'] + user_stats['public_user']['Blocked users']  }} Verified users </span>
+		</div>
+
+	</div>
+
+	<div class = "col-md-2 prime_padding10px  prime_display_inlinetable">
+		<div class = "prime_bar_block prime_success_background">
+		</div>
+		<div class = "prime_bar_block_info prime_font12px">
+			{{ user_stats['public_user']['Active users'] }} Active users
+		</div>
+	</div>
+	<div class = "col-md-2 prime_padding10px  prime_display_inlinetable">
+		<div class = "prime_bar_block prime_danger_background">
+		</div>
+		<div class = "prime_bar_block_info prime_font12px">
+			{{ user_stats['public_user']['Blocked users'] }} Blocked users
+		</div>
+	</div>
+	
+</div>
+
+
+</div>

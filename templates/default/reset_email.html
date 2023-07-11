@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<form class = "row justify-content-center prime_margintop20px "  action="/"  method ="post">
+
+	<input type="hidden" name="t" value="reset_email">  
+	<input type="hidden" name="rn" value={{pn}}>
+
+<div class = "col-12 col-md-8 prime_padding20px">
+		<div class="card  mb-3">
+	
+			<div class = "card-header">Forgot your password?</div>
+			
+			<div class = "card-body">
+				<p class = "card-text"> Enter the email address you used to register with MakeAtState. We will send you a password reset link and intructions to help you reset your password.</p> 
+                <p>Users who logged in using MSU credentials cannot reset the password here. Please use <a href="https://netid.msu.edu/netid/password/index.html;jsessionid=K1B-5khpgQOYGZw+uh7jleUp">MSU password reset</a> resources to reset your MSU password.</p>
+				<div class="input-group mb-2 mr-sm-2 prime_margintop10px prime_center_padding">
+					<label class="input-group-text">Email *</label>
+					<input type="email" class="form-control " placeholder="Email" name ="email"  aria-label = "Enter your email addres	"  required>
+				 </div>
+
+				<div class ="text-center prime_margintop20px">
+					<input type="submit" class="btn btn-success" value ="Reset" aria-label = "Send me a password reset link"/>
+				</div>
+
+				<div class ="text-center prime_margintop20px">
+					<a href = "/?t=login" class="prime_pill_btn ">Back to sign in</a>
+				</div>
+			</div>
+		</div>
+	
+	
+</div>
+
+</form>
+
+
+
+
+{% endblock %}
+
+

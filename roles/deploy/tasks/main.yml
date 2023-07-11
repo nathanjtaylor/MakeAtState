@@ -1,0 +1,105 @@
+---
+
+- pause:
+    prompt: Enter GitLab token with maintainer privileges
+    echo: false
+  register: _r
+
+- name: Calculate.
+  set_fact:
+    deploy_gitlab_token: "{{ _r.user_input }}"
+
+- name: Add deployment user.
+  user:
+    name: "{{ deploy_user }}"
+    comment: "CI/CD deployment user"
+    shell: /bin/bash
+    state: present
+  become: true
+
+- name: Get list of project's CI/CD variables.
+  gitlab_project_variable:
+    api_url: "https://{{ deploy_gitlab_host }}"
+    api_token: "{{ deploy_gitlab_token }}"
+    project: "{{ deploy_gitlab_project }}"
+  delegate_to: localhost
+  register: _vars
+
+- name: Check whether SSH key is in deployment user's authorized-keys file.
+  command:
+    cmd: "grep -q '{{ deploy_key_tag }}$' .ssh/authorized_keys"
+    chdir: "/home/{{ deploy_user }}"
+  become: true
+  become_user: "{{ deploy_user }}"
+  register: _auth
+  changed_when: false
+  failed_when: _auth.rc not in [0, 1, 2]
+
+- name: Check whether the key is in a consistent state.
+  assert:
+    that:
+      '("SSH_KEY" in _vars.project_variable.untouched) | bool
+       == (_auth.rc == 0) | bool'
+
+- name: Create and deploy key.
+  block:
+  - name: Create local temporary directory.
+    tempfile:
+      state: directory
+    delegate_to: localhost
+    check_mode: false
+    register: _tempdir_local
+    changed_when: false
+
+  - name: Generate SSH key.
+    openssh_keypair:
+      path: "{{ _tempdir_local.path }}/id_ed25519"
+      type: ed25519
+      comment: "{{ deploy_key_tag }}"
+    delegate_to: localhost
+    changed_when: false
+
+  # Needed for the cross-user "lineinfile" bit below.
+  - name: Add ACL package.
+    package:
+      name: acl
+      state: present
+    become: true
+
+  - name: Add SSH key to depoyment user's authorized-keys file.
+    lineinfile:
+      path: /home/{{ deploy_user }}/.ssh/authorized_keys
+      line: "{{ lookup('file', _tempdir_local.path + '/id_ed25519.pub') }}"
+      state: present
+      create: true
+      mode: u=rwX,go=rX
+    become: true
+    become_user: "{{ deploy_user }}"
+
+  - name: Add SSH key to CI/CD variables.
+    gitlab_project_variable:
+      api_url: "https://{{ deploy_gitlab_host }}"
+      api_token: "{{ deploy_gitlab_token }}"
+      project: "{{ deploy_gitlab_project }}"
+      vars:
+        SSH_KEY: "{{ lookup('file', _tempdir_local.path + '/id_ed25519') }}"
+    delegate_to: localhost
+
+  always:
+  - name: Clean up local temporary directory.
+    file:
+      path: "{{ _tempdir_local.path }}"
+      state: absent
+    delegate_to: localhost
+    when: _tempdir_local.path is defined
+    changed_when: false
+    diff: false
+  when: '"SSH_KEY" not in _vars.project_variable.untouched'
+
+- name: Add sudoers file.
+  blockinfile:
+    path: /etc/sudoers
+    block: "{{ deploy_sudoers }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK (deploy)"
+    validate: visudo -cf %s
+  become: true

@@ -1,0 +1,16 @@
+---
+
+makeatstate_stack_name: makeatstate
+makeatstate_traefik_network: proxy
+makeatstate_use_letsencrypt: false
+makeatstate_alternative_hostnames: []
+
+# Unset:
+# makeatstate_hostname
+# makeatstate_mail_smtp_host
+# makeatstate_mail_from
+# makeatstate_oauth2_issuer
+# makeatstate_oauth2_client_id
+# makeatstate_oauth2_client_secret
+# akeatstate_oauth2_redirect_url
+# makeatstate_usps_id

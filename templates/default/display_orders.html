@@ -1,0 +1,22 @@
+<button type="button" class="btn btn-dark float-end mt-5" data-bs-toggle="modal" data-bs-target="#odersModal">
+  View files in project
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="odersModal" tabindex="-1" aria-labelledby="odersModalTitle" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="odersModalTitle">Files in project</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="prime_orders">Currently there are no items in your project. To add items to your order use <i data-feather="file-plus"></i>(Add to project) button. </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-info" data-bs-dismiss="modal">Add files</button>
+		<a href="/?t=add_to_cart" class ="btn btn-success prime_select_order_options">Add project to cart</a>	
+      </div>
+    </div>
+  </div>
+</div>

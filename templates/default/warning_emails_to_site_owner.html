@@ -1,0 +1,26 @@
+
+
+{% block warnings_to_owner  %}
+
+
+<div class = "row justify-content-center prime_margintop20px">
+
+	<div class = "col-md-6  prime_padding20px">
+		<div class="card bg-light mb-3">
+			<div class="card-header">A message from MakeAtState</div>
+			<div class = "card-body">
+
+				{% if message =="mount" %}
+				<p  class ="card-text">MakeAtState is unable to locate or read the file. Location of the log file is "/var/log/makeatstate.log"</p>
+					
+				{% endif %}
+			</div>
+
+	</div>
+
+</div>
+</div>
+
+{% endblock %}
+
+

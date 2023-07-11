@@ -1,0 +1,25 @@
+{% if memory_array %}
+<div class = "row justify-content-center prime_margintop20px">
+
+	<div class ="col-md-9 prime_padding0px">
+		<div class="card prime_noborder">
+  			<ul class="list-group list-group-flush">
+    				<li class="list-group-item">
+					<div class="prime_background_twinkleblue prime_memorybar_radius">
+						<div class="{{ (memory_array['fill_percent'] < 90)  ? 'prime_success_background' : 'prime_danger_background' }} prime_memorybar_radius " style="height:15px;width:{{(memory_array['fill_percent'] > 100) ? 100 : memory_array['fill_percent']}}%"></div>
+					</div>	
+					<span class ="prime_float_right prime_font12px">{{ memory_array['total_allocated_size'] }}</span>						
+
+				</li>
+				
+   				<li class="list-group-item">Used  <span class = "{{ (memory_array['fill_percent'] <90) ?'bg-success prime_bg_success_border' : 'prime_bg_danger_border bg-danger ' }} text-white">{{ memory_array['combined_file_size'] }}</span>  of total <span class = "bg-info text-white prime_border_info ">{{ memory_array['total_allocated_size'] }}</span>  available
+				</li>
+				
+  			</ul>
+		</div>
+
+	</div>
+
+
+</div>
+{% endif %}

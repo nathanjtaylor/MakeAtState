@@ -1,0 +1,41 @@
+---
+
+- hosts: cluster:!secondary_stacks
+  become: true
+  roles:
+    - role: ubuntu-unattended_upgrades
+      vars:
+        ubuntu_unattended_upgrades_install_backports: true
+        ubuntu_unattended_upgrades_remove_unused: true
+        ubuntu_unattended_upgrades_reboot: true
+        ubuntu_unattended_upgrades_reboot_time: "02:00"
+  tags: infra
+
+- hosts: all:!secondary_stacks
+  become: true
+  roles:
+    - docker
+    - docker-simple_swarm
+    - traefik
+  tags: infra
+
+- hosts: all:!secondary_stacks
+  roles:
+    - deploy
+  tags: [never, gitlab_deployment]
+
+- hosts: all
+  roles:
+    - makeatstate
+  tags: app
+
+- hosts: review
+  tasks:
+    - name: Destroy review stack.
+      include_role:
+        name: makeatstate
+        tasks_from: destroy_stack
+      vars:
+        stack_name: "{{ makeatstate_stack_name }}"
+        destroy_stack_name_pattern: "makeatstate_(test|review)-"
+  tags: [never, app-destroy]

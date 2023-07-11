@@ -1,0 +1,77 @@
+<div class = " col-md-9 row prime_message_block">
+    {% for message_details in messages %}
+    <div class = " col-md-12 prime_padding0px prime_margin10px">
+    {% if is_admin_view %}
+        {% set admin_side = 'prime_messages_right' %}
+        {% set user_side = 'prime_messages_left' %}
+        {% else %}
+            {% set admin_side = 'prime_messages_left' %}
+            {% set user_side = 'prime_messages_right' %}
+    {% endif %}
+        <div class=" {{ (message_details['sent_by_admin'])  ? admin_side : user_side }} card prime_long_card mb-9">
+
+        <div class="card-header prime_messages_background">
+
+        From:  {{ (message_details['fullname']) ? message_details['fullname'] ~ ' ' ~ message_details['lastname']  : 'MakeCentral'  }}
+        <small style="float:right; color:#ffffff;"> sent on: {{ message_details['sent'] }} </small>
+        </div>
+         <div class="card-body row">
+            <br>
+            <br>
+             <div class = "col-md-12">
+                <small class = "text-muted">Subject: </small>{{ message_details['subject'] }}
+            </div>
+            <br>
+            <br>
+            <small class = "text-muted" style="padding-left:15px">Message: </small>
+             <div class = "col-md-12">
+                {{ message_details['message'] | raw}}
+            </div>
+            {% if  message_details['attachments'] %}
+                <small class = "text-muted" style="padding-left:15px">Attachments: </small>
+                 <div class = "col-md-12">
+                    {% for attachment in message_details['attachments'] %}
+                        <div id="example-inline-configuration-for-image-{{ attachment['file_id'] }}" class="openseadragon">
+                        <script type="text/javascript">
+                            OpenSeadragon({
+                                id:            "example-inline-configuration-for-image-{{ attachment['file_id'] }}",
+                                prefixUrl:     "/openseadragon/images/",
+                                tileSources:   {
+                                    type: 'image',
+                                    url:  "/?t=stream_file&fid={{ attachment['file_id'] }}"
+                                }
+                            });
+                        </script>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+        </div>
+
+    </div>
+    </div>
+
+{% endfor %}
+</div>
+<div class = "col-md-9 prime_padding0px prime_margin10px">
+    <form action="/" method="post" enctype="multipart/form-data" class = "prime_borderlightgrey prime_padding10px">
+        <div class = "form-row">
+            <input type="hidden" name="t" value="send_message">
+            <input type=hidden name = "message_job_id" value={{message_actions['job_id']}} />
+            <input type=hidden name = "message_step_id" value={{message_actions['job_step_id']}} />
+            <input type=hidden name = "target_page" value="message_details" />
+
+            <textarea aria-label="notes" class="form-control rounded-0" rows="5"  name="message_text"></textarea>
+
+            <div class="custom-file" style="margin-top: 10px;">
+                <input type="file"  name = "files[]" multiple="multiple" class="custom-file-input form-control" id="customFile" >
+            </div>
+
+            <input class = "btn btn-success prime_margintop20px " style = "margin-left:auto" type="submit" value="Send a message" />
+        </div>
+    </form>
+</div>
+
+
+

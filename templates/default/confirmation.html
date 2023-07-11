@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+{% include 'prime_alerts.html' %}
+
+<div class = "row justify-content-center prime_margintop20px">
+
+	<div class = "col-md-6  prime_padding20px">
+		<div class="card bg-light mb-3">
+			<div class="card-header">Confirmation</div>
+			<div class = "card-body">
+
+				{% if message =="error" %}
+				<p  class ="card-text"> Your MakeAtState link is either invalid or expired. </p>
+				<a href="/?t=login" class="btn btn-dark">Return to login</a>
+					
+					
+				{% elseif message =="expired" %}
+				<p  class ="card-text"> Your confirmation link expired . </p>
+				<a href="/?t=resend&rs_uid={{user_id}}" class="btn btn-info">Resend link</a>
+		
+				{% elseif message =="password_reset" %}
+				<p  class ="card-text">We sent you a password reset link with instructions to reset your password. Please check your spam folder in case you did not receive an email from MakeAtState. </p>
+				{% elseif message =="reset_successful" %}
+				<p  class ="card-text"> Your password reset has been successful. You can login to your account with your new password </p>
+				<a href="/?t=login" class="btn btn-dark">Return to login</a>
+					
+					
+				{% elseif message =="expired" %}
+					
+				{% else %}
+
+				<p  class ="card-text"> Your email is confirmed. Login and start using MakeAtState.</p>
+				<a href="/?t=login" class="btn btn-dark">Return to login</a>
+				
+
+				{% endif %}
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+{% endblock %}
+

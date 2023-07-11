@@ -1,0 +1,68 @@
+{% for workflow in workflows %}
+
+	<div class="card prime_card" id="workflow_{{ workflow['workflow_id']}}">
+		<div class="card-header prime_background_teal">
+			Workflow
+		<a   href="#" class="btn btn-outline-light prime_icon_btn workflow_edit  edit_btn" id="edit_workflow_{{ workflow['workflow_id']}}" aria-label="Edit workflow" data-toggle="tooltip" data-placement="top" title="Edit workflow"><i data-feather="edit-2"></i></a>
+		</div>
+
+		<div class="card-body">
+			<div class="prime_card_details prime_card_solid_form"  >
+				<p style="font-size:24px">{{ workflow['name']}} </p>
+				<p><small class="text-muted" style="display:block">Group</small>{{ (workflow['group_tag'])?(workflow['group_tag']):'none'}}</p>
+				<p> <small class="text-muted" style="display:block">Allowed file extenstions  </small> {{ workflow['allowed_ext_data']|displayExtentions }}</p>
+                {% if  workflow['workflow_tag'] %}
+                    <p> <small class="text-muted" style="display:block">Workflow tag  </small> {{ workflow['workflow_tag'] }}</p>
+                {% endif %}
+                {% if  workflow['disabled'] %}
+                    <span class="badge bg-danger">Disabled</span> 
+                {% endif %}
+
+
+			</div>
+			<div class="prime_card_details prime_card_solid_form prime_paddingbottom10px" style="border-top:1px solid #efefef" >
+				<a   href="/?t=manage_printers&wid={{ workflow['workflow_id']}}" class="btn btn-dark prime_card_body_btn" aria-label="View printers">View printers</a>
+			</div>
+			<!-- Hidden edit form for edit workflow -->
+			<div class="prime_card_details prime_card_hidden_form prime_paddingbottom10px " >
+				<form action="/" enctype="multipart/form-data" method="POST">
+					<input type="hidden" name="t" value="edit_workflow">
+					<input type="hidden" name="wid" value="{{ workflow['workflow_id']}}">
+					<small class="text-muted" style="display:block">Workflow name  </small>
+					<input class ="form-control" aria-label="edit workflow name" type=text name="w_name" value="{{ workflow['name']}}" />
+					<small class="text-muted" style="display:block">Group</small>
+					<select name="w_group"  aria-label="Select group"class="form-control">
+						<option {{ (workflow['group_id'])?'':'selected' }} disabled></option>
+						{%  for group in groups %}
+							<option value="{{ group['group_id'] }}" {{(workflow['group_id']==group['group_id'])?'selected':''}}>{{ group['group_tag'] }}</option>
+						{% endfor %}
+					</select>
+					<small class="text-muted" style="display:block">Allowed file extensions  </small>
+					<input class ="form-control" aria-label="edit workflow ext" type=text name="w_ext" value="{{ workflow['allowed_ext_data']|displayExtentions }}" />
+					<small class="text-muted" style="display:block">Workflow tag  </small>
+					<input class ="form-control" aria-label="edit workflow tag" type=text name="w_tag" value="{{ workflow['workflow_tag']}}" />
+                    <div class="form-check pt-2">
+                        <input class="form-check-input" type="checkbox" name="w_disabled" id="disabledcheck" value="{{ workflow['disabled'] ?? 1}}" {{( workflow['disabled'] ==1) ? 'checked':'' }} >
+                        <label class="form-check-label" for="disabledcheck">
+                            Disabled
+                        </label>
+                    </div>
+
+					<a   href="#" class="btn btn-info prime_card_body_btn  prime_icon_btn back_btn" id="back_workflow_{{ workflow['workflow_id']}}" aria-label="Cancel edit"  data-toggle="tooltip" data-placement="top" title="Cancel edit"><i data-feather="corner-down-left"></i></a>
+					<input type="submit" class="btn btn-success prime_margintop20px " value="Update">
+				</form>
+
+			</div>
+			<!-- Hidden edit form for edit workflow  ends here -->
+
+
+		</div>
+
+		<div class="card-footer">
+			<a   href="/?t=remove_workflow&wid={{ workflow['workflow_id']}}"  class="btn btn-danger prime_white_text" aria-label="Delete workflow" data-toggle="tooltip" data-placement="top" title="Delete workflow"><i data-feather="trash-2"></i></a>
+		</div>
+
+	</div>
+
+{% endfor %}
+

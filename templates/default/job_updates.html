@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+
+<div class="jumbotron">
+	<h1 class="display-4">Job Updates </h1>
+  	<p class="lead">Additional details and update for your job.</p>
+  	<hr class="my-4">
+  	<p>View all the messages and updates for this job.</p>
+</div>
+
+{% include 'prime_alerts.html' %}
+
+
+<div class = "row justify-content-center prime_margintop20px">
+		{% if cancellation %}
+		{% include 'cancellation_reason.html' %}
+		{% endif %}
+		{% if job_step_updates %}
+				
+			{% include 'job_step_updates.html' %}
+		{% else %}
+			<div class = "col-md-9 prime_padding0px prime_margin10px">
+			
+				<div class="card prime_borderlightgrey mb-3">
+				  <div class="card-header">Job updates</div>
+				  <div class="card-body text-secondary">
+				    <p class="card-text">There are no updates available for this job.</p>
+				  </div>
+				</div>
+			
+			</div>
+		{% endif %}
+
+
+		{% if job_notes %}
+			{% include 'job_notes_brief.html' %}
+
+		{% elseif isPrivilagedUser %}
+
+			<div class = "col-md-9 prime_padding0px prime_margin10px">
+		
+				<div class="card prime_borderlightgrey mb-3">
+				  <div class="card-header">Job notes</div>
+				  <div class="card-body text-secondary">
+				    <p class="card-text">There are no notes available for this job.</p>
+				  </div>
+				</div>
+				
+			</div>
+
+		{% endif %}
+		{% if job_messages %}
+				
+			{% include 'job_messages.html' %}
+		{% else %}
+			<div class = "col-md-9 prime_padding0px prime_margin10px">
+		
+				<div class="card prime_borderlightgrey mb-3">
+				  <div class="card-header">Job messages</div>
+				  <div class="card-body text-secondary">
+				    <p class="card-text">There are no messages available for this job.</p>
+				  </div>
+				</div>
+				
+			</div>
+		{% endif %}
+
+		<div class="col-md-9 prime_padding0px prime_margin10px">
+			<div class="card prime_borderlightgrey mb-3">
+				 <div class="card-header prime_background_teal">More Actions</div>
+			 	 <div class="card-body row">
+
+					 <div class="col-md-6 prime_textalign_center">   
+						<a href="/?t=workflow&uid={{user_id}}&job_id={{job_id}}" class=" btn btn-light" aria-label="Back">Back</a>	 
+					</div>
+
+					<div class="col-md-6 prime_textalign_center">   
+						<a href="/?t=all_jobs" class="btn btn-dark" aria-label="View Jobs">View Jobs</a>	
+					</div>
+
+			</div>
+		</div>
+
+		</div>
+</div>
+
+{% endblock %}
+
+
+

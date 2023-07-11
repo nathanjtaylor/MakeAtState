@@ -1,0 +1,49 @@
+<div class = "col-md-9 prime_padding0px prime_margin10px">
+<div class="card prime_long_card mb-9">  
+	<div class="card-header prime_background_teal"> 
+        Project name: {{ " " }}{{ project_name }}
+	</div>
+	 <div class="card-body row">
+		 <div class = "col-md-3">
+			<small  class="text-muted" style="display:block">
+      				Current status
+    			</small>   
+			{{ status_details['short_message'] }}
+		</div>
+		 <div class = "col-md-3">   
+			<small  class="text-muted" style="display:block">
+      				File count
+    			</small>   
+			
+			{{ status_details['file_count'] }}
+		</div>
+
+		 <div class = "col-md-3">   
+			<small  class="text-muted" style="display:block">
+      				Updates as of
+    			</small>   
+			
+			{{ status_details['formatted_date']  }}
+		</div>
+
+		 <div class = "col-md-3">   
+			<small  class="text-muted" style="display:block">
+      				Print
+    			</small>   
+			
+			<a href="/?t=print&job_id={{ action_details['job_id'] }}">Job details</a>
+            {%if status_details['print_label'] %}
+			    <a class="d-block" href="/?t=print_label&job_id={{ action_details['job_id'] }}&label=files">Job label</a>
+			    <a class="d-block" href="/?t=print_label&job_id={{ action_details['job_id'] }}&label=user">User label</a>
+            {% endif %}
+		</div>
+		
+		
+
+	</div>
+
+	<div class="card-footer">
+	</div>
+</div>
+</div>
+

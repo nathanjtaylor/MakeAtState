@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+
+<div class="jumbotron">
+	<h1 class="display-4">User Details </h1>
+  	<p class="lead">View user details.</p>
+  	<hr class="my-4">
+  	<p>Use edit options to change user status , alter memory and expiration limits. </p>
+</div>
+
+{% include 'prime_alerts.html' %}
+
+<div class = "row justify-content-center prime_margintop20px">
+	
+	<div class = "col-md-9 prime_padding0px prime_margin10px ">   
+	{% if user_details  %}
+		{% include 'user_details_section.html' %}	
+	{% else %}
+		 <div class = "row  prime_padding10px justify-content-center">
+
+		 	
+		
+			<div class = "col-md-9 prime_padding0px prime_margin10px">
+			
+				<div class="card prime_borderlightgrey mb-3">
+				  <div class="card-header">User details</div>
+				  <div class="card-body text-secondary prime_textalign_center">
+				    <i data-feather="search"></i>
+				    <p class="card-text">User details not available.</p>
+				  </div>
+				</div>
+				
+			</div>
+		 </div>
+
+
+	{% endif %}
+
+	{% if edit_user_options %}
+
+		{% include 'edit_user_options.html' %}
+	{% endif %}
+
+	</div>
+	{% if user_actions %}
+
+		{% include 'user_actions.html' %}
+	{% endif %}
+	
+</div>
+{% endblock %}
+
+
+

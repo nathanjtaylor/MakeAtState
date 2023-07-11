@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+
+
+<div class="jumbotron">
+	<h1 class="display-4">View printer options</h1>
+  	<p class="lead">View all the printer options. Use edit option to edit printer options. </p>
+  	<hr class="my-4">
+  	<p>Add new printer options using the "Add" button.</p>
+
+</div>
+{% include 'prime_alerts.html' %}
+<div class="row justify-content-center prime_margintop20px"> 
+
+	<div class="col-md-11 text-center" style= "display: contents;">
+		{% if printer_data %}
+			{% include 'view_printer_options.html' %}
+		{% endif %}
+
+
+		<div class="card prime_card prime_add_card">
+		
+			<div class="card-body">
+				<i data-feather="plus-square" class ="prime_card_add_icon" style="width:75px;height:75px;"></i>
+				<p class = "prime_add_card_text">Add printer options</p>
+			</div>
+		
+		</div>
+
+		<div class="card prime_card prime_add_hidden_card" id = "workflow_{{ workflow['workflow_id']}}">
+			<div class="card-header prime_background_teal">
+				Add printer options
+			</div>
+		
+			<div class="card-body">
+				<!-- Hidden edit form for edit workflow -->
+				<div class = "prime_card_details prime_paddingbottom10px" >
+					<form action="/" enctype="multipart/form-data" method="POST">
+						<input type="hidden" name="t" value="add_printer_options">
+						<input type="hidden" name="wid" value="{{workflow_id}}">
+						<input type="hidden" name="printer" value="{{printer_name}}">
+						<small class="text-muted" style="display:block">Material  </small>
+						<input class ="form-control" aria-label = "add material" type=text name = "m_new_name"  />
+						<small class="text-muted" style="display:block">Color  </small>
+						<input class ="form-control" aria-label = "add color" type=text name = "c_new_name"  />
+						<a   href = "#" class="btn btn-info prime_card_body_btn prime_icon_btn  add_back_btn" id = "back_workflow_{{ workflow['workflow_id']}}" aria-label = "Cancel add workflow"  data-toggle="tooltip" data-placement="top" title="Cancel add workflow"><i data-feather="corner-down-left"></i></a>		
+						<input type="submit" class="btn btn-success prime_margintop20px " value="Add options">
+					</form>
+						
+				</div>	
+				<!-- Hidden edit form for edit workflow  ends here -->
+				
+			</div>
+		
+
+		</div>
+
+	<!--  End of add workflow card -->	
+	</div>
+</div>
+
+<div class="row justify-content-center prime_margintop20px">
+	<div class = "col-md-11 text-right prime_borderlightgrey prime_padding10px ">
+		
+		<a   href = "/?t=manage_printers&wid={{workflow_id}}"  class="btn btn-outline-dark" aria-label = "Back">Back</a>	
+	</div>
+</div>
+
+{% endblock %}
+
+

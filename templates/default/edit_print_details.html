@@ -1,0 +1,211 @@
+{% for file_id, job_file in job_files %}
+    <div class="col-md-9 prime_padding0px prime_margin10px">
+        <div id="print_details_{{ file_id }}">
+            <div class="card prime_long_card mb-9 prime_card_solid_form">
+                <div class="card-header prime_background_teal">
+                    {{ job_file['file_name'] }}
+                    <a href="#" class="btn btn-outline-light prime_icon_btn workflow_edit  edit_btn" id="edit_print_details_{{ file_id }}"
+                       aria-label="Edit print details" data-toggle="tooltip" data-placement="top"
+                       title="Edit print details"><i data-feather="edit-2"></i></a>
+                    <a href="/?t=remove_file_from_job&file_id={{ file_id }}&job_id={{action_details['job_id']}}" class="btn btn-outline-light prime_icon_btn workflow_edit" id="print_job"
+                       aria-label="Open print page" data-toggle="tooltip" data-placement="top"
+                       title="Delete file from job" style="margin-right: 3px;"><i data-feather="trash-2"></i></a>
+
+                </div>
+                <div class="card-body row">
+
+                    {% for key, val in job_file['print_details'] %}
+                        {% if key != "Notes" %}
+                            <div class="col-md-2">
+                                <small class="text-muted" style="display:block">
+                                    {{ key |capitalize }}
+                                </small>
+                                {{ val }}
+                            </div>
+                        {% endif %}
+
+                    {% endfor %}
+
+                    <div class="col-md-12 prime_margintop10px">
+                        <small class="text-muted" style="display:block">
+                            Notes
+                        </small>
+                        {{ job_file['print_details']['Notes'] }}
+                    </div>
+                </div>
+                <div class="card-footer">
+                    {% if job_file['viewable'] %}
+                        <a  aria-label = "View file" href = "/?t=view_file&fid={{ job_file['file_id'] }}"  class ="btn btn-info prime_icon_btn" data-toggle="tooltip" data-placement="top" title="View file"><i  data-feather="eye" ></i></a>	
+                    {% endif %}
+                    <a  aria-label= "Download file" href = "/?t=stream_file&fid={{ job_file['file_id'] }}&disposition=attachment"  class ="btn btn-warning prime_icon_btn" data-toggle="tooltip" data-placement="top" title="Download file"><i  data-feather="download" ></i></a>
+                </div>
+            </div>
+
+
+            <div class="card prime_long_card mb-9 prime_card_hidden_form ">
+                <div class="card-header prime_background_teal">
+                    Edit{{ " " }}{{ job_file['file_name'] }}{{ " " }}print details
+                </div>
+                <div class="card-body row  justify-content-center">
+                    <form action="/" method="post" enctype="multipart/form-data" class="col-md-9">
+                        <input type="hidden" name="input_action" id="input_action" value="update">
+                        <input type="hidden" name="t" value="update_print_details">
+                        <input type="hidden" name="uid" value="{{ action_details['uid'] }}">
+                        <input type="hidden" name="job_id" value="{{ action_details['job_id'] }}">
+                        <input type="hidden" name="file_id" value="{{ file_id }}">
+                        <div class="form-group">
+                            <div class="prime_workflow">
+                                {% if edit_print_details[file_id]['types'] %}
+                                    <div class="input-group mb-3 prime_margintop20px">
+                                        <div class="input-group-prepend">
+                                            <label class="input-group-text prime_no_background border-0" for="prime_select_types_{{ file_id }}">Submission
+                                                type</label>
+                                        </div>
+                                        <select name="workflow" class="form-control rounded prime_select_types" id="prime_select_types_{{ file_id }}">
+                                            <option disabled>Choose service type ...</option>
+                                            {% for type in edit_print_details[file_id]['types'] %}
+                                                <option value="{{ type }}" {{ (type  == job_file['print_details']['Type'] ) ? 'selected': '' }} >{{ type }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                {% else %}
+                                    <p class="prime_textalign_center prime_padding10px prime_borderbottom_lightgrey"> No
+                                        workflow types are available at this time , please try again later </p>
+
+                                {% endif %}
+                            </div>
+
+                            <div class="prime_printers" id="prime_printers_{{ file_id}}">
+                                {% if edit_print_details[file_id]['printers'] %}
+                                    <div class="input-group mb-3 prime_margintop20px">
+                                        <div class="input-group-prepend">
+                                            <label class="input-group-text prime_no_background border-0"
+                                                   for="prime_select_printers_{{ file_id }}">Printers</label>
+                                        </div>
+                                        <select name="printer" class="form-control rounded prime_select_printers" id="prime_select_printers_{{ file_id }}">
+                                            <option disabled selected>Choose a printer ...</option>
+                                            {% for printer in edit_print_details[file_id]['printers'] %}
+                                                <option value="{{ printer }}" {{ (printer  == job_file['print_details']['Printer'] ) ? 'selected': '' }} >{{ printer }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                {% else %}
+                                    <p class="prime_textalign_center prime_padding10px prime_borderbottom_lightgrey"> No
+                                        printers are available at this time , please try again later </p>
+
+                                {% endif %}
+
+                            </div>
+                            <div class="prime_materials" id="prime_materials_{{ file_id}}">
+                                {% if edit_print_details[file_id]['materials'] %}
+                                    <div class="input-group mb-3 prime_margintop20px">
+                                        <div class="input-group-prepend">
+                                            <label class="input-group-text prime_no_background border-0"
+                                                   for="prime_select_materials_{{ file_id }}">Materials</label>
+                                        </div>
+                                        <select name="material" class="form-control rounded prime_select_materials" id="prime_select_materials_{{ file_id }}">
+                                            <option disabled selected>Choose a material ...</option>
+                                            {% for material in edit_print_details[file_id]['materials'] %}
+                                                <option value="{{ material }}" {{ (material  == job_file['print_details']['Material'] ) ? 'selected': '' }} >{{ material }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                {% else %}
+                                    <p class="prime_textalign_center prime_padding10px prime_borderbottom_lightgrey"> No
+                                        materials are available at this time , please try again later </p>
+
+                                {% endif %}
+
+                            </div>
+                            <div class="prime_colors" id="prime_colors_{{ file_id}}">
+                                {% if edit_print_details[file_id]['colors'] %}
+                                    <div class="input-group mb-3 prime_margintop20px">
+                                        <div class="input-group-prepend">
+                                            <label class="input-group-text prime_no_background border-0" for="prime_select_colors_{{ file_id }}">Colors</label>
+                                        </div>
+                                        <select name="color" class="form-control rounded prime_select_colors" id="prime_select_colors_{{ file_id }}">
+                                            <option disabled selected>Choose a color ...</option>
+                                            {% for color in edit_print_details[file_id]['colors'] %}
+                                                <option value="{{ color }}" {{ (color  == job_file['print_details']['Color'] ) ? 'selected': '' }} >{{ color }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                {% else %}
+                                    <p class="prime_textalign_center prime_padding10px prime_borderbottom_lightgrey"> No
+                                        colors are available at this time , please try again later </p>
+
+                                {% endif %}
+
+
+                            </div>
+                            <div class="prime_copies">
+                                <div class="input-group mb-3 prime_margintop20px">
+                                    <div class="input-group-prepend"><label
+                                                class="input-group-text prime_no_background border-0" for="prime_set_dimensions_{{ file_id }}">Dimensions</label>
+                                    </div>
+                                    <input type="text" id="prime_set_dimensions_{{ file_id }}" class="form-control rounded prime_set_dimensions" aria-label="name"
+                                           placeholder="Enter the Dimensions of the print" name="dimensions"
+                                           value={{ job_file['print_details']['Dimensions'] }}>
+                                </div>
+                                <div class="input-group mb-3 prime_margintop20px">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text prime_no_background border-0" for="prime_set_copies_{{ file_id }}">Copies</label>
+                                    </div>
+                                    <input type="text" id="prime_set_copies_{{ file_id }}" class="form-control rounded prime_set_copies" aria-label="name"
+                                           placeholder="Please enter the number of copies" name="copies"
+                                           value= {{ job_file['print_details']['Copies'] }}>
+
+                                </div>
+                                <div class="input-group mb-3 prime_margintop20px">
+
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text prime_no_background border-0" for="inputGroupDelivery">Pickup
+                                            Option</label>
+                                    </div>
+                                    <select name="delivery" aria-label="Select delivery option" class="form-control rounded"
+                                            id="inputGroupDelivery">
+                                        <option disabled selected>Choose delivery option ...</option>
+                                        <option value="shipping" {{ ("shipping"  == job_file['print_details']['Delivery Option'] ) ? 'selected': '' }}>Ship to your address</option>
+                                        <option value="campus-mail" {{ ("campus-mail"  == job_file['print_details']['Delivery Option'] ) ? 'selected': '' }}>Ship to a campus mail address</option>
+                                        <option value="ServiceDesk-pickup" {{ ("ServiceDesk-pickup"  == job_file['print_details']['Delivery Option'] ) ? 'selected': '' }}>Pick up at MakeCentral: Service Desk</option>
+
+                                    </select>
+                                </div>
+                                <div class=" prime_marginbottom10px" id="inputCampusEdit" >
+
+                                    <div>
+                                        <label for="ship-field-info" >Shipping Address</label>
+                                        <textarea class="form-control rounded" name="ship-field-info" id="ship-field-info"
+                                                  rows="4">{{ job_file['print_details']['Shipping Address'] }}</textarea>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <label for="inputGroupNotes">Notes</label>
+                            <textarea class="form-control rounded" id="inputGroupNotes" name=notes
+                                      rows="3"> {{ job_file['print_details']['Notes'] }}</textarea>
+                        </div>
+
+
+                        <button type="button"
+                                class="save_cart_disabled btn btn-secondary prime_margintop20px prime_marginbottom20px"
+                                data-toggle="popover" data-placement="right" data-trigger="focus" title="Warning"
+                                data-content="Missing Required Fields">Update
+                        </button>
+                        <input class="save_cart btn btn-success  prime_margintop20px prime_marginbottom20px" type="submit"
+                               name="save_cart" value="Update"/>
+
+                        <input type="button" class="btn btn-danger back_btn" id="back_print_details_{{ file_id }}" value="Cancel">
+                    </form>
+
+
+                </div>
+
+                <div class="card-footer">
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+{% endfor %}

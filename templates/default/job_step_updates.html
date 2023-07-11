@@ -1,0 +1,30 @@
+
+<div class = "col-md-9 prime_padding0px prime_margin10px">   
+	 <div class="card prime_borderlightgrey mb-3">
+		<div class="card-header prime_background_teal"> Job updates</div>
+		 <div class="card-body" >
+		{% for updates in job_step_updates  %}
+			<div class = "row  prime_padding10px {{loop.index%2 ? '' : ' prime_background_lightblue' }}" >
+				 <div class = "col-md-4 prime_borderright_grey">
+						
+					 {{ updates['status'] }}
+				</div>
+				 <div class = "col-md-4 prime_borderright_grey">
+						
+					 <small class="text-muted"> {{ updates['sent'] }} </small>
+				</div>
+				 <div class = "col-md-4 ">
+						
+				<small class="text-muted">by: </small>  {{ updates['name'] }}
+				</div>
+				
+			</div>
+
+
+		{% endfor %}
+		</div>
+	</div>
+
+
+
+ </div>

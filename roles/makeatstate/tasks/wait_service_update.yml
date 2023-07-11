@@ -1,0 +1,18 @@
+---
+
+- name: "Wait for {{ service }} to update."
+  command:
+    cmd: "docker service inspect {{ service | quote }}"
+  until: (_r.stdout | from_json | first).UpdateStatus.State | default
+            in [ '', 'completed', 'paused', 'rollback_started',
+                 'rollback_paused', 'rollback_completed' ]
+  delay: 1
+  retries: 120
+  check_mode: false
+  become: true
+  register: _r
+  changed_when: false
+  failed_when: (_r.stdout | from_json | first).UpdateStatus.State | default
+                 in [ 'paused', 'rollback_started', 'rollback_paused',
+                      'rollback_completed' ]
+  no_log: true

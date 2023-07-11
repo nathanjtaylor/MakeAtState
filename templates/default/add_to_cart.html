@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+
+
+<div class="jumbotron">
+	<h1 class="display-4">Add files to cart</h1>
+  	<p class="lead">Please select all options that apply and add the item to your cart. You can delete items from cart or cancel items later if you choose</p>
+  	<hr class="my-4">
+	
+</div>
+
+{% include 'prime_alerts.html' %}
+
+<div class="row my-3 justify-content-center align-items-center">
+    <div class="col-auto">
+        <div class="px-3 rounded-pill prime_background_success">Upload Files</div>
+    </div>
+    <div class="col-auto">
+        <i data-feather="arrow-right"></i>
+    </div>
+    <div class="col-auto">
+        <div class="px-3 prime_background_success rounded-pill">Add Files to Cart</div>
+    </div>
+    <div class="col-auto">
+        <i data-feather="arrow-right"></i>
+    </div>
+    <div class="col-auto">
+        <div class="px-3 prime_bg_primary_border rounded-pill">Select Options</div>
+    </div>
+    <div class="col-auto">
+        <i data-feather="arrow-right"></i>
+    </div>
+    <div class="col-auto">
+        <div class="px-3 border rounded-pill">Submit Projects</div>
+    </div>
+</div>
+
+
+
+<div class="row justify-content-center prime_margintop20px">
+
+	<div class="col-md-8 prime_borderlightgrey">
+		<form action ="/" method ="post" enctype="multipart/form-data" id="prime_validate_form" novalidate>
+			<input type="hidden" name ="t" value ="save_to_cart">
+            <div class="row g-3 align-items-center my-3">
+                <div class="col-auto">
+                    <label for="project_name" class="col-form-label">Project name</label>
+                </div>
+                <div class="col-auto">
+                    <input type="input" id="project_name" class="form-control" pattern=".*\S+.*" maxlength=20 aria-describedby="project_name" name="project_name" required>
+                </div>
+                <div class="col-auto">
+                    <span id="passwordHelpInline" class="form-text">
+                        Must be 3-20 characters long.
+                    </span>
+                </div>
+            </div>
+
+			{% for file_id, name in file_names %}
+                <h2 class="mt-4">{{ name }}</h2>
+                <input type="hidden" name ="file_id[]" value ="{{ file_id }}">
+                {% if cart_id %}
+                    <input type="hidden" name ="cid" value ="{{ cart_id }}">
+                {% endif %}	
+                <div class="form-group">
+                    <div class="prime_workflow">	
+                        {%if types %}
+                        <div class="input-group mb-3 prime_margintop20px">
+                          <div class="input-group-prepend">
+                            <label class="input-group-text prime_no_background border-0" for="prime_wf_types_{{ file_id }}">Submission type</label>
+                          </div>
+                          <select name="workflow[]" class="form-control rounded prime_select_types" id="prime_select_types_{{ file_id }}">
+                            <option disabled selected>Choose service type ...</option>
+                            {% for type in types[file_id] %} 
+                                <option value="{{ type }}">{{ type }}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                        {% else %}
+                            <p class="prime_textalign_center prime_padding10px prime_borderbottom_lightgrey"> No workflow types are available at this time , please try again later </p>
+                        {% endif %}
+                    </div>
+                    <div class="prime_printers" id="prime_printers_{{ file_id }}">
+                    </div>
+                    <div class="prime_materials" id="prime_materials_{{ file_id }}">
+                    </div>
+                    <div class="prime_colors" id="prime_colors_{{ file_id }}">
+                    </div>
+                    <div class="prime_copies" id="prime_copies_{{ file_id }}">
+                    </div>
+                    <label for="notes" >Other Notes</label>
+                    <textarea class="form-control rounded" name="notes[]" id="notes" rows="3"></textarea>
+                </div>
+            {% endfor %}
+            {% include 'select_delivery.html' %}
+			<button type="button" class="prime_validate_btn save_cart_disabled btn btn-secondary prime_margintop20px prime_marginbottom20px" data-toggle="tooltip" data-placement="right" data-trigger="focus"  title ="Warning: Missing Required Fields, please fill Project name, Submission type, Printers, Materials, Colors, Copies, and Pickup Option" data-content="Missing Required Fields."  > {{  cart_id ? 'Update cart' : 'Add to cart' }}</button>
+			<input class="save_cart btn btn-success  prime_margintop20px prime_marginbottom20px" type="submit" name="save_cart" value="{{  cart_id ? 'Update cart' : 'Add to cart' }}" />
+			{% if cart_id %}
+				<a href="/?t=view_cart" class="btn btn-dark prime_margintop20px prime_marginbottom20px">Cancel</a>
+			{% else %}
+				 <a href="/?t=home" class="btn btn-dark prime_margintop20px prime_marginbottom20px">Cancel</a>
+				
+			{% endif %}
+		</form>		
+	</div> 
+</div>
+
+{% endblock %}
+

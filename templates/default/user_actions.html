@@ -1,0 +1,52 @@
+<div class = "col-md-9 prime_padding0px prime_margin10px">
+	<div class="card prime_borderlightgrey mb-3">
+		 <div class="card-header prime_background_teal">More Actions</div>
+		  <div class="card-body row">
+		  	{% if user_actions['previous_page'] %}
+
+			 <div class = "col-md-4 prime_textalign_center">   
+				<small class="text-muted" style="display:block">
+					Go back
+				</small>   
+			 	
+				<a  aria-label = "Back" href = "{{ user_actions['previous_page'] }}" class ="btn btn-light prime_margintop10px">Back</a>	
+				
+			</div>
+			{% endif %}
+
+			 <div class = "col-md-4 prime_textalign_center">   
+				<small class="text-muted" style="display:block">
+					View jobs
+				</small>   
+
+					<a  aria-label = "User jobs" href = "/?t=user_jobs&juid={{ user_actions['juid']}}"  class ="btn btn-info prime_margintop10px">User jobs</a>	
+			</div>
+
+			 <div class = "col-md-4 prime_textalign_center">   
+			 	{% if user_actions['buid'] %}	
+				<small class="text-muted" style="display:block">
+					Block user
+				</small>   
+					<form action="/" enctype="multipart/form-data">
+						<input type="hidden" name="t" value="{{ user_actions['block_target'] }}"/>
+						<input type="hidden" name="euid" value="{{ user_actions['buid'] }}"/>
+						<input type="submit" class ="btn btn-danger prime_margintop10px" value = "{{ user_actions['block_value'] }}" />	
+					</form>
+				{% endif %}
+			</div>
+
+
+			
+
+
+
+			
+		</div>
+			
+			
+			
+
+	</div>
+</div>
+
+

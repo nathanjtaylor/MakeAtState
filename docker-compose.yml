@@ -1,0 +1,36 @@
+---
+version: '3.5'
+
+services:
+  webapp:
+    image: makeatstate:latest
+    environment:
+      # Automatically loaded from .env.
+      MAIL_SMTP_HOST: "express.mail.msu.edu"
+      MAIL_FROM: "root@3dprime.devel.lib.msu.edu"
+    volumes:
+      - ./makeatstate.cfg:/var/www/MakeAtState/makeatstate.cfg:ro
+      - data:/mnt/makeatstate
+
+  database:
+    image: mariadb:10
+    environment:
+      MYSQL_USER: makeatstate
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: makeatstate
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    volumes:
+      - db:/var/lib/mysql
+      - db_logs:/var/log/mysql
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        max_attempts: 5
+        window: 10s
+
+
+volumes:
+  data:
+  db:
+  db_logs:

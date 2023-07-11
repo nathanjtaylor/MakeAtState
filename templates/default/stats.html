@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+
+<div class="jumbotron">
+	<h1 class="display-4">Statistics </h1>
+  	<p class="lead">View all stats here.</p>
+  	<hr class="my-4">
+  	<p>View user and job stats, you can switch between numbers and bar graphs.</p>
+</div>
+
+
+{% if stats_type %}
+<div class = "container-fluid">
+	<div class = "row justify-content-center prime_margintop20px prime_tabs">
+	  <div class="col-3 prime_border_twinkleblue prime_textalign_center prime_borderradius20px  prime_no_right_radius {{(stats_type ==1) ? ' prime_background_twinkleblue':'' }}  "> <a href="/?t=stats&stype=1&dtype={{ display_type }}">Job stats</a></div>
+	  <div class="col-3 prime_border_twinkleblue prime_textalign_center prime_borderradius20px prime_no_radius {{(stats_type ==2) ? ' prime_background_twinkleblue':'' }} "> <a href="/?t=stats&stype=2&dtype={{ display_type }}">User stats</a></div>
+	  <div class="col-3 prime_border_twinkleblue prime_textalign_center prime_borderradius20px prime_no_left_radius {{(stats_type ==3) ? ' prime_background_twinkleblue':'' }} "> <a href="/?t=stats&stype=3">Prime analytics</a></div>
+	</div>
+</div>
+
+{% endif %}
+
+{% if display_type  and (stats_type == 1 or stats_type == 2) %}
+<div class = "container-fluid">
+	<div class = "row justify-content-center prime_margintop20px prime_tabs">
+	  <div class="col-3 prime_border_twinkleblue prime_textalign_center prime_borderradius20px  prime_no_right_radius {{(display_type ==1) ? ' prime_background_twinkleblue':'' }}  "> <a href="/?t=stats&stype={{stats_type }}&dtype=1">View numbers</a></div>
+	  <div class="col-3 prime_border_twinkleblue prime_textalign_center prime_borderradius20px prime_no_left_radius {{(display_type ==2) ? ' prime_background_twinkleblue':'' }} "> <a href="/?t=stats&stype={{stats_type }}&dtype=2">View bar charts</a></div>
+	</div>
+</div>
+{% else %}
+<div class = "container-fluid">
+	<div class = "row justify-content-center prime_margintop20px prime_tabs">
+	  <div class="col-3 prime_border_twinkleblue prime_textalign_center prime_borderradius20px  prime_no_right_radius prime_ajax_tab {{(display_type ==1) ? ' prime_background_twinkleblue':'' }}  " id = "analytics_1"> <a href="?t=stats&stype=3&dtype=1">Job analytics</a></div>
+	  <div class="col-3 prime_border_twinkleblue prime_textalign_center prime_borderradius20px prime_no_left_radius  prime_ajax_tab {{(display_type ==2) ? ' prime_background_twinkleblue':'' }} " id = "analytics_2"> <a href="?t=stats&stype=3&dtype=2">Price analytics</a></div>
+	</div>
+</div>
+
+{% endif %}
+
+
+
+{% include 'prime_alerts.html' %}
+<div class = "container-fluid">
+	<div class = "row justify-content-center prime_margintop20px">
+		{% if (stats_type != 3)  %}
+			{% if display_type == 1 %}
+				{% include 'numeric_stats.html' %}
+			{% elseif  display_type == 2 %}
+				{% include 'bar_stats.html' %}
+			{% endif %}
+
+
+		{% elseif (stats_type == 3) %}
+			{% include 'prime_analytics.html' %}
+
+
+		{% else %}
+			<div class = "col-md-9 prime_padding0px prime_margin10px">
+
+				<div class="card prime_borderlightgrey mb-3">
+				  <div class="card-header">No statistics</div>
+				  <div class="card-body text-secondary">
+					<p class="card-text">No stats available at this time.</p>
+				  </div>
+				</div>
+
+			</div>
+
+
+		{% endif %}
+
+	</div>
+</div>
+{% endblock %}
+
+

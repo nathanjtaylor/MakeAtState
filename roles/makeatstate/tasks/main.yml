@@ -1,0 +1,282 @@
+---
+
+- name: Build and deploy stack.
+  block:
+  - name: Create temporary directory.
+    tempfile:
+      state: directory
+      suffix: makeatstate-docker
+    register: _tempdir
+    changed_when: false
+
+  - name: Create local temporary directory.
+    tempfile:
+      state: directory
+      suffix: makeatstate-docker
+    delegate_to: localhost
+    register: _tempdir_local
+    changed_when: false
+
+  # Faster than the "copy" module.
+  - name: Archive files.
+    archive:
+      dest: "{{ _tempdir_local.path }}/code.tar"
+      format: tar
+      path:
+      - Dockerfile
+      - entrypoint
+      - apache.conf
+      - composer.json
+      - composer.lock
+      - src
+      - templates
+      - web
+    delegate_to: localhost
+    changed_when: false
+
+  - name: Make directory.
+    file:
+      path: "{{ _tempdir.path }}/build"
+      state: directory
+    changed_when: false
+
+  - name: Extract archive.
+    unarchive:
+      dest: "{{ _tempdir.path }}/build"
+      src: "{{ _tempdir_local.path }}/code.tar"
+      mode: "u=rwX,go=rX"
+    changed_when: false
+
+  - name: Build Docker image.
+    docker_image:
+      name: makeatstate:latest
+      state: present
+      source: build
+      force_source: true
+      build:
+        path: "{{ _tempdir.path }}/build"
+        pull: false
+    become: true
+    register: _r
+
+  - name: Calculate.
+    set_fact:
+      makeatstate_image_id: "{{ _r.image.Id }}"
+    when: _r.image.Id is defined
+
+  - name: Prepare app configuration.
+    template:
+      dest: "{{ _tempdir_local.path }}/{{ item.file }}"
+      src: "{{ item.file }}.j2"
+      mode: 0600
+    delegate_to: localhost
+    when: _tempdir_local.path is defined
+    changed_when: false
+    ignore_errors: "{{ item.ignore_errors | default(false) }}"
+    loop:
+      - file: makeatstate.cfg
+      - file: makeatstate.secret.cfg
+        ignore_errors: true
+
+  - name: Load configuration.
+    include_tasks: create_or_find_secret.yml
+    vars:
+      var_prefix: makeatstate
+      name: "{{ item.name }}"
+      file: "{{ _tempdir_local.path }}/{{ item.path }}"
+      stack_name: "{{ makeatstate_stack_name }}"
+      source_stack_name: "{{ makeatstate_secrets_stack_name | default }}"
+      service_name: webapp
+      type: secret
+      path: "/run/secrets/makeatstate.cfg.d/{{ item.path }}"
+    loop:
+      - name: config
+        path: makeatstate.cfg
+      - name: secret_config
+        path: makeatstate.secret.cfg
+    loop_control:
+      label: "{{ item.path }} -> {{ item.name }}"
+
+  - name: Make directory.
+    file:
+      path: "{{ _tempdir_local.path }}/db-init.sql.d"
+      state: directory
+    delegate_to: localhost
+    changed_when: false
+
+  - name: Prepare SQL initialization scripts.
+    copy:
+      dest: "{{ _tempdir_local.path }}/db-init.sql.d/\
+             {{ item.index }}-{{ item.name }}"
+      src: "{{ item.name }}"
+    loop:
+    - index: "00"
+      name: table_definitions.sql
+    - index: "01"
+      name: initial_db_setup.sql
+    delegate_to: localhost
+    when: _tempdir_local.path is defined
+    changed_when: false
+
+  - name: Assemble SQL initialization scripts.
+    assemble:
+      dest: "{{ _tempdir_local.path }}/db-init.sql"
+      src: "{{ _tempdir_local.path }}/db-init.sql.d"
+    delegate_to: localhost
+    changed_when: false
+
+  - name: Calculate checksum.
+    stat:
+      path: "{{ _tempdir_local.path }}/db-init.sql"
+      checksum_algorithm: sha256
+    delegate_to: localhost
+    register: _r
+
+  - name: Calculate.
+    set_fact:
+      makeatstate_sql_config_name:
+        "{{ (makeatstate_stack_name + '_sql_config-' + _r.stat.checksum)
+            | regex_replace('(.{,64}).*', '\\1') }}"
+
+  - name: Create config.
+    docker_config:
+      name: "{{ makeatstate_sql_config_name }}"
+      state: present
+      data: "{{ lookup('file', _tempdir_local.path + '/db-init.sql')
+                | b64encode }}"
+      data_is_b64: true
+      labels:
+        com.docker.stack.namespace: "{{ makeatstate_stack_name }}"
+    become: true
+
+  - name: Copy files.
+    template:
+      dest: "{{ _tempdir.path }}/\
+             {{ item | basename | regex_replace('\\.j2$', '') }}"
+      src: "{{ item }}"
+      mode: 0644
+    loop:
+    - docker-compose.yml.j2
+    when: _tempdir.path is defined
+    changed_when: false
+
+  - name: Deploy stack.
+    docker_stack:
+      name: "{{ makeatstate_stack_name }}"
+      compose: "{{ _tempdir.path }}/docker-compose.yml"
+      prune: true
+      state: present
+      resolve_image: never
+    become: true
+    when: _tempdir.path is defined
+
+  always:
+  - name: Clean up temporary directory.
+    file:
+      path: "{{ _tempdir.path }}"
+      state: absent
+    when: _tempdir.path is defined
+    changed_when: false
+    diff: false
+
+  - name: Clean up local temporary directory.
+    file:
+      path: "{{ _tempdir_local.path }}"
+      state: absent
+    delegate_to: localhost
+    when: _tempdir_local.path is defined
+    changed_when: false
+    diff: false
+
+- name: Check stack health.
+  include_tasks: wait_stack_healthy.yml
+  vars:
+    stack_name: "{{ makeatstate_stack_name }}"
+
+- name: Clean up.
+  docker_prune:
+    volumes: true
+    containers: true
+    volumes_filters:
+      label: "com.docker.stack.namespace={{ makeatstate_stack_name }}"
+    containers_filters:
+      label: "com.docker.stack.namespace={{ makeatstate_stack_name }}"
+  become: true
+  throttle: 1
+  failed_when: false
+
+- name: Get identifier of database container.
+  command:
+    cmd: "docker ps --quiet --no-trunc
+            -f 'label=com.docker.stack.namespace={{ makeatstate_stack_name }}'
+            -f 'name=^{{ makeatstate_stack_name }}_database\\.'
+            -f health=healthy"
+  until: _r.stdout_lines | count > 0
+  delay: 1
+  retries: 60
+  check_mode: false
+  become: true
+  register: _r
+  changed_when: false
+
+- name: Calculate.
+  set_fact:
+    makeatstate_db_container_id: "{{ _r.stdout_lines | first }}"
+
+- name: Wait for database to be initialized.
+  command:
+    cmd: "docker exec -i {{ makeatstate_db_container_id | quote }}
+            mysql --batch --skip-column-names makeatstate"
+    stdin: "SELECT COUNT(*) FROM permissions"
+  until: _r.stdout | int > 0
+  delay: 1
+  retries: 60
+  check_mode: false
+  become: true
+  register: _r
+  changed_when: false
+
+- name: Check whether an administrator account already exists.
+  command:
+    cmd: "docker exec -i {{ makeatstate_db_container_id | quote }}
+            mysql --batch --skip-column-names makeatstate"
+    stdin: "SELECT COUNT(*) FROM users"
+  delay: 1
+  retries: 60
+  check_mode: false
+  become: true
+  register: _r
+  changed_when: false
+
+- name: Add administrator account.
+  block:
+  - name: Calculate.
+    set_fact:
+      makeatstate_admin_password:
+        "{{ lookup('password', '/dev/null chars=ascii_lowercase length=16') }}"
+
+  - name: Show initial credentials.
+    debug:
+      msg: "To log in, connect to the interface at
+            https://{{ makeatstate_hostname | default(inventory_hostname) }}
+            with username 'admin@localhost' and password
+            '{{ makeatstate_admin_password }}'."
+
+  - name: Create administrator.
+    command:
+      cmd: "docker exec -i {{ makeatstate_db_container_id | quote }}
+              mysql --batch --skip-column-names makeatstate"
+      stdin: |
+        INSERT INTO users (email, permission_id, verified, fullname, pw_hash)
+        VALUES (
+          'admin@localhost',
+          (SELECT permission_id FROM permissions
+           WHERE group_name = 'Site admin'),
+          NOW(),
+          'Default administrator',
+          '{{ makeatstate_admin_password | password_hash }}'
+        );
+    delay: 1
+    retries: 60
+    become: true
+  when: "_r.stdout == '0'"

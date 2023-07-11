@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="jumbotron">
+	<h1 class="display-4">Manage Users </h1>
+  	<p class="lead">View, manage permissions of administrators and staff.</p>
+	<hr class="my-4">
+	<p>Search for users using either email address or name.</p>
+</div>
+{% include 'prime_alerts.html' %}
+<div class = "row justify-content-center  prime_search_container">
+	<div class = "col-md-9">
+		<form action ="/" method ="GET" enctype="multipart/form-data" class ="prime_margintop10px">
+			<input type="hidden" name ="t" value ="search_users">
+  			<div class="form-group">
+				<label class="visually-hidden" for="searchUsers">Username</label>
+				<input type="text" name ="q" class ="prime_search_bar" id="searchUsers" aria-label = "Search using email or name"  placeholder="   Search using email or name"  value ="{{query}}" required>
+				<input class="btn btn-primary prime_search_btn"  type="submit" value="Search users">
+			</div>
+		</form>
+	</div>
+</div>
+<div class = "row justify-content-center prime_margintop20px">
+	<div class = "col-md-9">
+		<div class="row justify-content-center prime_margintop20px prime_tabs">
+			<div class="col-3 prime_border_twinkleblue prime_textalign_center prime_borderradius20px  prime_no_right_radius {{ ((type !=1) and (type !=2) and (type!=3)) ?' prime_background_twinkleblue':''}}  "> <a href="/?t=manage_users&type=4">Adminstrators</a></div>
+			<div class="col-3 prime_border_twinkleblue prime_textalign_center prime_borderradius20px  prime_no_radius  {{ (type ==3)? ' prime_background_twinkleblue':''}}  "> <a href="/?t=manage_users&type=3">Staff</a></div>
+			<div class="col-3 prime_border_twinkleblue prime_textalign_center prime_borderradius20px prime_no_radius {{ (type ==2) ?' prime_background_twinkleblue': '' }} "> <a href="/?t=manage_users&type=2">Student staff</a></div>
+			<div class="col-3 prime_border_twinkleblue prime_textalign_center prime_borderradius20px prime_no_left_radius {{ (type ==1) ?' prime_background_twinkleblue': '' }} "> <a href="/?t=manage_users&type=1">Public users</a></div>
+		</div>
+	</div>
+</div>
+<div class = "row justify-content-center prime_margintop20px">
+	{% if pagination_array['status'] %}
+		<div class = "col-4 prime_padding0px prime_margin10px  prime_textalign_center prime_border_twinkleblue prime_borderradius5px">
+			 {{pagination_array['status']}} users
+		</div>
+	{% endif %}
+	<div class = "col-md-9 prime_padding0px prime_margin10px ">
+	{% if  user_results  %}
+		{% include 'user_row.html' %}
+	{% else %}
+		 <div class = "row  prime_padding10px justify-content-center">
+			<div class = "col-md-12 prime_padding0px prime_margin10px">
+				<div class="card prime_borderlightgrey mb-3">
+				  <div class="card-header">No Users</div>
+				  <div class="card-body text-secondary prime_textalign_center">
+				    <i data-feather="users"></i>
+				    {% if type ==1 %}
+				    <p class="card-text">No public users for MakeAtState.</p>
+				    {% elseif type ==2 %}
+				    <p class="card-text">No student staff for MakeAtState.</p>
+				    {% elseif type ==3 %}
+				    <p class="card-text">No staff for MakeAtState.</p>
+				    {% else %}
+				    <p class="card-text">No administrators for MakeAtState.</p>
+				    {% endif %}
+				  </div>
+				</div>
+			</div>
+		 </div>
+	{% endif %}
+	{% if pagination_array %}
+		{% include 'page_list.html' %}
+	{% endif %}
+	</div>
+</div>
+{% endblock %}

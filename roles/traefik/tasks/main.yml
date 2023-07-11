@@ -1,0 +1,160 @@
+---
+
+- name: Create network for Traefik.
+  docker_network:
+    name: "{{ traefik_network }}"
+    state: present
+    driver: overlay
+    attachable: true
+  become: true
+
+- name: Calculate.
+  set_fact:
+    _traefik_published:
+      - published_port: 80
+        target_port: 80
+        mode: host
+      - published_port: 443
+        target_port: 443
+        mode: host
+
+- name: Calculate.
+  set_fact:
+    _traefik_published_dev:
+      - published_port: 8080
+        target_port: 8080
+        mode: ingress
+  when: traefik_devel
+
+- name: Create Traefik config directory.
+  file:
+    path: /etc/traefik/conf.d/
+    state: directory
+    mode: 0755
+  become: true
+
+- name: Write Traefik config.
+  copy:
+    dest: "/etc/traefik/conf.d/dynamic.yml"
+    content: |
+      tls:
+        options:
+          default:
+            minVersion: VersionTLS13
+  become: true
+
+- name: Create Traefik TLS directory.
+  file:
+    path: /etc/traefik/tls/
+    state: directory
+    mode: 0700
+  become: true
+
+- name: Create Traefik ACME directory.
+  file:
+    path: /etc/traefik/acme/
+    state: directory
+    mode: 0700
+  become: true
+
+- name: Deploy Traefik.
+  docker_swarm_service:
+    name: "{{ traefik_service_name }}"
+    state: present
+    image: docker.io/traefik:v2.6
+    resolve_image: true
+    mounts:
+      - source: /var/run/docker.sock
+        target: /var/run/docker.sock
+      - source: /etc/traefik/conf.d/
+        target: /etc/traefik/conf.d/
+        readonly: true
+      - source: /etc/traefik/tls/
+        target: /etc/traefik/tls/
+        readonly: true
+      - source: /etc/traefik/acme/
+        target: /etc/traefik/acme/
+
+    publish: "{{ _traefik_published + _traefik_published_dev | default([]) }}"
+    command:
+      "traefik
+         --global.checknewversion=false
+         --global.sendanonymoususage=false
+
+         {# This is used for the health check. #}
+         --entrypoints.ping.address=127.0.0.1:8081
+         --ping
+         --ping.entrypoint=ping
+
+         --log
+         {% if traefik_devel %}
+         --log.level=DEBUG
+         {% endif %}
+         --accesslog
+
+         {% if traefik_devel %}
+         {# Make the Traefik dashboard and API accessible on port 8080 without
+          # authentication. #}
+         --api.insecure=true
+         {% endif %}
+
+         --entrypoints.http.address=:80
+         --entrypoints.http.transport.respondingTimeouts.readTimeout=\
+             {{ traefik_read_timeout }}
+         --entrypoints.https.address=:443
+         --entrypoints.https.transport.respondingTimeouts.readTimeout=\
+             {{ traefik_read_timeout }}
+
+         {# Set the timeout for opening a connection to a targeted backend. The
+          # default is 30 seconds, which seems far too long. #}
+         --serversTransport.forwardingTimeouts.dialTimeout=10
+
+         --providers.docker
+         --providers.docker.swarmMode=true
+         {% if traefik_devel %}
+         --providers.docker.swarmModeRefreshSeconds=5
+         {% endif %}
+         --providers.docker.exposedByDefault=false
+         {# This is necessary so that, when routing to a container with multiple
+          # network interfaces, Traefik knows which address it should use.
+          # Without this, Traefik may attempt to connect to an address which is
+          # not routable from its container. #}
+         --providers.docker.network={{ traefik_network }}
+         --providers.file.directory=/etc/traefik/conf.d/
+
+         {% if traefik_acme_email is defined %}
+         --certificatesresolvers.letsencrypt.acme.email={{ traefik_acme_email }}
+         {% endif %}
+         --certificatesresolvers.letsencrypt.acme.storage=\
+             /etc/traefik/acme/acme.json
+         --certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http
+         {% if traefik_devel %}
+         {# This helps us to avoid exceeding Let's Encrypt's rate limits. #}
+         --certificatesresolvers.letsencrypt.acme.caserver=\
+             https://acme-staging-v02.api.letsencrypt.org/directory
+         {% endif %}"
+    networks:
+      - "{{ traefik_network }}"
+    placement:
+      constraints:
+        - node.role == manager
+    replicas: 1
+    update_config:
+      failure_action: rollback
+    reservations:
+      cpus: "0.1"
+      memory: 24M
+    limits:
+      cpus: "{{ [2, ansible_processor_vcpus] | min }}"
+      memory: 96M
+    healthcheck:
+      test:
+        "traefik healthcheck
+           --entrypoints.ping.address=127.0.0.1:8081
+           --ping
+           --ping.entrypoint=ping"
+      interval: 10s
+      timeout: 30s
+      retries: 1
+      start_period: 30s
+  become: true

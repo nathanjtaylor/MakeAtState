@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+
+
+<div class="jumbotron">
+	<h1 class="display-4">View workflows</h1>
+  	<p class="lead">View all the workflows. Use edit option to edit the workflow name. </p>
+  	<hr class="my-4">
+  	<p>Add new workflows using the "Add" button.</p>
+
+</div>
+{% include 'prime_alerts.html' %}
+<div class="row justify-content-center prime_margintop20px">
+
+	<div class="col-md-11 text-center" style= "display: contents;" >
+		{% if workflows %}
+			{% include 'view_workflows.html' %}
+		{% endif %}
+
+
+		<div class="card prime_card prime_add_card">
+
+			<div class="card-body">
+				<i data-feather="plus-square" class ="prime_card_add_icon" style="width:75px;height:75px;"></i>
+				<p class="prime_add_card_text">Add workflows</p>
+			</div>
+
+		</div>
+
+		<div class="card prime_card prime_add_hidden_card" id="workflow_{{ workflow['workflow_id']}}">
+			<div class="card-header prime_background_teal">
+				Add workflow
+			</div>
+
+			<div class="card-body">
+				<!-- Hidden edit form for edit workflow -->
+				<div class="prime_card_details prime_paddingbottom10px" >
+					<form action="/" enctype="multipart/form-data" method="POST">
+						<input type="hidden" name="t" value="add_workflow">
+						<small class="text-muted" style="display:block">Workflow name  </small>
+						<input class ="form-control" aria-label="add workflow name" type=text name="w_name"  />
+						<small class="text-muted" style="display:block">Group</small>
+						<select name="w_group"  aria-label="Select group"class="form-control">
+							<option selected disabled></option>
+							{%  for group in groups %}
+								<option value="{{ group['group_id'] }}">{{ group['group_tag'] }}</option>
+							{% endfor %}
+						</select>
+						<small class="text-muted" style="display:block">Allowed file extenstions  </small>
+						<input class ="form-control" aria-label="add workflow ext" type=text name="w_ext"  />
+						<small class="text-muted" style="display:block">Workflow tag  </small>
+						<input class ="form-control" aria-label="add workflow tag" type=text name="w_tag"  />
+                        <div class="form-check pt-2">
+                            <input class="form-check-input" type="checkbox" name="w_disabled" id="disabledcheck" value="1">
+                            <label class="form-check-label" for="disabledcheck">
+                                Disabled
+                            </label>
+                        </div>
+
+						<a   href="#" class="btn btn-info prime_card_body_btn prime_icon_btn  add_back_btn" id="back_workflow_{{ workflow['workflow_id']}}" aria-label="Cancel add workflow"  data-toggle="tooltip" data-placement="top" title="Cancel add workflow"><i data-feather="corner-down-left"></i></a>
+						<input type="submit" class="btn btn-success prime_margintop20px " value="Add workflow">
+					</form>
+
+				</div>
+				<!-- Hidden edit form for edit workflow  ends here -->
+
+			</div>
+
+
+		</div>
+
+	<!--  End of add workflow card -->
+	</div>
+
+</div>
+
+
+{% endblock %}
+

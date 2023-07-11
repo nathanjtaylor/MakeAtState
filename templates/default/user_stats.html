@@ -1,0 +1,52 @@
+<div class = "col-md-9 prime_padding0px prime_margin10px">
+<div class="row prime_padding10px prime_background_teal">
+	<div class = "col-md-12 ">All user stats</div>
+</div>
+
+{% for key, stats in user_stats['all'] %}
+		<div class = "row  prime_padding10px  prime_borderbottom_lightgrey  {{ loop.index % 2  == 0 ?  ' prime_background_lightblue' : ''}}" >
+			 <div class = "col-md-6 prime_borderright_grey">
+					
+				<small class="text-muted">Type: </small>
+				{{ key }}
+			</div>
+
+			 <div class = "col-md-6 ">
+					
+				<small class="text-muted">Count: </small>
+				{{ stats }}
+			</div>
+			
+		</div>
+
+{% endfor %}
+</div>
+
+
+
+<div class = "col-md-9 prime_padding0px prime_margin10px">
+<div class="row prime_padding10px prime_background_teal">
+	<div class = "col-md-12 ">Public user stats</div>
+</div>
+{% for key, stats in user_stats['public_user'] %}
+		<div class = "row  prime_padding10px  prime_borderbottom_lightgrey  {{ loop.index % 2  == 0 ?  ' prime_background_lightblue' : ''}}" >
+			 <div class = "col-md-6 prime_borderright_grey">
+					
+				<small class="text-muted">Type: </small>
+				{{ key }}
+			</div>
+
+			 <div class = "col-md-6 ">
+					
+				<small class="text-muted">Count: </small>
+				{{ stats }}
+			</div>
+			
+		</div>
+
+{% endfor %}
+</div>
+
+
+
+

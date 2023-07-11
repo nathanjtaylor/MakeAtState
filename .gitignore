@@ -1,0 +1,14 @@
+# Any files which should not be overwritten should also be listed in
+# roles/app_3dprime/tasks/main.yml.
+.DS_Store
+vendor/
+*.swp
+*.swo
+*~
+*.cfg
+*.phar
+log/
+/docker-compose.deploy.yml
+/3dprime.service
+/certs/
+/.env

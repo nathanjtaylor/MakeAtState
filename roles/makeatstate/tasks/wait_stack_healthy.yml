@@ -1,0 +1,22 @@
+---
+
+- name: Get stack services.
+  command:
+    cmd: "docker stack services --format {%raw %}'{{ .Name }}'{% endraw %}
+            {{ stack_name | quote }}"
+  check_mode: false
+  become: true
+  changed_when: false
+  register: _services
+
+- name: Wait for stack to update.
+  include_tasks: wait_service_update.yml
+  loop: "{{ _services.stdout_lines }}"
+  loop_control:
+    loop_var: service
+
+- name: Wait for stack to be healthy.
+  include_tasks: wait_service_healthy.yml
+  loop: "{{ _services.stdout_lines }}"
+  loop_control:
+    loop_var: service

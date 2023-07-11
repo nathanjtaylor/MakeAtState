@@ -1,0 +1,49 @@
+
+{% block email_template %}
+<html lang="en">
+  <head>
+  <title>3dPrime</title>
+  </head>
+  <body >
+    <header style="background: #009D6C;color: #fff;font-size: 70px;padding: 20px;">MakeAtState</header>
+    <h1 style="color: #009D6C;">{{ name }}, </h1>
+    <h2 style="color: #666666;"> Welcome to MakeAtState, we are excited to have you!</h2>
+    
+    {% if confirm_url %}
+        <p style="font-size: 20px;color: #444444;line-height: 25px;">To confirm your account please click <a href="{{ confirm_url }}">{{ confirm_url }}</a>
+    {% endif %}
+
+    </p>
+    <p style="font-size: 20px;color: #444444;line-height: 25px;">Use MakeAtState for all your 3D printing needs here at the MSU libraries.</p>
+ 
+
+
+   <footer>
+	<br>
+	<br>
+	<span class = "small">Hollander MakeCentral</span><br>
+	<span class = "small">MSU Libraries’ Makerspace</span><br>
+	<span class = "small">****************************</span><br>
+	<span class = "small">Michigan State University Libraries</span><br>
+	<span class = "small">Main Library, 2West</span><br>
+	<span class = "small">366 W. Circle Drive</span><br>
+	<span class = "small">East Lansing, MI 48824</span><br>
+	<span class = "small">Phone: 517-884-0844</span><br>
+	<span class = "small">Email: <a class="msul-breakword" href="mailto:LIB.makecentral@msu.edu" rel="nofollow">LIB.makecentral@msu.edu</a></span><br>
+	<span class = "small"><a href="https://www.lib.msu.edu/general/library-hours-cal/hollander-makecentral-makerspace/" rel="nofollow">Hours</a></span><br>
+    <br>
+    <div class="d-flex">
+        <a  href="https://www.instagram.com/makeatstate/" rel="nofollow">
+            <img class="pt-2 pr-2" width="40px" height="40px" src="data:image/png;base64,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" role="presentation" alt="" />
+        </a>
+        <a  href="https://twitter.com/makeatstate" rel="nofollow">
+            <img  class="pt-2 pr-2" width="40px" height="40px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAACGElEQVRIie2Wy2sTURSHvzOZmbzMEwqlxiBBwdemVhTcuOhGV4KvhYirguDOf6Ci++4KBqEuunAlStduBEHwvWtVSLBEImk1VZKYzEwz46JWrM2dJGRRhfy2Z879+J1z5t4jPPjqsQPSdgI6BA/B/z54LCScSAVIG9Jzju4XPJnWeVZdV8bjujA3EeX8bgMRwXE9ZgsW88sWFzMm88sW7+tux1yl44QuPDkVY2pvUAm+dyzKhYyJyIZTQxNu7A/xZjJOTBfSprqgykjKFAxNuHs0Qn48QlzfWsZMWOPcmKE8+FLGZM3p7NYXXGq6rLRcRIRruRCF0wluHQpzILaRko1ov53+LRFh8mmNdzU1WFR3tSFwJWsyNxHdBli1XCotlyMJ9YjEF6rU1OOhHq7RkMbNg2G+Ox5Jcyt4JKgxElT375vt+kKhS6lXbY+kz4Co9Lza7vqN76lXX9YpN9V9Uulh2R4MvFRzub3UpPSju4NNfbFc7peswcAAIrAnEugZPL3YpN6lvz2B80WL628bfG51L/lC2SZf7O62JzDAnaLF1OsGFR/444rD5Rd1et2jlL/T8VSA8aTOvl0aZ0ZNDsc7l9t2PWY+tJhebLLex/amBL9aa5ONaJyNG+Si2wvzsdHmUdlhttCi2Oh/8pU3158yBHJRjZSpYbsen5ouK9Zgy6nvs7gpx+PX89a/M5X+7w1kCB6CO+knTgGp2vG+n3IAAAAASUVORK5CYII=" role="presentation" alt="" />
+        </a>
+    </div>
+  </footer> 
+
+  </body>
+
+</html>
+
+{% endblock %}

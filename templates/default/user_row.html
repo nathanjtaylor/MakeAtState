@@ -1,0 +1,18 @@
+{% for user in user_results  %}
+	<div class = "row  prime_padding10px  prime_borderbottom_lightgrey  {{ loop.index % 2  == 0 ?  ' prime_background_lightblue' : ''}}" >
+		 <div class = "col-md-3 prime_borderright_grey">
+			<small class="text-muted" style="display:block">Name  </small>{{ user['fullname'] }}&nbsp;{{ user['lastname'] }}
+		</div>
+		 <div class = "col-md-3 prime_borderright_grey">
+			<small class="text-muted" style="display:block">Email</small>{{ user['email'] }}
+		</div>
+		 <div class = "col-md-3 prime_borderright_grey">
+			<small class="text-muted" style="display:block">Status</small>{{(user['blocked']) ? 'Blocked' :  user['group_name'] |capitalize}}
+		</div>
+		 <div class = "col-md-3 ">
+			<small class="text-muted" style="display:block">Actions</small>
+			<a  aria-label = "Edit user" href = "/?t=user_details&euid={{ user['user_id'] }}"  class ="btn btn-dark prime_icon_btn" data-toggle="tooltip" data-placement="top" title="Edit user"><i  data-feather="edit" ></i></a>
+			<a  aria-label = "View jobs" href = "/?t=user_jobs&juid={{ user['user_id'] }}"  class ="btn btn-info prime_icon_btn" data-toggle="tooltip" data-placement="top" title="View jobs"><i  data-feather="printer" ></i></a>
+		</div>
+	</div>
+{% endfor %}

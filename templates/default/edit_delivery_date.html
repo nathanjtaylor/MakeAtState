@@ -1,0 +1,44 @@
+
+<div class = "col-md-9 prime_padding0px prime_margin10px">  
+
+<form class = "form-row prime_form_row" novalidate="" id ="prime_validate_form"  action="/"  method ="post">
+	<div class="card prime_borderlightgrey mb-3"> 
+		<div class="card-header prime_background_teal">Set Delivery Date</div>
+		<div class="card-body row justify-content-center"> 
+			<input type="hidden" name="t" value="setdeliverydate">  
+			<input type="hidden" name="job_id" value="{{edit_delivery_date['job_id']}}">  
+			<input type="hidden" name="uid" value="{{edit_delivery_date['user_id']}}">  
+			<input type="hidden" name="next" value="{{edit_delivery_date['next']}}">  
+
+
+			<div class = "col-md-6 prime_textalign_center">
+				<small class="text-muted" style="display:block">
+					Approximate delivery
+				</small>   
+
+				<div class="input-group mb-2 mr-sm-2 prime_margintop10px prime_center_padding">
+					<input type="date" class="form-control" minlength="10" pattern="^[0-9\/]*$" placeholder="mm/dd/yyyy" name ="estimated_delivery" required>
+					<div class ="invalid-feedback">
+						Invalid date . Date should not be empty and in mm/dd/yyyy format
+					</div>
+
+				 </div>
+				
+			</div>
+		</div>
+		<div class="card-footer">
+			<div>
+				<input type="submit" class="btn btn-success prime_margintop10px prime_validate_btn" value ="Set Delivery Date"/>
+			</div>
+			
+		</div>
+	</div>
+
+</form>
+
+
+
+</div>
+
+
+

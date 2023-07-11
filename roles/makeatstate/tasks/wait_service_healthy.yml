@@ -1,0 +1,16 @@
+---
+
+- name: "Wait for {{ service }} to be healthy."
+  command:
+    cmd: "docker ps --quiet --no-trunc
+            -f 'label=com.docker.stack.namespace={{ stack_name | quote }}'
+            -f 'name=^{{ service | quote }}\\.'
+            -f health=none -f health=healthy"
+  until: _r.stdout_lines | count > 0
+  delay: 1
+  retries: 60
+  check_mode: false
+  become: true
+  register: _r
+  changed_when: false
+  no_log: true

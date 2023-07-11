@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+
+
+
+{% block content %}
+
+<div class="jumbotron">
+	<h1 class="display-4">Hollander Makerspace</h1>
+  	<p class="lead">For questions or concerns please regarding your job contact the Hollander Makersapce. For questions regarding in-person pick up times, please contact the MakeCentral: Service Desk
+</p>
+  	<hr class="my-4">
+
+</div>
+
+
+{% include 'prime_alerts.html' %}
+
+<div class = "container-fluid">
+	<div class = "row justify-content-center prime_margintop20px ">
+
+
+
+		<div class = "col-md-6 prime_padding0px prime_margin10px">
+
+			<div class="card prime_borderlightgrey mb-3">
+			  <div class="card-header">Contact Information</div>
+			  <div class="card-body text-secondary">
+				<p class="card-text"><strong>Hollander Makerspace Staff</strong></p>
+				<p class="card-text">Phone: 517-884-0844</p>
+				<p class="card-text">Email: <a class="msul-breakword" href="mailto:LIB.Makerspace@msu.edu" rel="nofollow">LIB.Makerspace@msu.edu</a></p>
+				<p class="card-text">Location: Main Library, 2West</p>
+				<p class="card-text"><a href="https://www.lib.msu.edu/general/library-hours-cal/hollander-makecentral-makerspace/" rel="nofollow">Hours</a></p>
+			  </div>
+			  <div class="card-body text-secondary">
+				<p class="card-text"><strong>MakeCentral Service Desk Staff</strong></p>
+				<p class="card-text">Phone: 517-884-6386</p>
+				<p class="card-text">Email: <a class="msul-breakword" href="mailto:LIB.makecentral@msu.edu" rel="nofollow">LIB.makecentral@msu.edu</a></p>
+				<p class="card-text">Location: Main Library, 2West</p>
+				<p class="card-text"><a href="https://www.lib.msu.edu/general/library-hours-cal/hollander-makecentral-makerspace/" rel="nofollow">Hours</a></p>
+			  </div>
+
+			</div>
+
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+

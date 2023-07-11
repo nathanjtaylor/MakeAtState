@@ -1,0 +1,113 @@
+<div class="card prime_long_card mb-9 prime_user_details">
+	<div class="card-header prime_background_teal">
+	 User details
+	<a   href = "#" class="btn btn-outline-light prime_icon_btn edit_user_details prime_float_right" aria-label = "Edit item"i data-toggle="tooltip" data-placement="top" title="Edit user details"><i data-feather="edit-2"></i></a>
+	</div>
+	 <div class="card-body row">
+		 <div class = "col-md-3 prime_textalign_center">
+			<small class="text-muted" style="display:block">
+				First name
+			</small>
+			{{ user_details['fullname'] }}
+		</div>
+		 <div class = "col-md-3 prime_textalign_center">
+			<small class="text-muted" style="display:block">
+				Last name
+			</small>
+			{{ user_details['lastname'] }}
+		</div>
+		 <div class = "col-md-3 prime_textalign_center">
+			<small  class="text-muted" style="display:block">
+				Email
+			</small>
+			{{ user_details['email'] }}
+		</div>
+		 <div class = "col-md-3 prime_textalign_center">
+			<small  class="text-muted" style="display:block">
+				Phone number
+			</small>
+			{{ user_details['phone_num'] }}
+		</div>
+		 <div class = "col-md-3 prime_textalign_center">
+			<small class="text-muted" style="display:block">
+				Status
+			</small>
+			{{ edit_user_options['status'] | capitalize}}
+		</div>
+		 <div class = "col-md-3 prime_textalign_center prime_margintop10px">
+			<small class="text-muted" style="display:block">
+				Affiliation
+			</small>
+			{{ user_details['affiliation'] | capitalize}}
+		</div>
+		 <div class = "col-md-3 prime_textalign_center prime_margintop10px">
+			<small class="text-muted" style="display:block">
+				Department
+			</small>
+			{{ user_details['department'] | capitalize}}
+		</div>
+	</div>
+	<div class="card-footer">
+	</div>
+</div>
+<div class="card prime_long_card mb-9 prime_edit_user_details">
+	<form action="/" enctype="multipart/form-data" method="POST">
+	<input type="hidden" name="t" value="edit_user_details">
+	<input type="hidden" name="euid" value="{{ edit_user_options['euid'] }}">
+	<div class="card-header prime_background_teal">
+	 Edit user details
+	</div>
+	 <div class="card-body row">
+		 <div class = "col-md-3 prime_textalign_center">
+			<small class="text-muted" style="display:block">
+				First name
+			</small>
+			{{ user_details['fullname'] }}
+		</div>
+		 <div class = "col-md-3 prime_textalign_center">
+			<small class="text-muted" style="display:block">
+				Last name
+			</small>
+			{{ user_details['lastname'] }}
+		</div>
+		 <div class = "col-md-3 prime_textalign_center">
+			<small  class="text-muted" style="display:block">
+				Email
+			</small>
+			{{ user_details['email'] }}
+		</div>
+		 <div class = "col-md-3 prime_textalign_center">
+			<small  class="text-muted" style="display:block">
+				Phone number
+			</small>
+			{{ user_details['phone_num'] }}
+		</div>
+		 <div class = "col-md-3 prime_textalign_center">
+			<small class="text-muted" style="display:block">
+				Select status
+			</small>
+			  <select name = "perm_id"  aria-label = "Select status" class="form-control">
+			    {% for permission in edit_user_options['all_permissions']  %}
+				<option value="{{ permission['perm_id'] }}"  {{ (edit_user_options['status'] == permission['perm_group'] ) ? 'selected': '' }} >{{permission['perm_group'] | capitalize }}</option>
+			    {% endfor %}
+			  </select>
+		</div>
+		 <div class = "col-md-3 prime_textalign_center prime_margintop10px">
+			<small class="text-muted" style="display:block">
+				Affiliation
+			</small>
+			{{ user_details['affiliation'] | capitalize}}
+		</div>
+		 <div class = "col-md-3 prime_textalign_center prime_margintop10px">
+			<small class="text-muted" style="display:block">
+				Department
+			</small>
+			{{ user_details['department'] | capitalize}}
+		</div>
+	</div>
+	<div class="card-footer">
+		<input type="button" class="btn btn-danger cancel_edit_user_details" value="Cancel">
+		<input type="submit" class="btn btn-success prime_float_right" value="Update">
+	</div>
+	</form>
+</div>

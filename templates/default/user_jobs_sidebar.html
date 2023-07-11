@@ -1,0 +1,14 @@
+<p>Sort</p>
+ <ul class="list-group">
+    {% for sort_field, value in sort_options  %}
+        <li><a href="/?t=user_jobs&juid={{juid}}&sort={{sort_field}}&dir={{sort_array['sort_dir']}}" class="list-group-item d-flex justify-content-between align-items-center">{{ value}}</a></li>
+    {% endfor %}
+ </ul>
+<p>Sort order</p>
+ <ul class="list-group">
+    {% for sort_dir, value in sort_dir_options  %}
+        <li><a href="/?t=user_jobs&juid={{juid}}&sort={{sort_array['sort_field']}}&dir={{sort_dir}}" class="list-group-item d-flex justify-content-between align-items-center">{{ value}}</a></li>
+    {% endfor %}
+ </ul>
+
+

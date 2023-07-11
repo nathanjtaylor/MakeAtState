@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MakeAtState | {{ page_title }}  </title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link type="text/css" rel="stylesheet" href="../css/makeatstate.css">
+</head>
+<body style="padding-right: 8%;
+    padding-left: 8%;">
+<h1 class="prime_textalign_center">Details for order {{ " " }}{{ job_id }}-{{ project_name }}</h1>
+<h2 class="prime_textalign_center">Project name: {{ " " }}{{ project_name}}</h2>
+<table>
+    <tr>
+        <td><b>Job Placed: </b> {{created}}</td>
+    </tr>
+    <tr>
+        <td><b>MakeAtState Job Number: </b> {{ job_id }}</td>
+    </tr>
+    {% if price_details %}
+    <tr>
+        <td><b>Pre-tax Total: </b>${{ (price_details['grand_total'] - price_details['tax']) | number_format(2, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td><b>Job Total: </b> ${{ price_details['grand_total'] | number_format(2, '.', ',')}}</td>
+    </tr>
+    {% endif %}
+</table>
+
+{%for file_id, file in job_files %}
+    <div class="prime_print_section">
+        <table class="prime_print_table">
+            <tr class="prime_print_border">
+                <td style="text-align: center"><b>{{ file['file_name'] }}</b></td>
+            </tr>
+            <tr class="prime_print_border">
+                <td>
+                    <table class="prime_print_table">
+                        <tr>
+                            {% for title, value in short_details[file_id] %}
+                            {% if (loop.index-1) % 5 == 0 %}
+                        </tr>
+                        <tr>
+                            {% endif %}
+                            <td style="padding-bottom: 15px; padding-top: 5px; width: 20%"><b>{{ title }}</b><br>{{value}}</td>
+                            {% endfor %}
+                        </tr>
+                        {% for title, value in long_details['file_id'] %}
+                        <tr >
+                            <td colspan="5" style="padding-top: 10px">
+                                <b>{{title}}</b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" style="padding-bottom: 10px">
+                                {{ value }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+            </tr>
+        </table>
+    </div>
+{% endfor %}
+{% if user_details %}
+    <div class="prime_print_section">
+        <table class="prime_print_table">
+            <tr class="prime_print_border">
+                <td style="text-align: center"><b>Submitted by</b></td>
+            </tr>
+            <tr class="prime_print_border">
+                <td>
+                    <table class="prime_print_table">
+                        <tr>
+                            {% for title, value in user_details %}
+                            {% if (loop.index-1) % 5 == 0 %}
+                        </tr>
+                        <tr>
+                            {% endif %}
+                            <td style="padding-bottom: 15px; padding-top: 5px; width: 20%"><b>{{ title }}</b><br>{{value}}</td>
+                            {% endfor %}
+                        </tr>
+                    </table>
+            </tr>
+        </table>
+    </div>
+{% endif %}
+{% if price_details %}
+    {%for file_id, file in job_files %}
+        <div class="prime_print_section">
+            <table class="prime_print_table">
+                <tr class="prime_print_border">
+                    <td style="text-align: center"><b>Pricing Info for {{ " " }}{{ file['file_name'] }}</b></td>
+                </tr>
+                <tr class="prime_print_border">
+                    <td>
+                        <table class="prime_print_table">
+                            <tr>
+                                <td class="price_info_left"><b>Unit Price:</b></td>
+                                <td class="price_info_right">${{price_details[file_id]['unit_price']}}</td>
+                            </tr>
+                            <tr><td class="price_info_left"><b> Copies:</b></td>
+                                <td class="price_info_right">{{price_details[file_id]['count']}}</td></tr>
+                            <tr>
+                                <td class="price_info_left"><b>Pre-tax Total:</b></td>
+                                <td class="price_info_right">${{price_details[file_id]['total_pretax']}}</td>
+                            </tr>
+                            {% if price_details['discount'] and price_details[file_id]['discount'] > 0 %}
+                            <tr>
+                                <td class="price_info_left"><b>Price before discount</b></td>
+                                <td class="price_info_right">$ {{ price_details[file_id]['total_price_before_discount'] }}</td>
+                            </tr>
+                            <tr>
+                                <td class="price_info_left"><b>Discount</b></td>
+                                 <td class="price_info_right">{{ price_details[file_id]['discount'] }}%</td>
+                            </tr>
+                            {% endif %}
+                            <tr>
+                                <td class="price_info_left"><b>Calculated Tax:</b></td>
+                                <td class="price_info_right">${{price_details[file_id]['tax']}}</td>
+                            </tr>
+                            <tr>
+                                <td class="price_info_left"><b>Total Price:</b></td>
+                                <td class="price_info_right">${{price_details[file_id]['total']}}</td>
+                            </tr>
+                        </table>
+                </tr>
+            </table>
+        </div>
+    {% endfor %}
+{% endif %}
+</body>
+</html>

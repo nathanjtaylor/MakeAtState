@@ -1,0 +1,37 @@
+---
+
+- name: Get certificate's subject's common name.
+  openssl_certificate_info:
+    path: "{{ cert_file }}"
+  delegate_to: localhost
+  register: _r
+
+- name: Calculate.
+  set_fact:
+    cert_name: "{{ _r.subject.commonName
+                   | regex_replace('[^A-Za-z0-9_.-]', '_') }}"
+
+- name: Write TLS certificate.
+  copy:
+    dest: "/etc/traefik/tls/{{ cert_name }}.crt"
+    src: "{{ cert_file }}"
+  become: true
+  notify: reconfigure_traefik
+
+- name: Write TLS key.
+  copy:
+    dest: "/etc/traefik/tls/{{ cert_name }}.key"
+    src: "{{ key_file }}"
+    mode: 0400
+  become: true
+  notify: reconfigure_traefik
+
+- name: Write Traefik config.
+  copy:
+    dest: "/etc/traefik/conf.d/tls-{{ cert_name }}.yml"
+    content: |
+      tls:
+        certificates:
+        - certFile: /etc/traefik/tls/{{ cert_name }}.crt
+          keyFile: /etc/traefik/tls/{{ cert_name }}.key
+  become: true

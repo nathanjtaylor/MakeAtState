@@ -1,0 +1,121 @@
+<div class="card prime_long_card mb-9 prime_user_details">
+	<div class="card-header prime_background_teal">
+	 My details
+    {% if  user_details['okta_token']  is  empty %}
+        <!-- Show this setting only for users authenticated via MakeAtState -->
+	    <a   href = "#" class="btn btn-outline-light prime_icon_btn edit_user_details prime_float_right" aria-label = "Edit item"i data-toggle="tooltip" data-placement="top" title="Edit user details"><i data-feather="edit-2"></i></a>
+    {% endif %}
+	</div>
+	 <div class="card-body row">
+		 <div class = "col-md-3 prime_textalign_center">
+			<small class="text-muted" style="display:block">
+				First name
+			</small>
+			{{ user_details['fullname'] }}
+		</div>
+		 <div class = "col-md-3 prime_textalign_center">
+			<small class="text-muted" style="display:block">
+				Last name
+			</small>
+			{{ user_details['lastname'] }}
+		</div>
+		 <div class = "col-md-3 prime_textalign_center">
+			<small  class="text-muted" style="display:block">
+				Email
+			</small>
+			{{ user_details['email'] }}
+		</div>
+		 <div class = "col-md-3 prime_textalign_center">
+			<small  class="text-muted" style="display:block">
+				Phone number
+			</small>
+			{{ user_details['phone_num'] }}
+		</div>
+		 <div class = "col-md-3 prime_textalign_center prime_margintop10px">
+			<small class="text-muted" style="display:block">
+				Status
+			</small>
+			{{ user_details['status'] | capitalize}}
+		</div>
+		 <div class = "col-md-3 prime_textalign_center prime_margintop10px">
+			<small class="text-muted" style="display:block">
+				Affiliation
+			</small>
+			{{ user_details['affiliation'] | capitalize}}
+		</div>
+		 <div class = "col-md-3 prime_textalign_center prime_margintop10px">
+			<small class="text-muted" style="display:block">
+				Department
+			</small>
+			{{ user_details['department'] | capitalize}}
+		</div>
+	</div>
+	<div class="card-footer">
+	</div>
+</div>
+<div class="card prime_long_card mb-9 prime_edit_user_details">
+	<form action="/" enctype="multipart/form-data" novalidate="" id ="settingsForm"  method="POST">
+	<input type="hidden" name="t" value="update_user_details_settings">
+	<div class="card-header prime_background_teal">
+	 Edit user details
+	</div>
+	 <div class="card-body row">
+		 <div class = "col-md-3 prime_textalign_center">
+			<small class="text-muted" style="display:block">
+				First name
+			</small>
+			<input type="text" name ="name" aria-label="name"  class="form-control" value="{{ user_details['fullname'] }}" required>
+		</div>
+		 <div class = "col-md-3 prime_textalign_center">
+			<small class="text-muted" style="display:block">
+				Last name
+			</small>
+			<input type="text" name ="lastname" aria-label="lastname"  class="form-control" value="{{ user_details['lastname'] }}" required>
+		</div>
+		 <div class = "col-md-3 prime_textalign_center">
+			<small  class="text-muted" style="display:block">
+				Email
+			</small>
+	    		<input type="email" class="form-control "aria-label="email" placeholder="Email" name ="email" value="{{ user_details['email'] }}"  id="validationTooltip01" required>
+			<div class ="invalid-feedback">
+				Invalid email entry. Email should be in  "me@example.com" format
+			</div>
+		</div>
+		 <div class = "col-md-3 prime_textalign_center">
+			<small  class="text-muted" style="display:block">
+				Phone number
+			</small>
+	    		<input type="tel" minlength="12" pattern="^[0-9\-]*$" aria-label="phone number" class="form-control" placeholder="xxx-xxx-xxxx" name ="phone" value="{{ user_details['phone_num']}}" required>
+			<div class ="invalid-feedback">
+				Invalid phone number . Phone number should be in xxx-xxx-xxxx format
+			</div>
+		</div>
+		 <div class = "col-md-3 prime_textalign_center prime_margintop10px">
+			<small class="text-muted" style="display:block">
+				Status
+			</small>
+			{{ user_details['status'] | capitalize}}
+		</div>
+		 <div class = "col-md-3 prime_textalign_center prime_margintop10px">
+			<small class="text-muted" style="display:block">
+				Affiliation
+			</small>
+			  <select name = "affiliation" aria-label="affiliation"  class="form-control">
+				    {% for affiliations  in user_details['all_affiliations']  %}
+					<option value="{{ affiliations['aff_key'] }}"  {{ (affiliations['aff_key'] == user_details['affiliation_val']  ) ? 'selected': '' }} >{{ affiliations['aff_val']}}</option>
+				    {% endfor %}
+			  </select>
+		</div>
+		 <div class = "col-md-3 prime_textalign_center prime_margintop10px">
+			<small class="text-muted" style="display:block">
+				Department
+			</small>
+			<input type="text" name ="department"aria-label="department" class="form-control" name = "user_badge" value="{{ user_details['department'] | capitalize}}">
+		</div>
+	</div>
+	<div class="card-footer">
+		<input type="button" class="btn btn-danger cancel_edit_user_details" value="Cancel">
+		<input type="submit"  class="settings_btn btn btn-success prime_float_right" value="Update">
+	</div>
+	</form>
+</div>

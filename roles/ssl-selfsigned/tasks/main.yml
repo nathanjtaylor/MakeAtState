@@ -1,0 +1,39 @@
+---
+
+- name: Create directory for storing PKI material.
+  file:
+    path: "{{ item | dirname }}"
+    state: directory
+    mode: 0700
+  delegate_to: localhost
+  become: false
+  loop:
+    - "{{ ssl_selfsigned_key_file }}"
+    - "{{ ssl_selfsigned_csr_file }}"
+    - "{{ ssl_selfsigned_cert_file }}"
+
+- name: Generate private key.
+  openssl_privatekey:
+    path: "{{ ssl_selfsigned_key_file }}"
+  delegate_to: localhost
+  become: false
+
+- name: Generate CSR for self-signing.
+  openssl_csr:
+    path: "{{ ssl_selfsigned_csr_file }}"
+    privatekey_path: "{{ ssl_selfsigned_key_file }}"
+    common_name: "{{ ssl_selfsigned_name | default(inventory_hostname) }}"
+    basic_constraints: CA:TRUE
+    basic_constraints_critical: true
+  delegate_to: localhost
+  become: false
+
+- name: Generate self-signed certificate.
+  openssl_certificate:
+    path: "{{ ssl_selfsigned_cert_file }}"
+    csr_path: "{{ ssl_selfsigned_csr_file }}"
+    privatekey_path: "{{ ssl_selfsigned_key_file }}"
+    selfsigned_not_after: "{{ ssl_selfsigned_validity | default('+3650d') }}"
+    provider: selfsigned
+  delegate_to: localhost
+  become: false

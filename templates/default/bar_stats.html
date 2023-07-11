@@ -1,0 +1,42 @@
+{% if (stats_type == 1) %}
+	{% set stats=job_stats %}
+{% endif %}
+{% if (stats_type != 1) %}
+	{% set stats=user_stats %}
+{% endif %}
+
+
+{% for key, array in stats %}
+	<div class = "col-md-9 prime_padding0px prime_margin10px">
+		<div class="row  prime_background_lightgrey">
+			<div class = "col-md-12 prime_padding10px ">{{ key }} Stats</div>
+		</div>
+		<div class = "col-md-12 prime_padding10px ">
+			<div class="prime_background_twinkleblue prime_stats_bar prime_margintop20px">
+
+				{% set total = 0 %}
+				{% for k, stat in array %}
+					{% set total = total + stat %}
+				{% endfor %}
+
+				{% for k, stat in array %}
+				<div class="prime_stats_bar prime_float_left  prime_no_{{loop.first ? 'right_' : loop.last ? 'left_' : ''}}radius" style="width:{{ ( stat / total ) * 100}}%; background-color: {{ colors[loop.index] }}; "></div>
+				{% endfor %}
+				<span class="prime_float_right prime_font12px">Total: {{ total }}</span>
+			</div>
+
+		</div>
+		{% for k, stat in array %}
+			<div class = "col-md-2 prime_padding10px  prime_display_inlinetable">
+				<div class = "prime_bar_block" style="background-color: {{ colors[loop.index] }}">
+				</div>
+				<div class = "prime_bar_block_info prime_font12px">
+					{{ stat }} {{k}}
+				</div>
+			</div>
+		{% endfor %}
+
+
+	</div>
+{% endfor %}
+

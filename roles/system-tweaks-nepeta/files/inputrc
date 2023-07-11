@@ -1,0 +1,24 @@
+set editing-mode vi
+set bell-style none
+
+set match-hidden-files off
+set revert-all-at-newline on
+set colored-stats on
+
+set keymap vi-insert
+"\C-b": unix-filename-rubout
+"\C-l": clear-screen
+
+"\C-x\C-i": insert-completions
+"\C-xf": complete-filename
+"\C-x=": possible-completions
+"\C-x/": possible-filename-completions
+"\C-x!": possible-command-completions
+"\C-x@": possible-hostname-completions
+"\C-x~": possible-username-completions
+"\C-x$": possible-variable-completions
+
+set keymap vi-command
+"\C-b": unix-filename-rubout
+"\C-l": clear-screen
+"\C-a": yank-nth-arg

@@ -1,0 +1,48 @@
+{% for group in groups %}
+
+    <div class="card prime_card" id = "group_{{ group['group_id']}}">
+        <div class="card-header prime_background_teal">
+            Group
+            <a   href = "#" class="btn btn-outline-light prime_icon_btn workflow_edit  edit_btn" id = "edit_group_{{ group['group_id']}}" aria-label = "Edit group" data-toggle="tooltip" data-placement="top" title="Edit group"><i data-feather="edit-2"></i></a>
+        </div>
+
+        <div class="card-body">
+            <div class = "prime_card_details prime_card_solid_form"  >
+                <p style="font-size:24px">{{ group['group_name']}} </p>
+                <p> <small class="text-muted" style="display:block">Admin Email </small> {{ group['admin_email']}}</p>
+                {% if  group['group_tag'] %}
+                    <p> <small class="text-muted" style="display:block">Group tag  </small> {{ group['group_tag'] }}</p>
+                {% endif %}
+
+            </div>
+
+            <!-- Hidden edit form for edit group -->
+            <div class = "prime_card_details prime_card_hidden_form prime_paddingbottom10px " >
+                <form action="/" enctype="multipart/form-data" method="POST">
+                    <input type="hidden" name="t" value="edit_group">
+                    <input type="hidden" name="gid" value="{{ group['group_id']}}">
+                    <small class="text-muted" style="display:block">Group name  </small>
+                    <input class ="form-control" aria-label = "edit group name" type=text name = "g_name" value="{{ group['group_name']}}" />
+                    <small class="text-muted" style="display:block">Admin Email  </small>
+                    <input class ="form-control" aria-label = "edit group ext" type=text name = "g_email" value="{{ group['admin_email'] }}" />
+                    <small class="text-muted" style="display:block">Group tag  </small>
+                    <input class ="form-control" aria-label = "edit group tag" type=text name = "g_tag" value="{{ group['group_tag']}}" />
+
+                    <a   href = "#" class="btn btn-info prime_card_body_btn  prime_icon_btn back_btn" id = "back_group_{{ group['group_id']}}" aria-label = "Cancel edit"  data-toggle="tooltip" data-placement="top" title="Cancel edit"><i data-feather="corner-down-left"></i></a>
+                    <input type="submit" class="btn btn-success prime_margintop20px " value="Update">
+                </form>
+
+            </div>
+            <!-- Hidden edit form for edit group  ends here -->
+
+
+        </div>
+
+        <div class="card-footer" >
+            <a   href = "/?t=remove_group&gid={{ group['group_id']}}"  class="btn btn-danger prime_white_text" aria-label = "Delete group" data-toggle="tooltip" data-placement="top" title="Delete group"><i data-feather="trash-2"></i></a>
+        </div>
+
+    </div>
+
+{% endfor %}
+

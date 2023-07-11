@@ -1,0 +1,21 @@
+
+{% block display_materials %}
+	{% if materials %}
+		<div class="input-group mb-3 prime_margintop20px">
+		  <div class="input-group-prepend">
+		    <label class="input-group-text prime_no_background border-0" for="prime_select_materials_{{ id }}">Materials</label>
+		  </div>
+		  <select name = "material[]" class="form-control rounded prime_select_materials" id="prime_select_materials_{{ id }}">
+		    <option disabled selected>Choose material ...</option>
+		    {% for material in materials %} 
+			<option value="{{ material }}">{{ material }}</option>
+		    {% endfor %}
+		  </select>
+		</div>
+	{% else %}
+		 <p class = "prime_textalign_center prime_padding10px prime_borderbottom_lightgrey"> No materials are available for this workflow , please try again later </p>
+
+	{% endif %}
+{% endblock %}
+
+

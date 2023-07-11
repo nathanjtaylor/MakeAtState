@@ -1,0 +1,151 @@
+<div class = "col-md-9 prime_padding0px prime_margin10px">
+<div class="row  prime_background_lightgrey">
+	<div class = "col-md-12 prime_padding10px ">Basic stats</div>
+</div>
+	<div class = "col-md-12 prime_padding10px ">
+		<div class="prime_background_twinkleblue prime_stats_bar prime_margintop20px">
+			<div class="prime_success_background prime_stats_bar prime_float_left  prime_no_right_radius" style="width:{{ (job_stats['basic']['Total jobs'] == 0) ? 0 :  (job_stats['basic']['Open jobs'] / job_stats['basic']['Total jobs'] ) * 100}}% "></div>
+			<div class="prime_dark_background prime_stats_bar prime_float_left prime_no_left_radius" style="width:{{ (job_stats['basic']['Total jobs'] == 0) ? 0 :  (job_stats['basic']['Closed jobs'] / job_stats['basic']['Total jobs'] ) * 100}}% "></div>
+			<span class="prime_float_right prime_font12px">{{ job_stats['basic']['Total jobs'] }} total jobs</span>
+		</div>
+
+	</div>
+	<div class = "col-md-2 prime_padding10px  prime_display_inlinetable">
+		<div class = "prime_bar_block prime_success_background">
+		</div>
+		<div class = "prime_bar_block_info prime_font12px">
+			{{ job_stats['basic']['Open jobs'] }} Open jobs
+		</div>
+	</div>
+	<div class = "col-md-2 prime_padding10px  prime_display_inlinetable">
+		<div class = "prime_bar_block prime_dark_background">
+		</div>
+		<div class = "prime_bar_block_info prime_font12px">
+			{{ job_stats['basic']['Closed jobs'] }} Closed jobs
+		</div>
+	</div>
+</div>
+
+<div class = "col-md-9 prime_padding0px prime_margin10px">
+<div class="row  prime_background_lightgrey">
+	<div class = "col-md-12 prime_padding10px ">Detailed stats</div>
+</div>
+	<div class = "col-md-12 prime_padding10px ">
+		<div class="prime_background_twinkleblue prime_stats_bar prime_margintop20px">
+			<div class="prime_success_background prime_stats_bar prime_float_left  prime_no_right_radius" style="width:{{ (job_stats['basic']['Total jobs'] == 0) ? 0 : (job_stats['detail']['Completed jobs'] / job_stats['basic']['Total jobs'] ) * 100}}% "></div>
+			<div class="prime_warning_background prime_stats_bar prime_float_left  prime_no_radius" style="width:{{ (job_stats['basic']['Total jobs'] == 0) ? 0 : (job_stats['detail']['Jobs cancelled by users'] / job_stats['basic']['Total jobs'] ) * 100}}% "></div>
+			<div class="prime_danger_background prime_stats_bar prime_float_left  prime_no_radius" style="width:{{(job_stats['basic']['Total jobs'] == 0) ? 0 :  (job_stats['detail']['Jobs cancelled by makersspace'] / job_stats['basic']['Total jobs'] ) * 100}}% "></div>
+			<div class="prime_info_background prime_stats_bar prime_float_left  prime_no_radius" style="width:{{ (job_stats['basic']['Total jobs'] == 0) ? 0 : (job_stats['detail']['Jobs in progress'] / job_stats['basic']['Total jobs'] ) * 100}}% "></div>
+
+			<div class="prime_dark_background prime_stats_bar prime_float_left prime_no_left_radius" style="width:{{(job_stats['basic']['Total jobs'] == 0) ? 0 :  (job_stats['detail']['Jobs awaiting user action'] / job_stats['basic']['Total jobs'] ) * 100}}% "></div>
+			<span class="prime_float_right prime_font12px">{{ job_stats['basic']['Total jobs'] }} total jobs</span>
+		</div>
+
+	</div>
+	<div class = "col-md-2 prime_padding10px  prime_display_inlinetable">
+		<div class = "prime_bar_block prime_success_background">
+		</div>
+		<div class = "prime_bar_block_info prime_font12px">
+			{{ job_stats['detail']['Completed jobs'] }} Completed jobs
+		</div>
+	</div>
+	<div class = "col-md-2 prime_padding10px  prime_display_inlinetable">
+		<div class = "prime_bar_block prime_warning_background">
+		</div>
+		<div class = "prime_bar_block_info prime_font12px">
+			{{ job_stats['detail']['Jobs cancelled by users'] }} Jobs cancelled by users
+		</div>
+	</div>
+	<div class = "col-md-2 prime_padding10px  prime_display_inlinetable">
+		<div class = "prime_bar_block prime_danger_background">
+		</div>
+		<div class = "prime_bar_block_info prime_font12px">
+			{{ job_stats['detail']['Jobs cancelled by makersspace'] }} Jobs cancelled by makersspace
+		</div>
+	</div>
+	<div class = "col-md-2 prime_padding10px  prime_display_inlinetable">
+		<div class = "prime_bar_block prime_info_background">
+		</div>
+		<div class = "prime_bar_block_info prime_font12px">
+			{{ job_stats['detail']['Jobs in progress'] }} Jobs in progress
+		</div>
+	</div>
+
+	<div class = "col-md-2 prime_padding10px  prime_display_inlinetable">
+		<div class = "prime_bar_block prime_dark_background">
+		</div>
+		<div class = "prime_bar_block_info prime_font12px">
+			{{ job_stats['detail']['Jobs awaiting user action'] }} Jobs awaiting user action
+		</div>
+	</div>
+</div>
+
+<div class = "col-md-9 prime_padding0px prime_margin10px">
+<div class="row  prime_background_lightgrey">
+	<div class = "col-md-12 prime_padding10px ">Open jobs stats</div>
+</div>
+	<div class = "col-md-12 prime_padding10px ">
+		<div class="prime_background_twinkleblue prime_stats_bar prime_margintop20px">
+			<div class="prime_info_background prime_stats_bar prime_float_left  prime_no_right_radius" style="width:{{ (job_stats['basic']['Open jobs'] == 0) ? 0 :  (job_stats['detail']['Jobs in progress'] / job_stats['basic']['Open jobs'] ) * 100}}% "></div>
+
+			<div class="prime_dark_background prime_stats_bar prime_float_left prime_no_left_radius" style="width:{{ (job_stats['basic']['Open jobs'] == 0) ? 0 : (job_stats['detail']['Jobs awaiting user action'] / job_stats['basic']['Open jobs'] ) * 100}}% "></div>
+			<span class="prime_float_right prime_font12px">{{ job_stats['basic']['Open jobs'] }} open jobs</span>
+		</div>
+
+	</div>
+	<div class = "col-md-2 prime_padding10px  prime_display_inlinetable">
+		<div class = "prime_bar_block prime_info_background">
+		</div>
+		<div class = "prime_bar_block_info prime_font12px">
+			{{ job_stats['detail']['Jobs in progress'] }} Jobs in progress
+		</div>
+	</div>
+
+	<div class = "col-md-2 prime_padding10px  prime_display_inlinetable">
+		<div class = "prime_bar_block prime_dark_background">
+		</div>
+		<div class = "prime_bar_block_info prime_font12px">
+			{{ job_stats['detail']['Jobs awaiting user action'] }} Jobs awaiting user action
+		</div>
+	</div>
+</div>
+
+
+<div class = "col-md-9 prime_padding0px prime_margin10px">
+<div class="row  prime_background_lightgrey">
+	<div class = "col-md-12 prime_padding10px ">Closed jobs stats</div>
+</div>
+	<div class = "col-md-12 prime_padding10px ">
+		<div class="prime_background_twinkleblue prime_stats_bar prime_margintop20px">
+			<div class="prime_success_background prime_stats_bar prime_float_left  prime_no_right_radius" style="width:{{ (job_stats['basic']['Closed jobs'] == 0) ? 0 :  (job_stats['detail']['Completed jobs'] / job_stats['basic']['Closed jobs'] ) * 100}}% "></div>
+			<div class="prime_warning_background prime_stats_bar prime_float_left  prime_no_radius" style="width:{{ (job_stats['basic']['Closed jobs'] == 0) ? 0 :  (job_stats['detail']['Jobs cancelled by users'] / job_stats['basic']['Closed jobs'] ) * 100}}% "></div>
+			<div class="prime_danger_background prime_stats_bar prime_float_left  prime_no_left_radius" style="width:{{ (job_stats['basic']['Closed jobs'] == 0) ? 0 :  (job_stats['detail']['Jobs cancelled by makersspace'] / job_stats['basic']['Closed jobs'] ) * 100}}% "></div>
+
+			<span class="prime_float_right prime_font12px">{{ job_stats['basic']['Closed jobs'] }} closed jobs</span>
+		</div>
+
+	</div>
+	<div class = "col-md-2 prime_padding10px  prime_display_inlinetable">
+		<div class = "prime_bar_block prime_success_background">
+		</div>
+		<div class = "prime_bar_block_info prime_font12px">
+			{{ job_stats['detail']['Completed jobs'] }} Completed jobs
+		</div>
+	</div>
+	<div class = "col-md-2 prime_padding10px  prime_display_inlinetable">
+		<div class = "prime_bar_block prime_warning_background">
+		</div>
+		<div class = "prime_bar_block_info prime_font12px">
+			{{ job_stats['detail']['Jobs cancelled by users'] }} Jobs cancelled by users
+		</div>
+	</div>
+	<div class = "col-md-2 prime_padding10px  prime_display_inlinetable">
+		<div class = "prime_bar_block prime_danger_background">
+		</div>
+		<div class = "prime_bar_block_info prime_font12px">
+			{{ job_stats['detail']['Jobs cancelled by makersspace'] }} Jobs cancelled by makersspace
+		</div>
+	</div>
+</div>
+
+

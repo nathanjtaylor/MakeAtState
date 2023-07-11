@@ -1,0 +1,24 @@
+# Application.
+/vendor/
+/.env
+/3dprime.cfg
+/3dprime.service.in
+/3dprime-devel.service
+/certs/
+
+# Repository.
+/.git/
+/.gitignore
+/.gitlab-ci.yml
+/.*.sw?
+
+# Docker.
+/Dockerfile
+/.dockerignore
+/docker-compose.*.yml
+
+# Ansible and Vagrant.
+/roles/
+/hosts.yml
+/playbook.yml
+/Vagrantfile

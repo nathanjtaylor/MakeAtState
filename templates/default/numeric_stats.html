@@ -1,0 +1,49 @@
+{% if (stats_type == 1) %}
+	{% set stats=job_stats %}
+{% else %}
+	{% set stats=user_stats %}
+{% endif %}
+
+{% for key, array in stats %}
+
+	{% set total = 0 %}
+	{% for k, stat in array %}
+		{% set total = total + stat %}
+	{% endfor %}
+
+	<div class = "col-md-9 prime_padding0px prime_margin10px">
+	<div class = "container-fluid">
+		<div class="row prime_padding10px prime_background_teal">
+			<div class = "col-md-12 ">
+				<p style="text-align: left; width:49%; display: inline-block;">{{ key }} Stats</p>
+				<p style="text-align: right; width:50%;  display: inline-block;">total: {{ total }}</p></div>
+		</div>
+	</div>
+
+	{% for k, stat in array %}
+		<div class = "container-fluid">
+			<div class = "row  prime_padding10px  prime_borderbottom_lightgrey  {{ loop.index % 2  == 0 ?  ' prime_background_lightblue' : ''}}" >
+				 <div class = "col-md-6 prime_borderright_grey">
+
+					<small class="text-muted">Type: </small>
+					{{ k }}
+				</div>
+
+				 <div class = "col-md-6 ">
+
+					<small class="text-muted">Count: </small>
+					{{ stat }}
+				</div>
+
+			</div>
+		</div>
+
+	{% endfor %}
+	</div>
+{% endfor %}
+{% if (stats_type == 1) %}
+	<div class = "col-md-9 prime_padding0px prime_margin10px">
+		<a href = "/?t=export_stats" class = "btn btn-dark" >Export Cancellation Data</a>
+	</div>
+{% endif %}
+

@@ -1,0 +1,14 @@
+{
+    "require": {
+        "twig/twig": "~2.0",
+	    "natecollins/web-utilities": "dev-master",
+        "twig/extensions": "^1.5"
+    },
+    "repositories": [
+	{
+		"type":"vcs",
+		"url":"https://github.com/natecollins/web-utilities.git"
+	}
+
+    ]	
+}

@@ -1,0 +1,50 @@
+<div class = "col-md-9 prime_padding0px prime_margin10px">
+	<div class="card prime_borderlightgrey mb-3">
+        <div   class="card-header prime_background_teal prime_show_cursor" id = "show_notes" aria-label = "show notes" data-toggle="tooltip" data-placement="top" title="Show/Hide Notes">Job Notes  <span class="badge badge-light badge-pill">{{ job_notes | length}}</span>
+            <a   href = "#" class="btn btn-outline-light prime_icon_btn prime_right_icon  "  aria-label = "View notes" data-toggle="tooltip" data-placement="top" title="View notes"><span id = "job_add_note_icon"><i data-feather="plus"  id = "note_icon"></i></span></a>
+        </div>
+
+		<div class="card-body " id = "notes" style="display: none">
+			<div class = "prime_job_notes">
+			{% block job_notes_block %}
+
+					{% for notes in job_notes  %}
+						<div class = "row  prime_padding10px {{loop.index%2 ? '' : 'prime_background_lightblue' }}" >
+							<div class = "col-md-8 prime_borderright_grey">
+								<small class="text-muted">note:  </small>{{ notes['note_text'] }}
+							</div>
+							<div class = "col-md-2 prime_borderright_grey">
+								<small class="text-muted"> {{ notes['created'] }}</small>
+							</div>
+							<div class = "col-md-2 ">
+								<small class="text-muted">by: </small> {{ notes['first_name'] }}{{ " " }}{{ notes['last_name'] }}
+							</div>
+						</div>
+					{% endfor %}
+
+				{% if success=="True" %}
+				<div class="alert alert-success alert-dismissible" role="alert">
+					Note added successfully !!
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				{% endif %}
+			{% endblock %}
+			</div>
+			<div class="card prime_no_border mb-3">
+				<a   href = "#" class="btn btn-outline-light prime_icon_btn " style="background-color: #9F9F9F" id = "show_add_note" aria-label = "Edit print details" data-toggle="tooltip" data-placement="top" title="Add a Note"><span><i data-feather="plus"></i></span></a>
+			</div>
+			<div class="card-body row" id = "add_note_block" style="display: none">
+				<div class = "col-md-12">
+					<input type=hidden id = "note_job_id" value={{send_updates['job_id']}} />
+					<div class = "note_status"></div>
+					<textarea aria-label="notes" class="form-control rounded-0" id="note_text" rows="5"></textarea>
+				</div>
+			</div>
+			<div class="card-footer prime_no_border prime_no_background" id="add_note_footer" style="display: none">
+				<a  aria-label = "Add note" href = "#"  class ="btn btn-info  prime_float_right" id = "add_note">Add note</a>
+			</div>
+		</div>
+	</div>
+</div>

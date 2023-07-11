@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+{% include 'prime_alerts.html' %}
+
+<div class = "row justify-content-center prime_margintop20px">
+
+	<div class = "col-md-6  prime_padding20px">
+		<div class="card bg-light mb-3">
+			<div class="card-header">{{ name |title   }}, we have sent you a confirmation link</div>
+			<div class = "card-body">
+				<p  class ="card-text"> To start using your MakeAtState account you need to confirm your email address . We have sent a confirmation link to &nbsp; {{ email }}. You have 24 hours to activate your account.</p>
+				<span style="display:block;" class ="small">Please check your span and junk folders.</span>
+				<a href="/?t=resend&rs_uid={{user_id}}" class="btn btn-info">Resend link</a>
+				<a href="/?t=home" class="btn btn-info">Return Home</a>
+
+			</div>
+		</div>
+
+	</div>
+
+</div>
+
+{% endblock %}

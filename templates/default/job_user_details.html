@@ -1,0 +1,41 @@
+<div class = "col-md-9 prime_padding0px prime_margin10px">
+<div class="card prime_long_card mb-9">  
+	<div class="card-header prime_background_teal"> 
+
+	 Job submitted by 
+
+	</div>
+	 <div class="card-body row">
+		 <div class = "col-md-4">
+			<small  class="text-muted" style="display:block">
+      				Fullname
+    			</small>   
+			{{ user_details['fullname'] }}{{ " " }}{{ user_details['lastname'] }}
+		</div>
+		 <div class = "col-md-4">   
+			<small  class="text-muted" style="display:block">
+      				Email
+    			</small>   
+			
+			{{ user_details['email'] }}
+		</div>
+		 <div class = "col-md-4">   
+			<small  class="text-muted" style="display:block">
+      				Phone Number
+    			</small>   
+			
+			{{ user_details['phone_num'] }}
+		</div>
+		
+	</div>
+
+	<div class="card-footer">
+		<a  aria-label = "View jobs submitted by user" href = "/?t=user_jobs&juid={{ user_details['user_id'] }}"  class ="btn btn-info prime_icon_btn" data-toggle="tooltip" data-placement="top" title="View user jobs"><i  data-feather="printer" ></i></a>
+			
+		
+		
+	</div>
+</div>
+</div>
+
+

@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Job Information </h1>
+    <p class="lead">View information and status of your job. Use the buttons under “More Actions” to advance job in the completion process or cancel</p>
+    <hr class="my-4">
+</div>
+
+{% include 'prime_alerts.html' %}
+
+
+<div class="row justify-content-center prime_margintop20px">
+
+
+    {% if (staff_held) %}
+    <div class="alert alert-info col-md-9 prime_padding10px prime_margin10px" role="alert">
+        <div class="container">
+        <div class="row">
+            <div class="col-md-10 ">
+            <p style="text-align: center; margin-bottom: 0"> This job is on hold because we have run into an issue or need more information from the patron. Check the Job Notes and Job Messages. If you are putting this job on hold, be sure to contact the patron through the Job Messages and add to the Job Notes as needed.</p>
+            </div>
+            <div class="col-md-2 " style="display: flex; align-items: center; justify-content: center;">
+                <form action="/" enctype="multipart/form-data">
+                <input type="hidden" name="t" value="workflow"/>
+                <input type="hidden" name="uid" value="{{ action_details['uid'] }}"/>
+                <input type="hidden" name="job_id" value="{{ action_details['job_id'] }}"/>
+                <input type="hidden" name="step" value="{{ action_details['current_step'] }}"/>
+                <input type="hidden" name="hold" value="{{ action_details['hold'] }}"/>
+                <input type="submit" class ="btn btn-dark" value="End Hold" /></form><br/>
+            </div>
+        </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if (user_held) %}
+    <div class="alert alert-info col-md-9 prime_padding20px prime_margin10px" role="alert">
+        <p style="text-align: center"> Your job is currently on hold. We may be waiting for more information from you. Please check your Job Messages.</p>
+    </div>
+    {% endif %}
+
+    {% if status_details %}
+        {% include 'status_details.html' %}
+    {% else %}
+    <div class="col-md-9 prime_padding0px prime_margin10px">
+        <div class="card prime_borderlightgrey mb-3">
+            <div class="card-header">Status details</div>
+            <div class="card-body text-secondary">
+                <p class="card-text">There are no details available.</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {%if (job_notes) or (job_show_notes) %}
+        {%include 'job_notes.html' %}
+    {% endif %}
+
+    {% if job_files and edit_print_details %}
+        {% include 'edit_print_details.html' %}
+    {% elseif job_files %}
+        {% include 'print_details.html' %}
+    {% else %}
+        <div class="col-md-9 prime_padding0px prime_margin10px">
+            <div class="card prime_borderlightgrey mb-3">
+                <div class="card-header">Job details</div>
+                <div class="card-body text-secondary">
+                    <p class="card-text">There are no details available.</p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if user_details %}
+        {% include 'job_user_details.html' %}
+    {% endif %}
+
+    {% if edit_price %}
+        {% include 'edit_price.html' %}
+    {% elseif admin_edit_price %}
+        {% include 'edit_price_details.html' %}
+    {% elseif price_details %}
+        {% include 'price_details.html' %}
+    {% else %}
+        <div class="col-md-9 prime_padding0px prime_margin10px">
+            <div class="card prime_borderlightgrey mb-3">
+                <div class="card-header">Price details</div>
+                <div class="card-body text-secondary">
+                    <p class="card-text">There are no details available.</p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if edit_delivery_date  %}
+        {% include 'edit_delivery_date.html' %}
+    {% elseif delivery_date_details %}
+        {% include 'delivery_date_details.html' %}
+    {% else %}
+        <div class="col-md-9 prime_padding0px prime_margin10px">
+            <div class="card prime_borderlightgrey mb-3">
+                <div class="card-header">Estimated Delivery Date</div>
+                <div class="card-body text-secondary">
+                    <p class="card-text">There are no details available.</p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="col-md-9 prime_padding0px prime_margin10px">
+        <form action="/" method="post" enctype="multipart/form-data" class="prime_borderlightgrey prime_padding10px">
+            <div class="form-row">
+                <input type="hidden" name="t" value="send_message">
+                <input type=hidden name="message_job_id" value={{action_details['job_id']}} />
+                <input type=hidden name="message_step_id" value={{action_details['job_step_id']}} />
+                <input type="hidden" name="group_id" value="{{ group_id }}">
+                <input type=hidden name="target_page" value="job_info" />
+                <textarea aria-label="notes" class="form-control rounded-0" rows="5"  name="message_text"></textarea>
+                <div class="custom-file" style="margin-top: 10px;">
+                    <input type="file"  name="files[]" multiple="multiple" class="custom-file-input form-control" id="customFile" >
+                </div>
+                <a  aria-label="View job messages" href="/?t=message_details&job_id={{action_details['job_id']}}" style="margin-top:20px"  class ="btn btn-dark">View job messages</a>
+                <input class="float-end btn btn-success prime_margintop20px " style="margin-left:auto"  type="submit" value="Send a message" />
+            </div>
+        </form>
+    </div>
+
+    {% if action_details %}
+        {% include 'action_details.html' %}
+    {% else %}
+        <div class="col-md-9 prime_padding0px prime_margin10px">
+            <div class="card prime_borderlightgrey mb-3">
+                <div class="card-header">Actions</div>
+                <div class="card-body text-secondary">
+                    <p class="card-text">There are no further actions available.</p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {%if workflow_step_list %}
+        {% include 'skip_to_step.html' %}
+    {% endif %}
+</div>
+{% endblock %}

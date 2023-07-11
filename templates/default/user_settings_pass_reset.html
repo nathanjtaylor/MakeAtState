@@ -1,0 +1,63 @@
+<div class="card prime_long_card mb-6">  
+	<form action="/" enctype="multipart/form-data" novalidate="" id ="settingsPasswordForm"  method="POST">
+	<input type="hidden" name="t" value="update_user_pass_settings">
+	<input type="hidden" name="pn" value="{{pn}}">
+
+	<div class="card-header prime_background_teal"> 
+
+	 Password reset
+
+	</div>
+	<div class="card-body row">
+		<div class="input-group mb-2 mr-sm-2 prime_margintop20px prime_center_padding">
+			<div class="input-group-prepend">
+				<div class="input-group-text prime_min_width120px">Current Password <small class="text-muted text-center" >&nbsp * </small></div>
+			</div>
+			<input type="password"  aria-label="current password"  class="form-control" id ="oldPassword" minlength="8" name ="oldPassword" placeholder="password" required>
+			<div class ="invalid-feedback">
+				Password should be atleast 8 characters long	
+			</div>
+			
+		 </div>
+		
+		<div class="input-group mb-2 mr-sm-2 prime_margintop20px prime_center_padding">
+			<div class="input-group-prepend">
+				<div class="input-group-text prime_min_width120px">New Password <small class="text-muted text-center" >&nbsp * </small></div>
+			</div>
+			<input type="password" class="form-control"aria-label="new password"  id ="newPassword" minlength="8" name ="newPassword" placeholder="password" required>
+			<div class ="invalid-feedback">
+				Password should be atleast 8 characters long	
+			</div>
+			
+		 </div>
+		<small  class="text-muted text-center" style="display:block">
+			Must be 8-20 characters long.
+		</small>
+
+		<div class="input-group mb-2 mr-sm-2 prime_margintop20px prime_center_padding">
+			<div class="input-group-prepend">
+				<div class="input-group-text prime_min_width120px">Confirm Password <small class="text-muted text-center" >&nbsp * </small></div>
+			</div>
+			<input type="password" class="form-control" name = "cpassword" aria-label="confirm password" id="confirmPassword"  placeholder="password" required>
+			<div class ="invalid-feedback" id="confirmInvalid">
+				Comfirm password filed cannot be empty and should match the password field	
+			</div>
+			
+		 </div>
+		<small  class="text-muted text-center" style="display:block">
+			Must be 8-20 characters long and same as the password entered in the "Password" field
+		</small>
+
+	
+	
+	</div>
+
+	<div class="card-footer" style = "display:flow-root">
+		<input type="submit"  class="pass_reset_btn btn btn-success prime_float_right" value="Reset">	
+		
+	</div>
+	</form>
+</div>
+		
+
+

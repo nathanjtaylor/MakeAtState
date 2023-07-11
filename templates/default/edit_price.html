@@ -1,0 +1,51 @@
+<div class="col-md-9 prime_padding0px prime_margin10px">
+    <form class="form-row prime_form_row" novalidate="" id="setPriceForm" action="/" method="post">
+        <div class="card prime_borderlightgrey mb-3">
+            <div class="card-header prime_background_teal">Set Price</div>
+            <div class="card-body container-fluid">
+                <input type="hidden" name="t" value="setprice">
+                <input type="hidden" name="job_id" value="{{ edit_price['job_id'] }}">
+                <input type="hidden" name="uid" value="{{ edit_price['user_id'] }}">
+                <input type="hidden" name="next" value="{{ edit_price['next'] }}">
+
+                <!-- loop over all job file-->
+                {% for file_id, file in job_files %}
+
+                    <!-- check if price contatints exist -->
+                    {% if edit_price['files'][file_id]['price_constants'] %}
+                         {% include 'display_price_constants_form.html' %}
+                    <!-- When price constants are not set -->
+                    {% else %}
+                         {% include 'display_unit_price_form.html' %}
+                    {% endif %}
+                
+                {% endfor %}
+                <!-- End for loop -->
+                <div class="row justify-content-center">
+                    <div class="col-md-3 prime_textalign_center">
+                        <small class="text-muted" style="display:block">
+                            Grand total price
+                        </small>
+                        <div class="input-group mb-2 mr-sm-2 prime_margintop10px ">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text input-group-text-small">$</div>
+                            </div>
+                            <input type="float" min="0.00" step=0.01 class="form-control prime_grand_total"
+                                   aria-label="grand total price" pattern="^[0-9\.]*$" placeholder="0.00"
+                                   name="grand_total">
+                            <div class="invalid-feedback">
+                                Invalid price . Price should not be empty and in 0.00 format
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div>
+                    <input type="submit" class="btn btn-success prime_margintop10px set_price_btn"
+                           value="{{ edit_price['button_name'] }}"/>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

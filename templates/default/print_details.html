@@ -1,0 +1,39 @@
+{% for file_id, job_file in job_files %}
+    <div class = "col-md-9 prime_padding0px prime_margin10px">
+        <div id = "print_details" >
+            <div class="card prime_long_card mb-9">
+                <div class="card-header prime_background_teal">
+                    {{ job_file['file_name'] }}
+                </div>
+                 <div class="card-body row">
+
+                     {% for key, val in job_file['print_details'] %}
+                        {% if key != "Notes" %}
+                         <div class = "col-md-2">
+                            <small  class="text-muted" style="display:block">
+                            {{  key |capitalize}}
+                            </small>
+                            {{ val }}
+                        </div>
+                        {% endif %}
+
+                     {% endfor %}
+                     <div class = "col-md-12 prime_margintop10px">
+                        <small  class="text-muted" style="display:block">
+                        Notes
+                        </small>
+                        {{ job_file['print_details']['Notes'] }}
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    {% if job_file['viewable'] %}
+                        <a  aria-label = "View file" href = "/?t=view_file&fid={{ job_file['file_id'] }}"  class ="btn btn-info prime_icon_btn" data-toggle="tooltip" data-placement="top" title="View file"><i  data-feather="eye" ></i></a>	
+                    {% endif %}
+                    <a  aria-label= "Download file" href = "/?t=stream_file&fid={{ job_file['file_id'] }}&disposition=attachment"  class ="btn btn-warning prime_icon_btn" data-toggle="tooltip" data-placement="top" title="Download file"><i  data-feather="download" ></i></a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}

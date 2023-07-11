@@ -1,0 +1,151 @@
+
+
+<!-- Modal -->
+<div class="modal fade" id="CancelModalCenter" tabindex="-1" role="dialog" aria-labelledby="CancelModalCenterTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<form action="/" enctype="multipart/form-data">
+			<div class="modal-header">
+				<h5 class="modal-title" id="CancelModalCenterTitle">Reason for Cancellation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="form-check">
+					{% if cancellation_reasons %}
+						{% for reason in cancellation_reasons %}
+							<input class="form-check-input" type="radio" name="cancelRadios" id="cancelRadio{{ reason['cancellation_reason_id'] }}" value="{{ reason['cancellation_reason_id'] }}">
+							<label class="form-check-label" for="cancelRadio{{ reason['cancellation_reason_id'] }}">
+								{{ reason['reason'] }}
+							</label>
+							{% if reason['more_information'] %}
+								<br style="display: none;" id="more_break_{{ reason['cancellation_reason_id'] }}">
+								<textarea id="cancel_more_info_{{ reason['cancellation_reason_id'] }}" name="cancel_more_info_{{ reason['cancellation_reason_id'] }}" rows="4" cols="50" maxlength="255" style="display: none;" ></textarea>
+							{% endif %}
+							<br>
+						{% endfor %}
+					{% endif %}
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary prime_margin10px" data-bs-dismiss="modal">Close</button>
+					<input type="hidden" name="t" value="workflow"/>
+					<input type="hidden" name="uid" value="{{ action_details['uid'] }}"/>
+					<input type="hidden" name="job_id" value="{{ action_details['job_id'] }}"/>
+					<input type="hidden" name="cancel" value="{{ action_details['cancel'] }}"/>
+					<input type="hidden" name="step" value="{{ action_details['current_step'] }}"/>
+					<input type="submit" class ="btn btn-danger prime_margin10px" value = "Cancel job" />
+
+			</div>
+			</form>
+		</div>
+	</div>
+
+</div>
+
+<div class = "col-md-9 prime_padding0px prime_margin10px">
+	<div class="card prime_borderlightgrey mb-3">
+		 <div class="card-header prime_background_teal">More Actions</div>
+		  <div class="card-body row">
+		  	{% if action_details['completed_message'] %}
+
+			 <div class = "col-md-6 prime_textalign_center">   
+				<small class="text-muted" style="display:block">
+					Message
+				</small>   
+				<p>{{ action_details['completed_message'] }}</p>
+			</div>
+
+			 <div class = "col-md-6 prime_textalign_center">   
+				<small class="text-muted" style="display:block">
+					Job updates
+				</small>   
+
+					<a  aria-label = "View updates" href = "/?t=job_updates&job_id={{ action_details['job_id']}}"  class ="btn btn-info prime_margintop10px">View updates</a>	
+			</div>
+
+			
+			{% else %}
+			 <div class = "col-md-3 prime_textalign_center">
+			 	{% if action_details['name'] %}
+				<small class="text-muted" style="display:block">
+					Next step
+				</small>
+					<form action="/" enctype="multipart/form-data">
+						<input type="hidden" name="t" value="workflow"/>
+						<input type="hidden" name="uid" value="{{ action_details['uid'] }}"/>
+						<input type="hidden" name="job_id" value="{{ action_details['job_id'] }}"/>
+						<input type="hidden" name="next" value="{{ action_details['next'] }}"/>
+						<input type="submit" class ="btn btn-success prime_margintop10px" value = "{{ action_details['name']}}" />
+					</form>
+				{% endif %}
+			</div>
+
+
+
+			 <div class = "col-md-3 prime_textalign_center">
+				<small class="text-muted" style="display:block">
+					Job updates
+				</small>   
+
+					<a  aria-label = "View updates" href = "/?t=job_updates&job_id={{ action_details['job_id']}}"  class ="btn btn-info prime_margintop10px">View updates</a>	
+			</div>
+
+
+
+			 <div class = "col-md-3 prime_textalign_center">
+			 	{% if action_details['cancel'] %}
+				 <!-- Button trigger modal -->
+				 <small  class="text-muted" style="display:block">
+					 Cancel
+				 </small>
+				 <input type="button" class="btn btn-danger prime_margin10px" data-bs-toggle="modal" data-bs-target="#CancelModalCenter" value="Cancel Job">
+				 <!--
+
+				<small  class="text-muted" style="display:block">
+					Cancel
+				</small>   
+				<form action="/" enctype="multipart/form-data">
+					<input type="hidden" name="t" value="workflow"/>
+					<input type="hidden" name="uid" value="{{ action_details['uid'] }}"/>
+					<input type="hidden" name="job_id" value="{{ action_details['job_id'] }}"/>
+					<input type="hidden" name="cancel" value="{{ action_details['cancel'] }}"/>
+					<input type="hidden" name="step" value="{{ action_details['current_step'] }}"/>
+					<input type="submit" class ="btn btn-danger prime_margintop10px" value = "Cancel job" />	
+				</form>
+				-->
+				{% endif %}
+
+			</div>
+
+			  <div class = "col-md-3 prime_textalign_center">
+				  {% if action_details['hold'] %}
+				  <small  class="text-muted" style="display:block">
+					  Hold
+				  </small>
+				  <form action="/" enctype="multipart/form-data">
+					  <input type="hidden" name="t" value="workflow"/>
+					  <input type="hidden" name="uid" value="{{ action_details['uid'] }}"/>
+					  <input type="hidden" name="job_id" value="{{ action_details['job_id'] }}"/>
+					  <input type="hidden" name="step" value="{{ action_details['current_step'] }}"/>
+					  <input type="hidden" name="hold" value="1"/>
+					  {% if (staff_held) %}
+					  <input type="submit" class ="btn btn-dark prime_margintop10px" value = "End Hold" />
+					  {% else %}
+					  <input type="submit" class ="btn btn-dark prime_margintop10px" value = "Hold Job" />
+					  {% endif %}
+				  </form>
+				  {% endif %}
+
+			  </div>
+			{% endif %}
+
+
+			
+		</div>
+			
+			
+			
+
+	</div>
+</div>
+

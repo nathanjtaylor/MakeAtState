@@ -1,0 +1,21 @@
+
+{% block display_printers %}
+	{% if printers %}
+		<div class="input-group mb-3 prime_margintop20px">
+		  <div class="input-group-prepend">
+		    <label class="input-group-text prime_no_background border-0" for="prime_select_printers_{{ id }}">Printers</label>
+		  </div>
+		  <select name = "printer[]" class="form-control rounded prime_select_printers" id="prime_select_printers_{{ id }}">
+		    <option disabled selected>Choose printer ...</option>
+		    {% for printer in printers %} 
+			<option value="{{ printer }}">{{ printer }}</option>
+		    {% endfor %}
+		  </select>
+		</div>
+		<!-- -TODO add a message if printers are not availabe -->
+	{% else %}
+		 <p class = "prime_textalign_center prime_padding10px prime_borderbottom_lightgrey"> No printers are available for this workflow , please try again later </p>
+
+	{% endif %}
+{% endblock %}
+
