@@ -1,6 +1,26 @@
 # MakeAtState
 
-A PHP application to used by MSU Library partons and Hollander Makerspace staff to submit and process 3D printing, Vynil printing, and Laser cutting jobs. 
+MakeAtState is an open-source software application written using PHP to manage fabrication project submissions. The website allows users to upload files for 3D printing, laser cutting, CNC routing, etc. Staff use the application to keep track of the jobs submitted by users, download files, provide a price and delivery date estimate, and notify the users when the project is ready for pick up. Communication with the user about their project is made easy through a messaging feature. 
+
+## Features
+Modifiable Project Workflow
+Add as many steps as needed. Set the price, estimated delivery date, and close order when completed. Cancellation options for user and staff and ability to control when users have the option to cancel. Optional email notification for each step. Different descriptive text for user and staff.
+
+### Add Multiple Workflow Types
+Add a separate workflow for 3D printing, laser cutting, class submissions, etc. Separate workflows by group and set the allowed file extensions. Each workflow can have multiple “printers” or machine choices. Each printer has its own material, color, and variable price options.
+
+### User submissions
+Users can create an account through single sign on or via a verified email address. Files can be uploaded stored in the account for a set period of time before expiring. Multiple files can be added to a project submission, users choose workflow, printer, material and color, specify dimensions, and pick up options.
+
+### Staff Process
+Jobs are divided into New, Held, Open, and Closed tabs. Initial submissions are in the New section, once staff take action it moves to the Open tab. Jobs can be placed on hold at any stage of the process if there is an issue or action is needed from the user. Once projects are completed, they are moved to Closed.
+Each project has three pages. The first is the Job Info page with status, invoice details, user information, and next action buttons. Next is the Job Messages page which is where communications can be sent back and forth. Images can be attached to the message and users get an email notification that there is a new message. The Job Updates page shows a history of the completed actions with dates and a timestamp. Staff names are concealed to users for privacy.
+
+### Admin Features
+Admins control the Project Workflow and Workflow Types with their respective options. Admins can set account access between user, student staff, staff, or admin. Users can be blocked if needed. Allocated file storage space and expiration dated can be modified. Stats are visible for analytics
+
+## Limitations
+All workflows have tax built into the price calculation and there is no tax exempt option. Automated emails are limited in customization. The jobs page can be cumbersome to read quickly so we still use a more detailed queue spreadsheet in addition to the website. Some users have trouble understanding the submission process and experience frustration.
 
 ## Prerequisites
 * PHP version 7.0 or higher
