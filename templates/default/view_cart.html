@@ -65,11 +65,97 @@
                         </div>
                     </div>
                 {% endfor %}
-                <div class="d-inline">
-                    <a href = "/?t=remove_cart_item&rpid={{ project_id }}" class="btn btn-danger prime_white_text mt-3" aria-label = "Delete item" style="width: max-content;">Remove</a>
-                    <a href = "/?t=workflow&uid={{ user_id }}&project_id={{ project_id }}&step=1" class="btn btn-success mt-3" aria-label = "Submit item" style="width: max-content;">Submit Project</a>
-                </div>
+                <!-- Form Markup TODO: aria--> 
+                <h4 class="mt-3">Survey Questions (optional)</h4>
+                <form id="form-{{project_id}}" action="/?t=view_cart" method="post">
+                    <fieldset class="form-group ms-3 mt-3 q1-block">
+                        <p>Can MSU Libraries post a picture of your work on its Social Media accounts?</p>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="{{project_id}}-q1-yes" name="q1" value="yes">
+                            <label class="form-check-label" for="{{project_id}}-q1-yes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="{{project_id}}-q1-no" name="q1" value="no">
+                            <label class="form-check-label" for="{{project_id}}-q1-no">No</label>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group ms-1 mt-1 row q2-block">
+                        <label class="col-md-4 col-form-label" for="{{project_id}}-q2">List Instagram accounts you want to be tagged with:</label>
+                        <input class="col-md-8" type="text" id="{{project_id}}-q2" name="q2" placeholder="@">
+                    </fieldset>
+                    <fieldset class="form-group ms-3 mt-3 q3-block">
+                        <p>Is this project part of an MSU class?</p>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="{{project_id}}-q3-yes" name="q3" value="yes">
+                            <label class="form-check-label" for="{{project_id}}-q3-yes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="{{project_id}}-q3-no" name="q3" value="no">
+                            <label class="form-check-label" for="{{project_id}}-q3-no">No</label>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group ms-1 mt-1 row q4-block">
+                        <label class="col-md-5 col-form-label" for="{{project_id}}-q4">What class or course# or section# is the project associated with?</label>
+                        <input class="col-md-7" type="text" id="{{project_id}}-q4" name="q4">
+                    </fieldset>
+                    <fieldset class="form-group ms-3 mt-3 q5-block">
+                        <p>Is the project you are submitting associated with any of these items?</p>
+                        <div class="form-check">
+                            <input type="checkbox" id="{{project_id}}-q5-o1" name="q5[]" value="o1">
+                            <label for="{{project_id}}-q5-o1">This is a gift, for fun, or personal project</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" id="{{project_id}}-q5-o2" name="q5[]" value="o2">
+                            <label for="{{project_id}}-q5-o2">This is a homework assignment</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" id="{{project_id}}-q5-o3" name="q5[]" value="o3">
+                            <label for="{{project_id}}-q5-o3">Part of a graduate thesis or dissertation</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" id="{{project_id}}-q5-o4" name="q5[]" value="o4">
+                            <label for="{{project_id}}-q5-o4">Research related</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" id="{{project_id}}-q5-o5"  name="q5[]" value="o5">
+                            <label for="{{project_id}}-q5-o5">A work-related job or task (e.g. exhibition, promotions or giveaways)</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" id="{{project_id}}-q5-o6" name="q5[]" value="o6">
+                            <label for="{{project_id}}-q5-o6">Prototyping for Business or Entrepreneurship</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" id="{{project_id}}-q5-o7" name="q5[]" value="o7">
+                            <label for="{{project_id}}-q5-o7">Other</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" id="{{project_id}}-q5-o8" name="q5[]" value="o8">
+                            <label for="{{project_id}}-q5-o8">I prefer not to say</label>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group mt-3 mb-3 q6-block">
+                        <label for="{{project_id}}-q6">We would love to hear more about what you are working on. Please feel free to share more details.</label><br>
+                        <textarea id="{{project_id}}-q6" name="q6" class="form-control" rows="8"></textarea>                            
+                    </fieldset>
+                    <div class="">
+                        <a href = "/?t=remove_cart_item&rpid={{ project_id }}" class="btn btn-danger prime_white_text mt-3 d-inline" aria-label = "Delete item" style="width: max-content;">Remove</a>
+                        <button type="submit" class="btn btn-success d-inline" aria-label = "Submit item" style="width: max-content;">Submit Project</button>
+                    </div>
+            </form>
+            <!-- Form Markup End -->
             </div>
+
+            <script>
+                $(document).ready(function(){
+                    $("#submit-project-assessment").click(function(e){
+                        e.preventDefault();
+                        var projectId = $(this).data("project-id");
+                        var form = $("#form-" + projectId);
+                        console.log(form);
+                        //window.location.href = "http://www.google.com";
+                    });
+                });
+            </script>
 		{% else %}
 			<div class="card prime_borderlightgrey mb-3">
 			    <div class="card-header">Your cart is empty</div>
@@ -80,5 +166,4 @@
 		{% endfor %}
 	</div>
 </div>
-
 {% endblock %}

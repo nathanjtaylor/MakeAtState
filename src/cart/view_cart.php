@@ -11,6 +11,7 @@ class ViewCart{
     * @param $Templ : sets the template file
     */
     public function __construct(Templater &$vcTempl){
+        APP::printVar($_POST["q1"]);
         $this->vcTemplate =  $vcTempl;
         $this->dc = new DataCalls();
         $this->setCartNavigation();

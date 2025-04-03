@@ -202,6 +202,10 @@ class Url{
 				require_once __DIR__."/infrastructure/manage_groups.php";
 				$group_manage = new ManageGroups($this->oTemplate);
 				break;
+			case 'manage_assessments':
+				require_once __DIR__."/infrastructure/manage_assessments.php";
+				$assessment_manage = new ManageAssessments($this->oTemplate);
+				break;
 			case 'manage_printers':
 			case 'update_printer':
 			case 'remove_printer':

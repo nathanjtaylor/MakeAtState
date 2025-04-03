@@ -1,6 +1,5 @@
 var cartWarning = "Missing Required Fields";
 $(document).ready(function(){
-
     //Validation for register form
     $(".register_btn").click(function(event) {
 

@@ -23,8 +23,8 @@ services:
 
   webapp:
     volumes:
-    - ./src:/var/www/MakeAtState/src
-    - ./templates:/var/www/MakeAtState/templates
+      - ./src:/var/www/MakeAtState/src
+      - ./templates:/var/www/MakeAtState/templates
     deploy:
       mode: replicated
       replicas: 1

@@ -1,5 +1,5 @@
 <?php
-
+# This is a test comment
 class UserRegistration{
 
 
@@ -146,7 +146,7 @@ class UserRegistration{
 					$this->user_id = $uRow;
 					$mail_sent  = $this->sendEmail($token);
 
-					if($mail_sent){
+					if(true){
 						#if the email was successfully sent
 						LoggerPrime::debug("Successfully created a user with email :  ". $email);
 						$this->dc->transactionCommit();

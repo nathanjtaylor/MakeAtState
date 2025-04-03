@@ -34,7 +34,7 @@
                 $permissions_level = $this->getPermissionLevel($perm_id);
                 switch ($permissions_level) {
                     case self::ADMIN_MANAGE_LEVEL:
-                        $navigation_array = array("Home" => "?t=home" , "Jobs" => "?t=all_jobs" , "Messages"=>"?t=messages", "Manage Infrastructure"=>"?t=manage_infrastructure","Manage Project Workflows"=>"/?t=manage_steps", "Manage Groups"=>"?t=manage_groups","Manage Users"=>"?t=manage_users", "Stats"=>"?t=stats", "Contact us"=>"?t=contact");
+                        $navigation_array = array("Home" => "?t=home" , "Jobs" => "?t=all_jobs" , "Messages"=>"?t=messages", "Manage Infrastructure"=>"?t=manage_infrastructure","Manage Project Workflows"=>"/?t=manage_steps", "Manage Assessments"=>"/?t=manage_assessments", "Manage Groups"=>"?t=manage_groups","Manage Users"=>"?t=manage_users", "Stats"=>"?t=stats", "Contact us"=>"?t=contact");
                         break;
                     case self::STAFF_MANAGE_LEVEL:
                         $navigation_array = array("Home" => "?t=home" , "Jobs" => "?t=all_jobs" , "Messages"=>"?t=messages", "Stats"=>"?t=stats", "Contact us"=>"?t=contact");
