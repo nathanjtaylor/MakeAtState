@@ -10,7 +10,7 @@ services:
       MAIL_FROM: "root@3dprime.devel.lib.msu.edu"
     volumes:
       - ./makeatstate.cfg:/var/www/MakeAtState/makeatstate.cfg:ro
-      - data:/mnt/makeatstate
+      - data:/var/www/makeatstate_files
 
   database:
     image: mariadb:10
