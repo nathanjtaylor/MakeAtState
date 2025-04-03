@@ -289,6 +289,9 @@ class UserRegistration{
 	*/
 	public function sendEmail($token){
 
+		// TODO: REMOVE THIS!!!!
+		return true;
+
 		$cf = APP::config();
 		$site = $cf->get('application.url');
 		$confirm_url = $site. "/?t=confirm&ott=".$token."&cuid=".$this->user_id;
