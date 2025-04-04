@@ -67,7 +67,7 @@
                 {% endfor %}
                 <!-- Form Markup TODO: aria--> 
                 <h4 class="mt-3">Survey Questions (optional)</h4>
-                <form id="form-{{project_id}}" action="/?t=view_cart" method="post">
+                <form id="form-{{project_id}}" action="/" method="post">
                     <fieldset class="form-group ms-3 mt-3 q1-block">
                         <p>Can MSU Libraries post a picture of your work on its Social Media accounts?</p>
                         <div class="form-check form-check-inline">
@@ -139,21 +139,29 @@
                     </fieldset>
                     <div class="">
                         <a href = "/?t=remove_cart_item&rpid={{ project_id }}" class="btn btn-danger prime_white_text mt-3 d-inline" aria-label = "Delete item" style="width: max-content;">Remove</a>
-                        <button type="submit" class="btn btn-success d-inline" aria-label = "Submit item" style="width: max-content;">Submit Project</button>
+                        <button type="submit" name="submit" class="btn btn-success d-inline" aria-label = "Submit item" style="width: max-content;">Submit Project</button>
                     </div>
             </form>
             <!-- Form Markup End -->
             </div>
 
             <script>
-                $(document).ready(function(){
-                    $("#submit-project-assessment").click(function(e){
-                        e.preventDefault();
-                        var projectId = $(this).data("project-id");
-                        var form = $("#form-" + projectId);
-                        console.log(form);
-                        //window.location.href = "http://www.google.com";
-                    });
+                document.getElementById("form-{{project_id}}").addEventListener("submit", async function(event){
+                    event.preventDefault();
+                    let assessmentData = new FormData(this);
+                    
+                    try{
+                        const response = await fetch("/?t=workflow&uid={{ user_id }}&project_id={{ project_id }}&step=1", {
+                            method: "POST",
+                            body: assessmentData
+                        });
+                        console.log(await response.ok);
+                        console.log(await response.status);
+                    }
+                    catch (error){
+                        console.log("Hello");
+                        console.error(error);
+                    }
                 });
             </script>
 		{% else %}

@@ -19,6 +19,7 @@ class ProcessWorkflow extends WorkflowSteps{
     * Templater $sTempl : Templater object for job submit
     */
     public function __construct(Templater &$wTempl){
+        APP::printVar($_POST["q1"]);
         $this->pTemplate = $wTempl;
         $this->dc = new DataCalls();
         $this->helper = new PrimeHelper();
