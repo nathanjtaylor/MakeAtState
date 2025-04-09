@@ -138,6 +138,8 @@ class ProcessWorkflow extends WorkflowSteps{
             $this->cancel_step = UserData::create('cancel')->getInt();
             $this->hold_step = UserData::create('hold')->getInt();
 
+            // If on step 1, we should handle submission of the survey questions via formdata.
+
             if(!empty($this->workflow_step) && !empty($this->project_id) && !empty($this->user_id)){
                 $this->processInitialStep();
             }

@@ -30,3 +30,28 @@ INSERT INTO cancellation_reasons (`for_staff`, `reason`, `more_information`) VAL
 (1, "Patron resubmitted file", 0),
 (1, "Other", 1),
 (0, "Other", 1);
+
+-- Assessment question types
+INSERT INTO assessment_q_types VALUES
+(0, 'Text'),
+(1, 'YesNo'),
+(2, 'MultipleChoice'),
+(3, 'SelectOne');
+
+-- Default assessment questions
+INSERT INTO assessment_questions (question_id, qtype_id, question_text) VALUES 
+(0, 1, "Can MSU Libraries post a picture of your work on its Social Media accounts?"),
+(1, 0, "List Instagram accounts you want to be tagged with:"),
+(2, 1, "Is this project part of an MSU class?"),
+(3, 0, "What course/project is this project associated with?"),
+(4, 2, "Is this project you are submitting associated with any of these items?"),
+
+-- Multiple choice / pick one answer choices
+INSERT INTO assessment_q_mc_choices (question_id, option_text) VALUES
+(4, "This is a gift, for fun, or personal project"),
+(4, "This is a homework assignment"),
+(4, "Part of a graduate thesis or dissertation"),
+(4, "Research-related"),
+(4, "A work-related job or task (e.g. exhibition, promotions, or giveaways)"),
+(4, "Prototyping for business or entrepreneurship"),
+(4, "I prefer not to say");
