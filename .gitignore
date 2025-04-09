@@ -12,3 +12,5 @@ log/
 /3dprime.service
 /certs/
 /.env
+
+docker-compose.devel-local.yml

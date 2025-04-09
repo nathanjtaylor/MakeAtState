@@ -1,5 +1,5 @@
 -- Insert values into permissions table
-INSERT INTO `permissions` VALUES
+INSERT IGNORE INTO `permissions` VALUES
 (1,NULL,NULL,256,30,10,0,0),
 (2,'Library patron','users',256,30,10,268435456,0),
 (3,'Student staff','student_staff',256,30,10,268435456,1),
@@ -7,7 +7,7 @@ INSERT INTO `permissions` VALUES
 (5,'Site admin','admin',1024,180,20,268435456,3);
 
 -- Insert workflow step types
-INSERT INTO `workflow_step_type` VALUES
+INSERT IGNORE INTO `workflow_step_type` VALUES
 (1,'General step'),
 (2,'Price step'),
 (3,'Completed step'),
@@ -16,7 +16,7 @@ INSERT INTO `workflow_step_type` VALUES
 (6,'Delivery date step');
 
 -- Insert cancellation reasons
-INSERT INTO cancellation_reasons (`for_staff`, `reason`, `more_information`) VALUES
+INSERT IGNORE INTO cancellation_reasons (`for_staff`, `reason`, `more_information`) VALUES
 (0, "Printed somewhere else at MSU", 0),
 (0, "Estimated completion date was too long", 0),
 (0, "Needed a different material", 0),
@@ -30,3 +30,28 @@ INSERT INTO cancellation_reasons (`for_staff`, `reason`, `more_information`) VAL
 (1, "Patron resubmitted file", 0),
 (1, "Other", 1),
 (0, "Other", 1);
+
+-- Assessment question types
+INSERT IGNORE INTO assessment_q_types (qtype_id, question_type) VALUES
+(1, 'Text'),
+(2, 'YesNo'),
+(3, 'MultipleChoice'),
+(4, 'SelectOne');
+
+-- Default assessment questions
+INSERT IGNORE INTO assessment_questions (question_id, qtype_id, question_text) VALUES 
+(1, 2, "Can MSU Libraries post a picture of your work on its Social Media accounts?"),
+(2, 1, "List Instagram accounts you want to be tagged with:"),
+(3, 2, "Is this project part of an MSU class?"),
+(4, 1, "What course/project is this project associated with?"),
+(5, 3, "Is this project you are submitting associated with any of these items?");
+
+-- Multiple choice / pick one answer choices
+INSERT IGNORE INTO assessment_q_mc_choices (question_id, option_text) VALUES
+(5, "This is a gift, for fun, or personal project"),
+(5, "This is a homework assignment"),
+(5, "Part of a graduate thesis or dissertation"),
+(5, "Research-related"),
+(5, "A work-related job or task (e.g. exhibition, promotions, or giveaways)"),
+(5, "Prototyping for business or entrepreneurship"),
+(5, "I prefer not to say");
