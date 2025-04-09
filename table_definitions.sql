@@ -431,11 +431,11 @@ ENGINE = InnoDB;
 
 -- Multiple choice / pick one answer choices
 CREATE TABLE IF NOT EXISTS assessment_q_mc_choices (
-    option_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT
+    option_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     question_id INTEGER UNSIGNED NOT NULL,
     option_text VARCHAR(255) NOT NULL,
     PRIMARY KEY (option_id),
-    CONSTRAINT fk_question_id FOREIGN KEY (question_id) REFERENCES assessment_questions (question_id)
+    CONSTRAINT fk_mcq_question_id FOREIGN KEY (question_id) REFERENCES assessment_questions (question_id)
 )
 CHARACTER SET utf8mb4
 ENGINE = InnoDB;
