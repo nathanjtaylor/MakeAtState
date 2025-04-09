@@ -15,7 +15,7 @@ class  InitialStep extends WorkflowSteps {
     * @param array project_data: Project data for all items in the project
     * @param array project_name: Name of the project
     */
-    public function __construct(Templater &$sTempl, $project_id, $user_id, $project_data, $project_name){
+    public function __construct(Templater &$sTempl, $project_id, $user_id, $project_data, $project_name, $assessment_answers){
         $this->iTemplate = $sTempl;
         $this->dc = new DataCalls();
         $this->helper = new PrimeHelper();
@@ -23,6 +23,7 @@ class  InitialStep extends WorkflowSteps {
         $this->user_id = $user_id;
         $this->project_data = $project_data;
         $this->project_name = $project_name;
+        $this->assessment_answers = $assessment_answers; 
         $this->file_workflow_ids = array();
         //set current step `for the parent class
         $this->current_step = 1;
@@ -69,6 +70,7 @@ class  InitialStep extends WorkflowSteps {
                     $job_data['project_id'] = $this->project_id;
                     $job_data['file_data'][$fRow[0]['file_id']]['data']= $data['cart_data'];
                     $job_data['file_data'][$fRow[0]['file_id']]['name']= $fRow[0]["file_name"];
+                    $job_data['assessment_answers'] = $this->assessment_answers;
                 } else{
                     $error_messages[] = "The selected file does not exist. This cart item cannot be submitted";
                 }

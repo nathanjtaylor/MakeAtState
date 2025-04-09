@@ -18,8 +18,8 @@ class ProcessWorkflow extends WorkflowSteps{
     * Constructor function for workflow steps
     * Templater $sTempl : Templater object for job submit
     */
-    public function __construct(Templater &$wTempl){
-        APP::printVar($_POST["q1"]);
+    public function __construct(Templater &$wTempl){  
+
         $this->pTemplate = $wTempl;
         $this->dc = new DataCalls();
         $this->helper = new PrimeHelper();
@@ -28,6 +28,7 @@ class ProcessWorkflow extends WorkflowSteps{
         $this->stepAccess();
         $pTarget = UserData::create('t')->getString();
         $this->job_id = UserData::create('job_id')->getInt(0);
+
         $this->user_id = UserData::create('uid')->getInt(0);
         $this->job_notes = array();
         # Check if the user is an admin
@@ -162,6 +163,7 @@ class ProcessWorkflow extends WorkflowSteps{
             }
         }
     }
+
     /**
     * Accessing the initial step
     */
@@ -202,8 +204,10 @@ class ProcessWorkflow extends WorkflowSteps{
                     $error_messages[] = "Sorry, we encounted a problem submitting your cart items, please try again";
                 }
                 if(empty($error_messages)){
+                    $assessment_answers = $this->processAssessmentAnswers();
+
                     require_once(__DIR__."/initial_step.php");
-                    $initial_step = new InitialStep($this->pTemplate, $this->project_id, $this->user_id, $project_data, $project_name);
+                    $initial_step = new InitialStep($this->pTemplate, $this->project_id, $this->user_id, $project_data, $project_name, $assessment_answers);
                 }else{
                     Alerts::setErrorMessages($error_messages);
                     header('Location: /?t=view_cart');
@@ -217,6 +221,21 @@ class ProcessWorkflow extends WorkflowSteps{
                 break;
         }
     }
+
+    /**
+    * Get the answers to assessment answers
+    */
+    public function processAssessmentAnswers() {
+        $assessment_answers = array();
+
+        if (isset($_POST['q1'])) {
+            $q1 = $_POST['q1'];
+            $assessment_answers['q1'] = $q1;
+        }
+
+        return $assessment_answers;
+    }
+
     /**
     * Determines the next step in the workflow
     */

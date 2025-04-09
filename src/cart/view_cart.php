@@ -116,10 +116,18 @@ class ViewCart{
         $this->vcTemplate->setVariables("nav_array" , self::$nav_array);
         $this->vcTemplate->setVariables("user_id" , self::$user['user_id']);
         $this->vcTemplate->setVariables('cart_details', $this->cart_details);
+        $this->vcTemplate->setVariables('questions', $this->getQuestions());
         $this->vcTemplate->setVariables('submit_all_ids', $this->submit_all_ids);
         $this->vcTemplate->setVariables('error_messages', Alerts::getErrorMessages());
         $this->vcTemplate->setVariables('success_messages', Alerts::getSuccessMessages());
         $this->vcTemplate->generate();
+    }
+    /**
+    *Function to get assessment questions
+    */
+    public function getQuestions(){
+        $questions = $this->dc->getAssessmentQuestions(); //getAssessmentQuestions currently retrives static questions
+        return $questions;
     }
     /**
     *Delete item in cart
