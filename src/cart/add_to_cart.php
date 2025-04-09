@@ -466,6 +466,7 @@ EOT;
         $delivery_string = $this->prepareProjectDeliveryData();
         $user_id = self::$user['user_id'];
         $project_name = $_POST['project_name'];
+
         $cData = array();
         $cRow = array();
 
