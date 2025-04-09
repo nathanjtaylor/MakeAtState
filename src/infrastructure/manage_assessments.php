@@ -10,12 +10,12 @@ class ManageAssessments{
 
 	private $user_id;
 	private $access_level;
-	private $work_step_id;
+	// private $work_step_id;
+	private $question_id;
 	// private $workflow_steps = array(); // array of all workflow steps for this printer
 	private $assessment_questions = array(); // array of all assessment questions
 	private $assessment_types = array(); // array of all assessment questions
 	private $edit_permissions = array();
-	private $edit_types = array();
 	private $workflow_alerts = array(); // contains messages to help the user by provind more info about the workflow steps
 	
 	static private $user;
@@ -36,83 +36,64 @@ class ManageAssessments{
 		$this->setAccessLevel();
 		
 		$pTarget = UserData::create('t')->getString();
-		$this->work_step_id =  UserData::create('work_step_id')->getInt();
+		$this->question_id = UserData::create('question_id')->getInt();
 	
 		$success_messages = array();
 		$error_messages = array();
 		//Check if the user has permissions 		
 		if($this->access_level == "ADMIN" || $this->access_level == "STAFF"){
-			// action to update workflow steps
-			if($pTarget == "edit_workflow_steps"){
-				// getting all the values from the form
-				$update_steps = array();
-				$update_steps['work_step_id'] = $this->work_step_id;
-				$update_steps['name'] = UserData::create('name')->getString();
-				$update_steps['ordering'] = UserData::create('ordering')->getInt();
-				$update_steps['admin_status'] = UserData::create('admin_status')->getString();
-				$update_steps['user_status'] = UserData::create('user_status')->getString();
-				$update_steps['manage_level'] = UserData::create('manage_level')->getInt();
-				$update_steps['allow_cancellation'] = UserData::create('allow_cancellation')->getInt();
-				$update_steps['email_confirmation'] = UserData::create('email_confirmation')->getInt();
-				$this->updateWorkflowStep($update_steps);
-			}
-			// action to delete the workflow_step
-			elseif($pTarget == 'remove_workflow_step'){
-				$this->deleteWorkflowStep();
-			}
-			// action to undo delete the workflow_step
-			elseif($pTarget == 'undo_remove_workflow_step'){
-				$this->undoDeleteWorkflowStep();
 
+			if ($pTarget == "edit_assessment") {
+				$update_values = array();
+				$update_values['question_id'] = $this->question_id;
+				$update_values['question_text'] = UserData::create('question_text')->getString();
+				$update_values['qtype_id'] = UserData::create('qtype_id')->getInt();
+				$update_values['ordering'] = UserData::create('ordering')->getInt();
+				$this->updateAssessment($update_values);
 			}
-			// action to add a new workflow step
-			elseif($pTarget == 'add_workflow_steps'){
-				$add_steps =  array();
-				$add_steps['name'] = UserData::create('name')->getString();
-				$add_steps['ordering'] = UserData::create('ordering')->getInt();
-				$add_steps['admin_status'] = UserData::create('admin_status')->getString();
-				$add_steps['user_status'] = UserData::create('user_status')->getString();
-				$add_steps['manage_level'] = UserData::create('manage_level')->getInt();
-				$add_steps['allow_cancellation'] = UserData::create('allow_cancellation')->getInt();
-				$add_steps['email_confirmation'] = UserData::create('email_confirmation')->getInt();
-				$add_steps['step_type_id'] = UserData::create('step_type_id')->getInt();
-				
-				$this->addWorkflowSteps($add_steps);
-			}else{
-				$this->processWorkflowSteps();
+			elseif ($pTarget == 'update_assessment_questions') {
+				// Logic to update assessment question choices for multichoice and radio options
+			}
+			elseif ($pTarget == "add_assessment") {
+				$add_values = array();
+				$add_values['question_text'] = UserData::create('question_text')->getString();
+				$add_values['qtype_id'] = UserData::create('qtype_id')->getInt();
+				$add_values['ordering'] = UserData::create('ordering')->getInt();
+				$this->addAssessment($add_values);
+			}
+			elseif ($pTarget == "remove_assessment") {
+				$this->deleteAssessment();
+			}
+			elseif ($pTarget == "undo_assessment_delete") {
+				$this->undoDeleteAssessment();
+			}
+			else {
+				$this->processAssessmentQuestions();
 			}
 		}else{
 			// if the user doesnt have permissions send them to home page 
 			$error_messages[] = "Sorry this operation is not allowed";
 			Alerts::setErrorMessages($error_messages);
 			header('Location: /?t=home');
-
 		}
-		
 	}
-
 
 	/**
 	* Render manage workflows steps template
 	*/
-	private function renderManageWorkflowStepsTemplate(){
+	private function renderManageAssessmentsTemplate(){
 		$this->sTemplate->setTemplate('manage_assessments.html');
 		$this->sTemplate->setVariables('page_title', "Manage assessments");
 		$this->sTemplate->setVariables('error_messages' , Alerts::getErrorMessages());
 		$this->sTemplate->setVariables('success_messages' , Alerts::getSuccessMessages());
 		$this->sTemplate->setVariables('nav_array', self::$nav_array);	
-		//Set varibales for workflow_steps
-		// $this->sTemplate->setVariables('workflow_steps', $this->workflow_steps);	
+
 		$this->sTemplate->setVariables('assessment_questions', $this->assessment_questions);	
 		$this->sTemplate->setVariables('assessment_types', $this->assessment_types);	
 		
-		// $this->sTemplate->setVariables('edit_permissions', $this->edit_permissions);	
-		$this->sTemplate->setVariables('edit_types', $this->edit_types);	
 		$this->sTemplate->setVariables('workflow_step_alerts', $this->workflow_alerts);	
 
 		$this->sTemplate->generate();
-		
-
 	}
 
 	/**
@@ -148,18 +129,14 @@ class ManageAssessments{
 	/**
 	* Process workflows for display
 	*/
-	public function processWorkflowSteps(){
+	public function processAssessmentQuestions(){
 		$success_messages = array();
 		$error_messages = array();
 
-        // $sRows =  $this->dc->getAllWorkflowSteps();
         $q_rows = $this->dc->getAllAssessmentQuestions();
-        // $all_permissions = $this->dc->getAllPermissions();
-        // $all_step_types = $this->dc->getAllStepTypes();
         $this->assessment_types = $this->dc->getAllAssessmentQuestionTypes();
-        // $this->prepareWorkflowStepsForDisplay($sRows, $all_permissions, $all_step_types);
         $this->prepareAssessmentQuestionsForDisplay($q_rows);
-        $this->renderManageWorkflowStepsTemplate();
+        $this->renderManageAssessmentsTemplate();
 	}
 
 	/**
@@ -179,19 +156,6 @@ class ManageAssessments{
 			}
 			$this->assessment_questions[$key] = $step;
 		}
-		foreach($this->assessment_types as $key=>$type){
-			$this->edit_types[$type['qtype_id']] = $type['question_type'];
-		}
-
-		// Check if general step , price step , job completed step , cancelled step and user cancelled step are available for the workflow 
-		//if not do not add it to the dropdown
-		// $warnings_array = $this->helper->determineReadinessOfPrinterWorkflow($step_rows, $all_step_types);
-		// if(empty($warnings_array)){
-		// 	$this->workflow_alerts['success_message'] = "Project workflow is ready and can accept user submissions";
-		// }else{
-		// 	$this->workflow_alerts['warning_message'] = "Workflow steps incomplete. Project workflow is not ready and cannot accept user submissions";
-		// 	$this->workflow_alerts['warnings'] = $warnings_array;
-		// }
 	}
 
 
@@ -199,56 +163,48 @@ class ManageAssessments{
 	* Update workflow steps in a workflow , workflw_id and printer name must be valid
 	* @param array update_steps: array of values from the edit form
 	*/
-
-	public function updateWorkflowStep($update_steps){
+	public function updateAssessment($update_values){
 		$error_messages = array();
 		$success_messages = array();
-		$step_name_exists = false;
-		$adjust_order_work_step_id = false;
+		$adjust_order_question_id = false;
+
 		//check if the work_step_id is available
-		$sData =  array("work_step_id"=> $update_steps['work_step_id'],  "step_removed"=>null);
+		$sData = array("question_id"=> $update_values['question_id'], "question_removed"=>null);
 		// get db row for this step
-		$sRow = $this->dc->getRowsById("workflow_steps", $sData);
+		$sRow = $this->dc->getRowsById("assessment_questions", $sData);
 		// get db rows for all steps 
-        $allStepsRows = $this->dc->getAllWorkflowSteps();
-		if(!empty($sRow) && !empty($allStepsRows)){
-			// check for exact match for step names 	
-			foreach($allStepsRows as $k=>$step){
-
-				if(($step['name'] == $update_steps['name']) && ($update_steps['work_step_id'] !== $step['work_step_id']) ){
-
-					$step_name_exists = true;
-					
-					$error_messages[] = "A step with same name already exists, please use a different name.";
-					break;
-				}
-				// check the order # from the form  is set for another step
-				if(  ($step['ordering'] == $update_steps['ordering']) && ($update_steps['work_step_id'] !== $step['work_step_id'])  ){
-					$adjust_order_work_step_id  = $step['ordering'];
+        $allQsRows = $this->dc->getAllAssessmentQuestions();
+		if(!empty($sRow) && !empty($allQsRows)){
+			// check if order needs updating	
+			foreach($allQsRows as $k=>$question){
+				if(
+					($question['ordering'] == $update_values['ordering']) && 
+					($update_values['question_id'] !== $question['question_id'])
+					) {
+					$adjust_order_question_id = $question['ordering'];
 				}
 			}
-			if(empty($step_name_exists) ){
-				$this->dc->transactionStart();
-				// if the ordering needs adjustment 
-				if(!empty($adjust_order_work_step_id )){
-					$adjustRows = $this->dc->adjustWorkflowStepOrder($adjust_order_work_step_id);
-					if(empty($adjustRows)){
-						$error_messages[] = "Sorry , we are unbale to adjust the ordering of the steps.";
-					}
-				}
-				// update the step in db
-				$updateStepData = array();
-				foreach($update_steps as $dbColName => $value){
-					$updateStepData[$dbColName] = empty($value)?'0':$value;
-				}
-				$updated = $this->dc->updateUsingPrimaryKey('workflow_steps', 'work_step_id', $updateStepData);
 
-				// if success set success message else set error message 
-				(!empty($updated)) ?$success_messages[] = "Successfully updated workflow step": $error_messages[]= "Sorry we are unbale to update workflow step";
-
+			$this->dc->transactionStart();
+			// if the ordering needs adjustment 
+			if(!empty($adjust_order_question_id)){
+				$adjustRows = $this->dc->adjustQuestionOrder($adjust_order_question_id);
+				if(empty($adjustRows)){
+					$error_messages[] = "Sorry, we are unable to adjust the ordering of the questions.";
+				}
 			}
+			// update the step in db
+			$updateQuestionData = array();
+			foreach($update_values as $dbColName => $value){
+				$updateQuestionData[$dbColName] = empty($value)?'0':$value;
+			}
+			$updated = $this->dc->updateUsingPrimaryKey('assessment_questions', 'question_id', $updateQuestionData);
+
+			// if success set success message else set error message 
+			(!empty($updated)) ?$success_messages[] = "Successfully updated assessment question": $error_messages[]= "Sorry, we are unable to update the assessment question";
+
 		}else{
-			$error_messages[] = "Sorry, unable to update step, please try again";
+			$error_messages[] = "Sorry, unable to update question, please try again";
 		}
 		if(!empty($error_messages)){
 			$this->dc->transactionRollback();
@@ -258,58 +214,44 @@ class ManageAssessments{
 			$this->dc->transactionCommit();
 			Alerts::setSuccessMessages($success_messages);
 		}
-		header('Location: /?t=manage_steps');
-	
-
+		header('Location: /?t=manage_assessments');
 	}
 
 	/**
 	* Function to add a new  workflow step
 	* @param array add_step : array of values to be added for a new step, obtained from the form
 	*/
-	public function addWorkflowSteps($add_step){
+	public function addAssessment($add_values){
 		$error_messages = array();
 		$success_messages = array();
-		$step_name_exists = false;
-		$adjust_order_work_step_id = false;
+		$adjust_order_question_id = false;
 
         // get db rows for all steps 
-        $allStepsRows = $this->dc->getAllWorkflowSteps();
-        // check for exact match for step names 	
-        foreach($allStepsRows as $k=>$step){
-
-            if(($step['name'] == $add_step['name']) && ($add_step['work_step_id'] !== $step['work_step_id']) ){
-
-                $step_name_exists = true;
-                
-                $error_messages[] = "A step with same name already exists, please use a different name.";
-                break;
-            }
-            // check the order # from the form  is set for another step
-            if(  ($step['ordering'] == $add_step['ordering']) && ($add_step['work_step_id'] !== $step['work_step_id'])  ){
-                $adjust_order_work_step_id  = $step['ordering'];
+        $allQsRows = $this->dc->getAllAssessmentQuestions();
+		
+        foreach($allQsRows as $k=>$question){
+            if(  ($question['ordering'] == $add_values['ordering']) && ($add_values['question_id'] !== $question['question_id'])  ){
+                $adjust_order_question_id  = $question['ordering'];
             }
         }
-        if(empty($step_name_exists) ){
-            $this->dc->transactionStart();
-            // if the ordering needs adjustment 
-            if(!empty($adjust_order_work_step_id )){
-                $adjustRows = $this->dc->adjustWorkflowStepOrder($adjust_order_work_step_id);
-                if(empty($adjustRows)){
-                    $error_messages[] = "Sorry , we are unbale to adjust the ordering of the steps.";
-                }
-            }
-            // update the step in db
-            $addStepData = array();
-            foreach($add_step as $dbColName => $value){
-                $addStepData[$dbColName] = empty($value)?'0':$value;
-            }
-            $updated = $this->dc->insertWorkflowSteps($addStepData);
 
-            // if success set success message else set error message 
-            (!empty($updated)) ?$success_messages[] = "Successfully added a new  workflow step": $error_messages[]= "Sorry we are unbale to add a new workflow step";
+		$this->dc->transactionStart();
+		// if the ordering needs adjustment 
+		if(!empty($adjust_order_question_id)){
+			$adjustRows = $this->dc->adjustQuestionOrder($adjust_order_question_id);
+			if(empty($adjustRows)){
+				$error_messages[] = "Sorry , we are unbale to adjust the ordering of the steps.";
+			}
+		}
+		// update the step in db
+		$addQuestionData = array();
+		foreach($add_values as $dbColName => $value){
+			$addQuestionData[$dbColName] = empty($value)?'0':$value;
+		}
+		$updated = $this->dc->insertAssessmentQuestion($addQuestionData);
 
-        }
+		// if success set success message else set error message 
+		(!empty($updated)) ?$success_messages[] = "Successfully added a new assessment question.": $error_messages[]= "Sorry, we are unable to add a new assessment question.";
 
 		if(!empty($error_messages)){
 			$this->dc->transactionRollback();
@@ -319,26 +261,23 @@ class ManageAssessments{
 			$this->dc->transactionCommit();
 			Alerts::setSuccessMessages($success_messages);
 		}
-		header('Location: /?t=manage_steps');
-
-
-
+		header('Location: /?t=manage_assessments');
 	}
+
 	/**
-	* Function to delete the wprkflow step
-	* 
+	* Function to delete the assessment question.
 	*/
-	public function deleteWorkflowStep(){
+	public function deleteAssessment(){
 		$error_messages = array();
 		$success_messages = array();
-		// check if and work_step_id is set
-		if(isset($this->work_step_id)){
-			// update step_removed in wirkflow_steps table for this work_step_id
+		// check if and question_id is set
+		if(isset($this->question_id)){
+			// update question_removed in assessment_questions table for this question_id
 			$this->dc->transactionStart();
-			$sConditionsCol = array('work_step_id');
-			$sData = array('work_step_id'=>$this->work_step_id, 'step_removed'=>date('Y-m-d:H:i:s'));
-			$dRow = $this->dc->updateUsingConditions('workflow_steps', $sConditionsCol, $sData);	
-			(!empty($dRow)) ?$success_messages[] = 'Successfully deleted step from the workflow. <a href = "/?t=undo_remove_workflow_step&work_step_id='.$this->work_step_id.'">Undo</a>':$error_messages[] = "Sorry, we are unable to perform a delete operation";
+			$sConditionsCol = array('question_id');
+			$sData = array('question_id'=>$this->question_id, 'question_removed'=>date('Y-m-d:H:i:s'));
+			$dRow = $this->dc->updateUsingConditions('assessment_questions', $sConditionsCol, $sData);	
+			(!empty($dRow)) ?$success_messages[] = 'Successfully deleted step from the workflow. <a href = "/?t=undo_assessment_delete&question_id='.$this->question_id.'">Undo</a>':$error_messages[] = "Sorry, we are unable to perform a delete operation";
 		}else{
 			$error_messages[] = "Sorry, we are unable to perform a delete operation";
 		}
@@ -350,26 +289,21 @@ class ManageAssessments{
 			$this->dc->transactionCommit();
 			Alerts::setSuccessMessages($success_messages);
 		}
-		header('Location: /?t=manage_steps');
-
-
-
+		header('Location: /?t=manage_assessments');
 	}
 
 	/**
-	* Function to undo delete the wprkflow step
-	* 
+	* Function to undo deletion of an assessment question
 	*/
-	public function undoDeleteWorkflowStep(){
+	public function undoDeleteAssessment(){
 		$error_messages = array();
 		$success_messages = array();
-		// check if work_step_id is set
-		if(isset($this->work_step_id)){
-			// undo step_removed in workflow_steps table for this work_step_id
+		// check if question_id is set
+		if(isset($this->question_id)){
 			$this->dc->transactionStart();
-			$sConditionsCol = array('work_step_id');
-			$sData = array('work_step_id'=>$this->work_step_id, 'step_removed'=>null);
-			$dRow = $dRow = $dRow = $dRow = $this->dc->updateUsingConditions('workflow_steps', $sConditionsCol, $sData);	
+			$sConditionsCol = array('question_id');
+			$sData = array('question_id'=>$this->question_id, 'question_removed'=>null);
+			$dRow = $dRow = $dRow = $dRow = $this->dc->updateUsingConditions('assessment_questions', $sConditionsCol, $sData);	
 			(!empty($dRow)) ?$success_messages[] = 'Undo operation successful':$error_messages[] = "Sorry, we are unable to perform a undo operation";
 		}else{
 			$error_messages[] = "Sorry, we are unable to perform a undo operation";
@@ -382,12 +316,9 @@ class ManageAssessments{
 			$this->dc->transactionCommit();
 			Alerts::setSuccessMessages($success_messages);
 		}
-		header('Location: /?t=manage_steps');
-
-
-
+		header('Location: /?t=manage_assessments');
 	}
-	
+
 }
 
 

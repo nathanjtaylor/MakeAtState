@@ -39,12 +39,12 @@ INSERT IGNORE INTO assessment_q_types (qtype_id, question_type, has_choices) VAL
 (4, 'SelectOne', TRUE);
 
 -- Default assessment questions
-INSERT IGNORE INTO assessment_questions (question_id, qtype_id, question_text) VALUES 
-(1, 2, "Can MSU Libraries post a picture of your work on its Social Media accounts?"),
-(2, 1, "List Instagram accounts you want to be tagged with:"),
-(3, 2, "Is this project part of an MSU class?"),
-(4, 1, "What course/project is this project associated with?"),
-(5, 3, "Is this project you are submitting associated with any of these items?");
+INSERT IGNORE INTO assessment_questions (question_id, qtype_id, question_text, ordering) VALUES 
+(1, 2, "Can MSU Libraries post a picture of your work on its Social Media accounts?", 1),
+(2, 1, "List Instagram accounts you want to be tagged with:", 2),
+(3, 2, "Is this project part of an MSU class?", 3),
+(4, 1, "What course/project is this project associated with?", 4),
+(5, 3, "Is this project you are submitting associated with any of these items?", 5);
 
 -- Multiple choice / pick one answer choices
 INSERT IGNORE INTO assessment_q_mc_choices (option_id, question_id, option_text) VALUES

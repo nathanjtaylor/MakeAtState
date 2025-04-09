@@ -410,12 +410,13 @@ CREATE TABLE IF NOT EXISTS assessment_q_types (
 CHARACTER SET utf8mb4
 ENGINE = InnoDB;
 
--- todo: add ordering?
 CREATE TABLE IF NOT EXISTS assessment_questions (
     question_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     qtype_id INTEGER UNSIGNED NOT NULL,
     question_text VARCHAR(255) NOT NULL,
     question_removed datetime DEFAULT NULL,
+    ordering INTEGER NOT NULL,
+    INDEX idx_question_ordering (ordering),
     PRIMARY KEY (question_id),
     CONSTRAINT fk_qtype_id FOREIGN KEY (qtype_id) REFERENCES assessment_q_types (qtype_id)
 )

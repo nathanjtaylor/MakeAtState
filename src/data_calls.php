@@ -118,8 +118,7 @@ class DataCalls{
     public function getAllAssessmentQuestions(){
         $pQuery = "SELECT * FROM assessment_questions 
             WHERE question_removed IS NULL  
-            ORDER BY question_id";
-            // JOIN assessment_q_types ON assessment_questions.qtype_id = assessment_q_types.qtype_id
+            ORDER BY ordering";
         $steps = $this->db->query($pQuery);
         return $steps;
     }
@@ -146,6 +145,19 @@ class DataCalls{
         $aRows = $this->db->query($aQuery);
         return $aRows;
     }
+
+    /**
+    * adjust ordeing of steps
+    * when an order number in the step is increased , increase the following step's order # by 1
+    * @param int order_num : order number that needs to be adjusted
+    */
+    public function adjustQuestionOrder($order_num){
+        $aQuery = "UPDATE assessment_questions set ordering = ordering+1 where ordering >=".$order_num." AND question_removed IS NULL";
+        #APP::printVar($this->db->queryDump($aQuery, $aValues));
+        $aRows = $this->db->query($aQuery);
+        return $aRows;
+    }
+
     /**
     * Gets the next step in the workflow
     * @param array $aData: Data to be passed into the where clause
@@ -1155,7 +1167,7 @@ ORDER BY created;";
             # Primary key where clause
             $query .= "WHERE " . $this->db->escapeIdentifier($sPrimaryKeyCol). " = ?";
             $aValues[] = $iPrimaryKeyVal;
-            //APP::printVar($this->db->queryDump($query, $aValues));
+            APP::printVar($this->db->queryDump($query, $aValues));
             $iUpdated =  $this->db->query($query, $aValues);
             $rUpdated = ($iUpdated >= 1);
         }
@@ -1409,6 +1421,16 @@ ORDER BY created;";
         return $iRows;
     }
     /*
+    * Insert new workflow step into the workflow  step  table
+    * @param $wData  Array of column names and values
+             array("column_name"=> value)
+    */
+    public function insertAssessmentQuestion($wData){
+        $sTable = "assessment_questions";
+        $iRows = $this->insertIntoTable($sTable, $wData);
+        return $iRows;
+    }
+    /*
     * Remove onetime token after password reset and confirmation and update verified timestamp
     * @param int $user_id : user id for the expiration date
     */
@@ -1442,7 +1464,7 @@ ORDER BY created;";
                 $iValues[] = $value;
             }
         }
-        #APP::printVar($this->db->queryDump($query, $iValues));
+        APP::printVar($this->db->queryDump($query, $iValues));
         $iRows = $this->db->query($query, $iValues);
         return $iRows;
     }

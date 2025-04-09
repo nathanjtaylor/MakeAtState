@@ -30,104 +30,61 @@
 
 			<div class="card-body prime_textalign_center">
 				<i data-feather="plus-square" class ="prime_card_add_icon" style="width:75px;height:75px;"></i>
-				<p class="prime_add_card_text">Add questions</p>
+				<p class="prime_add_card_text">Add question</p>
 			</div>
 
 		</div>
 
 		<div class="card prime_long_card prime_add_hidden_card" id="workflow_{{ workflow['workflow_id']}}">
 			<form action="/" enctype="multipart/form-data" method="POST" id="prime_validate_form"  novalidate>
-			<input type="hidden" name="t" value="add_workflow_steps">
-
+			<input type="hidden" name="t" value="add_assessment">
 
 				<div class="card-header prime_background_teal">
-					<select name="step_type_id" aria-label="step type" class="form-select" style="width:300px">
-					    {% for key, name  in edit_types  %}
-						<option value="{{ key }}" >{{ name }}</option>
-
-					    {% endfor %}
-					</select>
-
+					Add New Question
 				</div>
 
 				<div class="card-body row">
-					 <div class="col-md-3 prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
-						<small  class="text-muted" style="display:block">
-							Step name
-						</small>
-						<input class="form-control" pattern=".*\S+.*" aria-label="step name" type="text" name="name" required>
+					<div class="prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
+						<small class="text-muted" style="display:block">
+							Question Text
+						</small>    
+						<textarea 
+							class="form-control" 
+							aria-label="Assessment text" 
+							type="text" maxlength="250" rows="4" 
+							name="question_text" required
+							style="resize: none;"
+						></textarea>
 						<div class ="invalid-feedback">
-							Step name cannot be empty
+							Assessment text cannot be empty
 						</div>
 					</div>
 
+					<div class="col-md-3 prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
+						<small class="text-muted" style="display:block">
+							Question Type
+						</small>
+					<select name="qtype_id" aria-label="Question type" class="form-select" style="width:300px">
+					    {% for type in assessment_types %}
+						<option value="{{ type['qtype_id'] }}" >{{ type['question_type'] }}</option>
+					    {% endfor %}
+					</select>
+					</div>
+
 					 <div class="col-md-3 prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
-						<small  class="text-muted" style="display:block">
+						<small class="text-muted" style="display:block">
 							Order
 						</small>
-						<input type="text" name="ordering" aria-label="step order" class="form-control"  name="order"  maxlength="3" pattern="^[1-9][0-9]*$" value="{{ workflow_step['ordering'] }}" required>
+						<input type="number" min="1" max="999" name="ordering" aria-label="Question order" class="form-control" name="order" required>
 						<div class ="invalid-feedback">
-							Invalid order . order should be a number between 1-999
+							Invalid order. order should be a number between 1-999
 						</div>
 					</div>
-
-					 <div class="col-md-3  prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
-						<small  class="text-muted" style="display:block">
-							Admin badge
-						</small>
-						<input type="text" pattern=".*\S+.*" name ="admin_status"aria-label="step admin status" class="form-control" name="admin_badge" value="{{ workflow_step['admin_status'] }}" required>
-						<div class ="invalid-feedback">
-							Admin badge cannot be empty
-						</div>
-					</div>
-
-					 <div class="col-md-3 prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
-						<small  class="text-muted" style="display:block">
-							User badge
-						</small>
-						<input type="text" pattern=".*\S+.*" name ="user_status" class="form-control"aria-label="step user status" name="user_badge" value="{{ workflow_step['user_status'] }}" required>
-						<div class ="invalid-feedback">
-							User badge cannot be empty
-						</div>
-					</div>
-
-					<div class="col-md-3 prime_textalign_center prime_margintop10px">
-						<small  class="text-muted" style="display:block">
-							Manage level
-						</small>
-						<select name="manage_level" aria-label="Manage level" class="form-select">
-						    {% for key, name  in edit_permissions  %}
-							<option value="{{ key }}"  {{ (workflow_step['manage_level_name']  ==  name  ) ? 'selected': '' }} >{{ name }}</option>
-
-						    {% endfor %}
-						</select>
-					</div>
-
-					<div class="col-md-3 prime_textalign_center prime_margintop10px">
-						<small  class="text-muted" style="display:block">
-							Allow cancelation by user
-						</small>
-						<select name="allow_cancellation"aria-label="Allow cancelation by user"  class="form-select">
-							<option value="1"  {{ (workflow_step['allow_cancellation'] == 1 ) ? 'selected': '' }} >Yes</option>
-							<option value="0"  {{ (workflow_step['allow_cancellation'] == 0 ) ? 'selected': '' }} >No</option>
-						</select>
-					</div>
-
-					<div class="col-md-3 prime_textalign_center prime_margintop10px">
-						<small  class="text-muted" style="display:block">
-							Send email confirmation to user
-						</small>
-						<select name="email_confirmation" aria-label="Send email confirmation to user" class="form-select">
-							<option value="1"  {{ (workflow_step['email_confirmation'] == 1 ) ? 'selected': '' }} >Yes</option>
-							<option value="0"  {{ (workflow_step['email_confirmation'] == 0 ) ? 'selected': '' }} >No</option>
-						</select>
-					</div>
-
 
 				</div>
 
 				<div class="card-footer">
-					<input type="button" class="btn btn-danger cancel_edit_status add_back_btn" aria-label="Cancel" id="back_workflow_step_{{ workflow_step['work_step_id']}} "value="Cancel">
+					<input type="button" class="btn btn-danger cancel_edit_status add_back_btn" aria-label="Cancel" id="back_assessment_{{ workflow_step['work_step_id']}} "value="Cancel">
 					<input type="submit" class="btn btn-success prime_float_right prime_validate_btn" aria-label="Add" value="Add">
 				</div>
 
@@ -139,12 +96,6 @@
 	<!--  End of add workflow card -->
 	</div>
 
-</div>
-<div class="row justify-content-center prime_margintop20px">
-	<div class="col-md-9 text-right prime_borderlightgrey prime_padding10px ">
-
-		<a   href="/?t=manage_printers&wid={{workflow_id}}"  class="btn btn-outline-dark" aria-label="Back">Back</a>
-	</div>
 </div>
 
 {% endblock %}

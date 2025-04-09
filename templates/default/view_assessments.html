@@ -8,24 +8,30 @@
                 <a href="#" class="btn btn-outline-light prime_icon_btn workflow_edit  edit_btn" id="edit_assessment_{{question['question_id']}}" aria-label="Edit assessment question"i data-toggle="tooltip" data-placement="top" title="Edit assessment question"><i data-feather="edit-2"></i></a>
             </div>
             <div class="card-body row">
-                <div class="col-md-9 prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
-                    <small  class="text-muted" style="display:block">
+                <div class="prime_borderbottom_lightgrey prime_paddingbottom10px">
+                    <small class="prime_textalign_center text-muted" style="display:block">
                         Question Text
                     </small>
                     {{question['question_text']}}
                 </div>
-                <div class="col-md-3 prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
-                    <small  class="text-muted" style="display:block">
+                <div class="col-md-9 prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
+                    <small class="text-muted" style="display:block">
                         Question Type
                     </small>
                     {{ question['question_type'] }}
                 </div>
+                <div class="col-md-3 prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
+                    <small  class="text-muted" style="display:block">
+                        Order
+                    </small>
+                    {{ question['ordering'] }}
+                </div>
                 {% if question['choices']%}
-                <div class="prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
-                    <small class="text-muted" style="display:block">
+                <div class="prime_borderbottom_lightgrey prime_paddingbottom10px">
+                    <small class="prime_textalign_center text-muted" style="display:block">
                         Question Choices
                     </small>
-                    <ul>
+                    <ul style="list-style-type: square;">
                         {% for choice in question['choices'] %}
                             <li>{{choice['option_text']}}</li>
                         {% endfor %}
@@ -37,7 +43,7 @@
             
             <div class="card-footer">
                 <a 
-                    href="/?t=remove_assessment&qid={{ question['question_id']}}"  
+                    href="/?t=remove_assessment&question_id={{ question['question_id']}}"  
                     class="btn btn-danger prime_white_text" aria-label="Delete assessment question" data-toggle="tooltip" data-placement="top" title="Delete assessment question"><i data-feather="trash-2"></i></a>
             </div>
         </div>
@@ -46,7 +52,7 @@
     <div class="card prime_long_card prime_card_hidden_form">
         <form action="/">
             <input type="hidden" name="t" value="edit_assessment">
-            <input type="hidden" name="assessment_id" value="{{ question['question_id'] }}">
+            <input type="hidden" name="question_id" value="{{ question['question_id'] }}">
 
             <div class="card-header prime_background_teal">
                 Question #{{question['question_id']}}
@@ -69,22 +75,30 @@
                         Assessment text cannot be empty
                     </div>
                 </div>
-            </div>
-
-            <div class="prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
-                <small class="text-muted" style="display:block">
-                    Question Type
-                </small>
-                <div style="display:flex; gap:2rem; justify-content: center;">
-                {% for type in assessment_types %}
-                <label><input 
-                    type="radio" 
-                    id="radio_{{type['qtype_id']}}" 
-                    value="{{type['qtype_id']}}" 
-                    name="question_type"
-                    {{question['qtype_id'] == type['qtype_id']? 'checked' : ''}}
-                >{{'('}}{{type['qtype_id']}}{{') '}}{{type['question_type']}}</label>
-                {% endfor %}
+                <div class="col-md-9 prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
+                    <small class="text-muted" style="display:block">
+                        Question Type
+                    </small>
+                    <div style="display:flex; gap:2rem; justify-content: center;">
+                    {% for type in assessment_types %}
+                    <label><input 
+                        type="radio" 
+                        id="radio_{{type['qtype_id']}}" 
+                        value="{{type['qtype_id']}}" 
+                        name="qtype_id"
+                        {{question['qtype_id'] == type['qtype_id']? 'checked' : ''}}
+                    >{{'('}}{{type['qtype_id']}}{{') '}}{{type['question_type']}}</label>
+                    {% endfor %}
+                    </div>
+                </div>
+                <div class="col-md-3 prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
+                    <small  class="text-muted" style="display:block">
+                        Order
+                    </small>
+                    <input type="number" min="1" max="999" name="ordering" class="form-control" aria-label="step order"  name="order"  maxlength="3" pattern="^[1-9][0-9]*$" value="{{ question['ordering'] }}" required>
+                    <div class ="invalid-feedback">
+                        Invalid order. Order should be a number between 1-999
+                    </div>
                 </div>
             </div>
 
