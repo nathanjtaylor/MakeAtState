@@ -104,6 +104,38 @@ class DataCalls{
     }
 
     /**
+    * Get all assessment question types
+    */
+    public function getAllAssessmentQuestionTypes(){
+        $pQuery = "SELECT * FROM assessment_q_types";
+        $step_types = $this->db->query($pQuery);
+        return $step_types;
+    }
+
+    /**
+    * Get all assessment questions
+    */
+    public function getAllAssessmentQuestions(){
+        $pQuery = "SELECT * FROM assessment_questions 
+            WHERE question_removed IS NULL  
+            ORDER BY question_id";
+            // JOIN assessment_q_types ON assessment_questions.qtype_id = assessment_q_types.qtype_id
+        $steps = $this->db->query($pQuery);
+        return $steps;
+    }
+
+    /**
+    * Get all assessment questions
+    */
+    public function getQuestionChoices($question_id){
+        $pQuery = "SELECT * FROM assessment_q_mc_choices 
+            WHERE question_id =".$question_id."  
+            ORDER BY option_id";
+        $steps = $this->db->query($pQuery);
+        return $steps;
+    }
+
+    /**
     * adjust ordeing of steps
     * when an order number in the step is increased , increase the following step's order # by 1
     * @param int order_num : order number that needs to be adjusted

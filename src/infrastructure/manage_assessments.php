@@ -1,6 +1,6 @@
 <?php
 
-# Manage workflow steps for a printer in 3DPrime
+# Manage assessment questions
 
 class ManageAssessments{
 
@@ -11,7 +11,9 @@ class ManageAssessments{
 	private $user_id;
 	private $access_level;
 	private $work_step_id;
-	private $workflow_steps = array(); // array of all workflow steps for this printer
+	// private $workflow_steps = array(); // array of all workflow steps for this printer
+	private $assessment_questions = array(); // array of all assessment questions
+	private $assessment_types = array(); // array of all assessment questions
 	private $edit_permissions = array();
 	private $edit_types = array();
 	private $workflow_alerts = array(); // contains messages to help the user by provind more info about the workflow steps
@@ -100,8 +102,11 @@ class ManageAssessments{
 		$this->sTemplate->setVariables('success_messages' , Alerts::getSuccessMessages());
 		$this->sTemplate->setVariables('nav_array', self::$nav_array);	
 		//Set varibales for workflow_steps
-		$this->sTemplate->setVariables('workflow_steps', $this->workflow_steps);	
-		$this->sTemplate->setVariables('edit_permissions', $this->edit_permissions);	
+		// $this->sTemplate->setVariables('workflow_steps', $this->workflow_steps);	
+		$this->sTemplate->setVariables('assessment_questions', $this->assessment_questions);	
+		$this->sTemplate->setVariables('assessment_types', $this->assessment_types);	
+		
+		// $this->sTemplate->setVariables('edit_permissions', $this->edit_permissions);	
 		$this->sTemplate->setVariables('edit_types', $this->edit_types);	
 		$this->sTemplate->setVariables('workflow_step_alerts', $this->workflow_alerts);	
 
@@ -147,51 +152,46 @@ class ManageAssessments{
 		$success_messages = array();
 		$error_messages = array();
 
-        $sRows =  $this->dc->getAllWorkflowSteps();
-        $all_permissions = $this->dc->getAllPermissions();
-        $all_step_types = $this->dc->getAllStepTypes();
-        $this->prepareWorkflowStepsForDisplay($sRows, $all_permissions, $all_step_types);
+        // $sRows =  $this->dc->getAllWorkflowSteps();
+        $q_rows = $this->dc->getAllAssessmentQuestions();
+        // $all_permissions = $this->dc->getAllPermissions();
+        // $all_step_types = $this->dc->getAllStepTypes();
+        $this->assessment_types = $this->dc->getAllAssessmentQuestionTypes();
+        // $this->prepareWorkflowStepsForDisplay($sRows, $all_permissions, $all_step_types);
+        $this->prepareAssessmentQuestionsForDisplay($q_rows);
         $this->renderManageWorkflowStepsTemplate();
 	}
 
 	/**
-	* Prepare workflow steps for display
-	* @param array step_rows : rows of steps for the printer from workflow_steps table
-	* @param array array all_permissions : all unique permissions of 3DPrime
-	* @param array array all_step+types: all step types from workflow_step_types table 
+	* Prepare assessment questions for display
+	* @param array q_rows : rows of questions from assessment_questions table
+	* @param array all_q_types: all question types from assessment_q_types table 
 	*/
-	public function  prepareWorkflowStepsForDisplay($step_rows, $all_permissions, $all_step_types){
-		foreach($step_rows as $key=>$step){
-			//loop through manage_level in permissions to get the name of the manage level for this step
-			foreach($all_permissions as $k=>$permission){
-				if($step['manage_level'] == $permission['manage_level']){
-					$step['manage_level_name'] = $permission['group_name'];		
+	public function prepareAssessmentQuestionsForDisplay($q_rows){
+		foreach($q_rows as $key=>$step){
+			foreach($this->assessment_types as $k=>$type){
+				if($step['qtype_id'] == $type['qtype_id']){
+					$step['question_type'] = $type['question_type'];
+					if ($type['has_choices'] == '1') {
+						$step['choices'] = $this->dc->getQuestionChoices($step['question_id']);
+					}
 				}
 			}
-			// loop through all step types to get step type name
-			foreach($all_step_types as $k=>$type){
-				if($step['step_type_id'] == $type['workflow_step_type_id']){
-					$step['step_type_name'] = $type['workflow_step_type_name'];
-				}
-			}
-			$this->workflow_steps[$key] = $step;
+			$this->assessment_questions[$key] = $step;
 		}
-		foreach($all_permissions as $key=>$permission){
-			$this->edit_permissions[$permission['manage_level']] = $permission['group_name'];
-		}
-		foreach($all_step_types as $key=>$type){
-			$this->edit_types[$type['workflow_step_type_id']] = $type['workflow_step_type_name'];
+		foreach($this->assessment_types as $key=>$type){
+			$this->edit_types[$type['qtype_id']] = $type['question_type'];
 		}
 
 		// Check if general step , price step , job completed step , cancelled step and user cancelled step are available for the workflow 
 		//if not do not add it to the dropdown
-		$warnings_array = $this->helper->determineReadinessOfPrinterWorkflow($step_rows, $all_step_types);
-		if(empty($warnings_array)){
-			$this->workflow_alerts['success_message'] = "Project workflow is ready and can accept user submissions";
-		}else{
-			$this->workflow_alerts['warning_message'] = "Workflow steps incomplete. Project workflow is not ready and cannot accept user submissions";
-			$this->workflow_alerts['warnings'] = $warnings_array;
-		}
+		// $warnings_array = $this->helper->determineReadinessOfPrinterWorkflow($step_rows, $all_step_types);
+		// if(empty($warnings_array)){
+		// 	$this->workflow_alerts['success_message'] = "Project workflow is ready and can accept user submissions";
+		// }else{
+		// 	$this->workflow_alerts['warning_message'] = "Workflow steps incomplete. Project workflow is not ready and cannot accept user submissions";
+		// 	$this->workflow_alerts['warnings'] = $warnings_array;
+		// }
 	}
 
 
