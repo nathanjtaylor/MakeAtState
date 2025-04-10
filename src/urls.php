@@ -203,6 +203,10 @@ class Url{
 				$group_manage = new ManageGroups($this->oTemplate);
 				break;
 			case 'manage_assessments':
+			case 'edit_assessment':
+			case 'remove_assessment':
+			case 'undo_assessment_delete':
+			case 'add_assessment':
 				require_once __DIR__."/infrastructure/manage_assessments.php";
 				$assessment_manage = new ManageAssessments($this->oTemplate);
 				break;

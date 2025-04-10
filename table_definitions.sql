@@ -399,3 +399,47 @@ CREATE TABLE IF NOT EXISTS `cancellations` (
 CHARACTER SET utf8mb4
 ENGINE=InnoDB;
 
+-- Assessment Questions tables
+
+CREATE TABLE IF NOT EXISTS assessment_q_types (
+    qtype_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    question_type VARCHAR(80) NOT NULL,
+    has_choices BOOLEAN DEFAULT FALSE,
+    PRIMARY KEY (qtype_id)
+)
+CHARACTER SET utf8mb4
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS assessment_questions (
+    question_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    qtype_id INTEGER UNSIGNED NOT NULL,
+    question_text VARCHAR(255) NOT NULL,
+    question_removed datetime DEFAULT NULL,
+    ordering INTEGER NOT NULL,
+    INDEX idx_question_ordering (ordering),
+    PRIMARY KEY (question_id),
+    CONSTRAINT fk_qtype_id FOREIGN KEY (qtype_id) REFERENCES assessment_q_types (qtype_id)
+)
+CHARACTER SET utf8mb4
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS assessment_answers (
+    answer_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    question_id INTEGER UNSIGNED NOT NULL,
+    answer_text VARCHAR(255) NOT NULL,
+    PRIMARY KEY (answer_id),
+    CONSTRAINT fk_question_id FOREIGN KEY (question_id) REFERENCES assessment_questions (question_id)
+)
+CHARACTER SET utf8mb4
+ENGINE = InnoDB;
+
+-- Multiple choice / pick one answer choices
+CREATE TABLE IF NOT EXISTS assessment_q_mc_choices (
+    option_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    question_id INTEGER UNSIGNED NOT NULL,
+    option_text VARCHAR(255) NOT NULL,
+    PRIMARY KEY (option_id),
+    CONSTRAINT fk_mcq_question_id FOREIGN KEY (question_id) REFERENCES assessment_questions (question_id)
+)
+CHARACTER SET utf8mb4
+ENGINE = InnoDB;
