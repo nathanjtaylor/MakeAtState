@@ -104,6 +104,37 @@ class DataCalls{
     }
 
     /**
+    * Get all assessment question types
+    */
+    public function getAllAssessmentQuestionTypes(){
+        $pQuery = "SELECT * FROM assessment_q_types";
+        $step_types = $this->db->query($pQuery);
+        return $step_types;
+    }
+
+    /**
+    * Get all assessment questions
+    */
+    public function getAllAssessmentQuestions(){
+        $pQuery = "SELECT * FROM assessment_questions 
+            WHERE question_removed IS NULL  
+            ORDER BY ordering";
+        $steps = $this->db->query($pQuery);
+        return $steps;
+    }
+
+    /**
+    * Get all assessment questions
+    */
+    public function getQuestionChoices($question_id){
+        $pQuery = "SELECT * FROM assessment_q_mc_choices 
+            WHERE question_id =".$question_id."  
+            ORDER BY option_id";
+        $steps = $this->db->query($pQuery);
+        return $steps;
+    }
+
+    /**
     * adjust ordeing of steps
     * when an order number in the step is increased , increase the following step's order # by 1
     * @param int order_num : order number that needs to be adjusted
@@ -114,6 +145,19 @@ class DataCalls{
         $aRows = $this->db->query($aQuery);
         return $aRows;
     }
+
+    /**
+    * adjust ordeing of steps
+    * when an order number in the step is increased , increase the following step's order # by 1
+    * @param int order_num : order number that needs to be adjusted
+    */
+    public function adjustQuestionOrder($order_num){
+        $aQuery = "UPDATE assessment_questions set ordering = ordering+1 where ordering >=".$order_num." AND question_removed IS NULL";
+        #APP::printVar($this->db->queryDump($aQuery, $aValues));
+        $aRows = $this->db->query($aQuery);
+        return $aRows;
+    }
+
     /**
     * Gets the next step in the workflow
     * @param array $aData: Data to be passed into the where clause
@@ -667,23 +711,26 @@ ORDER BY created;";
     * currently hardcoded for testing purposes
     */
     public function getAssessmentQuestions() {
-        return [
-            ['qid' => 'q1', 'text' => 'Can MSU Libraries post a picture of your work on its Social Media accounts?', 'type' => "2"],
-            ['qid' => 'q2', 'text' => 'List Instagram accounts you want to be tagged with:', 'type' => "1"],
-            ['qid' => 'q3', 'text' => 'Is this project part of an MSU class?', 'type' => "2"],
-            ['qid' => 'q4', 'text' => 'What class or course# or section# is the project associated with?', 'type' => "1"],
-            ['qid' => 'q5', 'text' => 'Is the project you are submitting associated with any of these items?', 'type' => "3", 'options' => [
-                                                                                            ['option_text' => 'This is a gift, for fun, or personal project', 'oid' => 'o1'], 
-                                                                                            ['option_text' => 'This is a homework assignment', 'oid' => 'o2'], 
-                                                                                            ['option_text' => 'Part of a graduate thesis or dissertation', 'oid' => 'o3'],
-                                                                                            ['option_text' => 'Research related', 'oid' => 'o4'],
-                                                                                            ['option_text' => 'A work-related job or task (e.g. exhibition, promotions or giveaways)', 'oid' => 'o5'],
-                                                                                            ['option_text' => 'Prototyping for Business or Entrepreneurship', 'oid' => 'o6'],
-                                                                                            ['option_text' => 'Other', 'oid' => 'o7'],
-                                                                                            ['option_text' => 'I prefer not to say', 'oid' => 'o8']
-                                                                                            ]],
-            ['qid' => 'q6', 'text' => 'We would love to hear more about what you are working on. Please feel free to share more details.', 'type' => "4"]
-        ];
+
+        $output = array();
+
+        $types = $this->getAllAssessmentQuestionTypes();
+        $questions = $this->getAllAssessmentQuestions();
+
+        foreach($questions as $k=>$question) {
+            // Determine if question has options
+            foreach($types as $k=>$type) {
+                if ($question['qtype_id'] == $type['qtype_id']) {
+                    $question['question_type'] = $type['question_type'];
+                    if ($type['has_choices'] == '1') {
+                        $question['choices'] = $this->getQuestionChoices($question['question_id']);
+                    }
+                }
+            }
+            // $output[$k] = $question;
+            array_push($output, $question);
+        }
+        return $output;
     }
 
     /**
@@ -1123,7 +1170,7 @@ ORDER BY created;";
             # Primary key where clause
             $query .= "WHERE " . $this->db->escapeIdentifier($sPrimaryKeyCol). " = ?";
             $aValues[] = $iPrimaryKeyVal;
-            //APP::printVar($this->db->queryDump($query, $aValues));
+            APP::printVar($this->db->queryDump($query, $aValues));
             $iUpdated =  $this->db->query($query, $aValues);
             $rUpdated = ($iUpdated >= 1);
         }
@@ -1377,6 +1424,16 @@ ORDER BY created;";
         return $iRows;
     }
     /*
+    * Insert new workflow step into the workflow  step  table
+    * @param $wData  Array of column names and values
+             array("column_name"=> value)
+    */
+    public function insertAssessmentQuestion($wData){
+        $sTable = "assessment_questions";
+        $iRows = $this->insertIntoTable($sTable, $wData);
+        return $iRows;
+    }
+    /*
     * Remove onetime token after password reset and confirmation and update verified timestamp
     * @param int $user_id : user id for the expiration date
     */
@@ -1410,7 +1467,7 @@ ORDER BY created;";
                 $iValues[] = $value;
             }
         }
-        #APP::printVar($this->db->queryDump($query, $iValues));
+        APP::printVar($this->db->queryDump($query, $iValues));
         $iRows = $this->db->query($query, $iValues);
         return $iRows;
     }

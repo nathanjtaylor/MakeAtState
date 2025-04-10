@@ -182,7 +182,7 @@ class ProcessWorkflow extends WorkflowSteps{
                     $pRow = $this->dc->getRowsById("projects", $aData);
                     // check if the cart is upto date
                     if(empty($pRow) ||  $this->user_id != $pRow[0]['user_id'] || !empty($pRow[0]['removed'])  || !empty($pRow[0]['submitted'])){
-                        LoggerPrime::info("Project id not present or user does not have access to submit .User id:" . $this->user_id . "Project id:". $project_id );
+                        LoggerPrime::info("Project id not present or user does not have access to submit .User id:" . $this->user_id . "Project id:". $this->project_id );
                         $error_messages[] = "Sorry, we encounted a problem submitting your cart items, please try again";
                         break;
                     }

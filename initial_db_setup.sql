@@ -32,26 +32,28 @@ INSERT IGNORE INTO cancellation_reasons (`for_staff`, `reason`, `more_informatio
 (0, "Other", 1);
 
 -- Assessment question types
-INSERT IGNORE INTO assessment_q_types (qtype_id, question_type) VALUES
-(1, 'Text'),
-(2, 'YesNo'),
-(3, 'MultipleChoice'),
-(4, 'SelectOne');
+INSERT IGNORE INTO assessment_q_types (qtype_id, question_type, has_choices) VALUES
+(1, 'Text', FALSE),
+(2, 'YesNo', FALSE),
+(3, 'MultipleChoice', TRUE),
+(4, 'SelectOne', TRUE),
+(5, 'TextArea', FALSE);
 
 -- Default assessment questions
-INSERT IGNORE INTO assessment_questions (question_id, qtype_id, question_text) VALUES 
-(1, 2, "Can MSU Libraries post a picture of your work on its Social Media accounts?"),
-(2, 1, "List Instagram accounts you want to be tagged with:"),
-(3, 2, "Is this project part of an MSU class?"),
-(4, 1, "What course/project is this project associated with?"),
-(5, 3, "Is this project you are submitting associated with any of these items?");
+INSERT IGNORE INTO assessment_questions (question_id, qtype_id, question_text, ordering) VALUES 
+(1, 2, "Can MSU Libraries post a picture of your work on its Social Media accounts?", 1),
+(2, 1, "List Instagram accounts you want to be tagged with:", 2),
+(3, 2, "Is this project part of an MSU class?", 3),
+(4, 1, "What course/project is this project associated with?", 4),
+(5, 3, "Is this project you are submitting associated with any of these items?", 5),
+(6, 5, "We would love to hear more about what you are working on. Please feel free to share any more details.", 6);
 
 -- Multiple choice / pick one answer choices
-INSERT IGNORE INTO assessment_q_mc_choices (question_id, option_text) VALUES
-(5, "This is a gift, for fun, or personal project"),
-(5, "This is a homework assignment"),
-(5, "Part of a graduate thesis or dissertation"),
-(5, "Research-related"),
-(5, "A work-related job or task (e.g. exhibition, promotions, or giveaways)"),
-(5, "Prototyping for business or entrepreneurship"),
-(5, "I prefer not to say");
+INSERT IGNORE INTO assessment_q_mc_choices (option_id, question_id, option_text) VALUES
+(1, 5, "This is a gift, for fun, or personal project"),
+(2, 5, "This is a homework assignment"),
+(3, 5, "Part of a graduate thesis or dissertation"),
+(4, 5, "Research-related"),
+(5, 5, "A work-related job or task (e.g. exhibition, promotions, or giveaways)"),
+(6, 5, "Prototyping for business or entrepreneurship"),
+(7, 5, "I prefer not to say");

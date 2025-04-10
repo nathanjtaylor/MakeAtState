@@ -70,37 +70,47 @@
                 <form id="form-{{project_id}}" action="/?t=workflow&uid={{ user_id }}&project_id={{ project_id }}&step=1" method="post">
 
                  {% for question in questions %}  
-                    {% if question['type'] == '1' %} <!-- text input -->
-                    <fieldset class="{{question['qid']}}-block form-group ms-1 mt-1 row">
-                        <label class="col-md-4 col-form-label" for="{{project_id}}-{{question['qid']}}">{{ question['text'] }}</label>
-                        <input class="col-md-8" type="text" id="{{project_id}}-{{question['qid']}}" name="{{question['qid']}}" placeholder="">
+                    {% if question['question_type'] == 'Text' %} <!-- text input -->
+                    <fieldset class="{{question['question_id']}}-block form-group ms-1 mt-1 row">
+                        <label class="col-md-4 col-form-label" for="{{project_id}}-{{question['question_id']}}">{{ question['question_text'] }}</label>
+                        <input class="col-md-8" type="text" id="{{project_id}}-{{question['question_id']}}" name="{{question['question_id']}}" placeholder="">
                     </fieldset>
-                    {% elseif question['type'] == '2' %}  <!-- yes/no input -->
-                    <fieldset class="{{question['qid']}}-block form-group ms-3 mt-3">
-                        <p>{{ question['text'] }}</p>
+                    {% elseif question['question_type'] == 'YesNo' %}  <!-- yes/no input -->
+                    <fieldset class="{{question['question_id']}}-block form-group ms-3 mt-3">
+                        <p>{{ question['question_text'] }}</p>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" id="{{project_id}}-{{question['qid']}}-yes" name="{{question['qid']}}" value="yes">
-                            <label class="form-check-label" for="{{project_id}}-{{question['qid']}}-yes">Yes</label>
+                            <input class="form-check-input" type="radio" id="{{project_id}}-{{question['question_id']}}-yes" name="{{question['question_id']}}" value="yes">
+                            <label class="form-check-label" for="{{project_id}}-{{question['question_id']}}-yes">Yes</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" id="{{project_id}}-{{question['qid']}}-no" name="{{question['qid']}}" value="no">
-                            <label class="form-check-label" for="{{project_id}}-{{question['qid']}}-no">No</label>
+                            <input class="form-check-input" type="radio" id="{{project_id}}-{{question['question_id']}}-no" name="{{question['question_id']}}" value="no">
+                            <label class="form-check-label" for="{{project_id}}-{{question['question_id']}}-no">No</label>
                         </div>
                     </fieldset>
-                    {% elseif question['type'] == '3' %}  <!-- checkbox input -->
-                    <fieldset class="{{question['qid']}}-block form-group ms-3 mt-3">
-                        <p>{{ question['text'] }}</p>
-                        {% for option in question['options'] %}  
+                    {% elseif question['question_type'] == 'MultipleChoice' %}  <!-- checkbox input -->
+                    <fieldset class="{{question['question_id']}}-block form-group ms-3 mt-3">
+                        <p>{{ question['question_text'] }}</p>
+                        {% for option in question['choices'] %}  
                         <div class="form-check">
-                            <input type="checkbox" id="{{project_id}}-{{question['qid']}}-{{option['oid']}}" name="{{question['qid']}}[]" value="{{option['oid']}}">
-                            <label for="{{project_id}}-{{question['qid']}}-{{option['oid']}}">{{ option['option_text'] }}</label>
+                            <input type="checkbox" id="{{project_id}}-{{question['question_id']}}-{{option['option_id']}}" name="{{question['question_id']}}[]" value="{{option['option_id']}}">
+                            <label for="{{project_id}}-{{question['question_id']}}-{{option['option_id']}}">{{ option['option_text'] }}</label>
                         </div>
                         {% endfor %}
                     </fieldset>
-                    {% elseif question['type'] == '4' %}  <!-- textarea input -->
-                    <fieldset class="{{question['qid']}}-block form-group mt-3 mb-3">
-                        <label for="{{project_id}}-{{question['qid']}}">{{ question['text'] }}</label><br>
-                        <textarea id="{{project_id}}-{{question['qid']}}" name="{{question['qid']}}" class="form-control" rows="8"></textarea>                            
+                    {% elseif question['question_type'] == 'SelectOne' %}  <!-- radio input -->
+                    <fieldset class="{{question['question_id']}}-block form-group ms-3 mt-3">
+                        <p>{{ question['question_text'] }}</p>
+                        {% for option in question['choices'] %}  
+                        <div class="form-check">
+                            <input type="radio" id="{{project_id}}-{{question['question_id']}}-{{option['option_id']}}" name="{{question['question_id']}}[]" value="{{option['option_id']}}">
+                            <label for="{{project_id}}-{{question['question_id']}}-{{option['option_id']}}">{{ option['option_text'] }}</label>
+                        </div>
+                        {% endfor %}
+                    </fieldset>
+                    {% elseif question['question_type'] == 'TextArea' %}  <!-- textarea input -->
+                    <fieldset class="{{question['question_id']}}-block form-group mt-3 mb-3">
+                        <label for="{{project_id}}-{{question['question_id']}}">{{ question['question_text'] }}</label><br>
+                        <textarea id="{{project_id}}-{{question['question_id']}}" name="{{question['question_id']}}" class="form-control" rows="8"></textarea>                            
                     </fieldset>
 
                     {% endif %}
