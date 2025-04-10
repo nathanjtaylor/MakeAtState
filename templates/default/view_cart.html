@@ -112,10 +112,14 @@
                         <label for="{{project_id}}-{{question['question_id']}}">{{ question['question_text'] }}</label><br>
                         <textarea id="{{project_id}}-{{question['question_id']}}" name="{{question['question_id']}}" class="form-control" rows="8"></textarea>                            
                     </fieldset>
-
                     {% endif %}
                  {% endfor %}
-
+                <!-- to get an array of question ids -->
+                 {% set qids = [] %}
+                 {% for question in questions %}
+                     {% set qids = qids | merge([question['qid']]) %}
+                 {% endfor %} 
+                 <input type="hidden" name="question_ids" value="{{ qids | join(',') }}">
                 </form>
                 <!-- Form Markup End -->
             </div>
