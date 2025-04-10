@@ -415,7 +415,7 @@ CREATE TABLE IF NOT EXISTS assessment_questions (
     qtype_id INTEGER UNSIGNED NOT NULL,
     question_text VARCHAR(255) NOT NULL,
     question_removed datetime DEFAULT NULL,
-    ordering INTEGER NOT NULL,
+    ordering INTEGER NOT NULL, 
     INDEX idx_question_ordering (ordering),
     PRIMARY KEY (question_id),
     CONSTRAINT fk_qtype_id FOREIGN KEY (qtype_id) REFERENCES assessment_q_types (qtype_id)
@@ -426,9 +426,11 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS assessment_answers (
     answer_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     question_id INTEGER UNSIGNED NOT NULL,
+    project_id INTEGER UNSIGNED NOT NULL,
     answer_text VARCHAR(255) NOT NULL,
     PRIMARY KEY (answer_id),
-    CONSTRAINT fk_question_id FOREIGN KEY (question_id) REFERENCES assessment_questions (question_id)
+    CONSTRAINT fk_question_id FOREIGN KEY (question_id) REFERENCES assessment_questions (question_id),
+    CONSTRAINT fk_project_id FOREIGN KEY (project_id) REFERENCES projects (project_id)
 )
 CHARACTER SET utf8mb4
 ENGINE = InnoDB;
