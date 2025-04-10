@@ -68,44 +68,60 @@
                 <!-- Form Markup TODO: aria--> 
                 <h4 class="mt-3">Survey Questions (optional)</h4>
                 <form id="form-{{project_id}}" action="/?t=workflow&uid={{ user_id }}&project_id={{ project_id }}&step=1" method="post">
-
+                {% set qids = [] %}
                  {% for question in questions %}  
+                 {% set question_id = question['qid'] %}
+                 {% set question_type = question['type'] %}
+                 {% set _ = qids.push(question_id) %}
                     {% if question['type'] == '1' %} <!-- text input -->
-                    <fieldset class="{{question['qid']}}-block form-group ms-1 mt-1 row">
-                        <label class="col-md-4 col-form-label" for="{{project_id}}-{{question['qid']}}">{{ question['text'] }}</label>
-                        <input class="col-md-8" type="text" id="{{project_id}}-{{question['qid']}}" name="{{question['qid']}}" placeholder="">
+                    <fieldset class="{{question_id}}-block form-group ms-1 mt-1 row">
+                        <label class="col-md-4 col-form-label" for="{{project_id}}-{{question_id}}">{{ question['text'] }}</label>
+                        <input class="col-md-8" type="text" id="{{project_id}}-{{question_id}}" name="{{question_id}}" placeholder="">
+                        <input type="hidden" name="{{question_id}}_type" value="{{question_type}}"> <!-- sending question type for form validation. TODO: form validation -->
                     </fieldset>
-                    {% elseif question['type'] == '2' %}  <!-- yes/no input -->
-                    <fieldset class="{{question['qid']}}-block form-group ms-3 mt-3">
+                    {% elseif question_type == '2' %}  <!-- yes/no input -->
+                    <fieldset class="{{question_id}}-block form-group ms-3 mt-3">
                         <p>{{ question['text'] }}</p>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" id="{{project_id}}-{{question['qid']}}-yes" name="{{question['qid']}}" value="yes">
-                            <label class="form-check-label" for="{{project_id}}-{{question['qid']}}-yes">Yes</label>
+                            <input class="form-check-input" type="radio" id="{{project_id}}-{{question_id}}-yes" name="{{question_id}}" value="yes">
+                            <label class="form-check-label" for="{{project_id}}-{{question_id}}-yes">Yes</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" id="{{project_id}}-{{question['qid']}}-no" name="{{question['qid']}}" value="no">
-                            <label class="form-check-label" for="{{project_id}}-{{question['qid']}}-no">No</label>
+                            <input class="form-check-input" type="radio" id="{{project_id}}-{{question_id}}-no" name="{{question_id}}" value="no">
+                            <label class="form-check-label" for="{{project_id}}-{{question_id}}-no">No</label>
                         </div>
+                        <input type="hidden" name="{{question_id}}_type" value="{{question_type}}">
                     </fieldset>
-                    {% elseif question['type'] == '3' %}  <!-- checkbox input -->
-                    <fieldset class="{{question['qid']}}-block form-group ms-3 mt-3">
+                    {% elseif question_type == '3' %}  <!-- checkbox input -->
+                    <fieldset class="{{question_id}}-block form-group ms-3 mt-3">
                         <p>{{ question['text'] }}</p>
-                        {% for option in question['options'] %}  
+                        {% for option in question['options'] %} 
+                        {% set option_id = option['oid'] %} 
                         <div class="form-check">
-                            <input type="checkbox" id="{{project_id}}-{{question['qid']}}-{{option['oid']}}" name="{{question['qid']}}[]" value="{{option['oid']}}">
-                            <label for="{{project_id}}-{{question['qid']}}-{{option['oid']}}">{{ option['option_text'] }}</label>
+                            <input type="checkbox" id="{{project_id}}-{{question_id}}-{{option_id}}" name="{{question_id}}[]" value="{{option_id}}">
+                            <label for="{{project_id}}-{{question_id}}-{{option_id}}">{{ option['option_text'] }}</label>
                         </div>
                         {% endfor %}
+                        <input type="hidden" name="{{question_id}}_type" value="{{question_type}}"> 
                     </fieldset>
-                    {% elseif question['type'] == '4' %}  <!-- textarea input -->
-                    <fieldset class="{{question['qid']}}-block form-group mt-3 mb-3">
-                        <label for="{{project_id}}-{{question['qid']}}">{{ question['text'] }}</label><br>
-                        <textarea id="{{project_id}}-{{question['qid']}}" name="{{question['qid']}}" class="form-control" rows="8"></textarea>                            
+                    {% elseif question_type == '4' %}  <!-- textarea input -->
+                    <fieldset class="{{question_id}}-block form-group mt-3 mb-3">
+                        <label for="{{project_id}}-{{question_id}}">{{ question['text'] }}</label><br>
+                        <textarea id="{{project_id}}-{{question_id}}" name="{{question_id}}" class="form-control" rows="8"></textarea> 
+                        <input type="hidden" name="{{question_id}}_type" value="{{question_type}}">                           
                     </fieldset>
-
                     {% endif %}
                  {% endfor %}
-
+                <!-- to get an array of question ids -->
+                 {% set qids = [] %}
+                 {% for question in questions %}
+                    {% set qids = qids | merge([question['qid']]) %}
+                 {% endfor %}                 
+                 <input type="hidden" name="question_ids" value="{{ qids | join(',') }}">
+                    <div>
+                        <a href = "/?t=remove_cart_item&rpid={{ project_id }}" class="btn btn-danger prime_white_text mt-3 d-inline" aria-label = "Delete item" style="width: max-content;">Remove</a>
+                        <button type="submit" name="submit" class="btn btn-success d-inline" aria-label = "Submit item" style="width: max-content;">Submit Project</button>
+                    </div>
                 </form>
                 <!-- Form Markup End -->
             </div>

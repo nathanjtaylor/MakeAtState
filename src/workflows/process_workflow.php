@@ -226,13 +226,19 @@ class ProcessWorkflow extends WorkflowSteps{
     * Get the answers to assessment answers
     */
     public function processAssessmentAnswers() {
-        $assessment_answers = array();
-
-        if (isset($_POST['q1'])) {
-            $q1 = $_POST['q1'];
-            $assessment_answers['q1'] = $q1;
+        if (!empty($_POST['question_ids'])) { //if there are questions
+            $question_ids = explode(',', $_POST['question_ids']);
+            $assessment_answers = array();
+            foreach ($question_ids as $question_id) {
+                if (isset($_POST[$question_id]) and !empty($_POST[$question_id])) {
+                    $answer = ['question_id' => $question_id,
+                                'user_id' => $this->user_id,
+                                'project_id' => $this->project_id,
+                                'answer' => $_POST[$question_id]];
+                    array_push($assessment_answers, $answer);
+                }
+            }
         }
-
         return $assessment_answers;
     }
 
