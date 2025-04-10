@@ -36,7 +36,8 @@ INSERT IGNORE INTO assessment_q_types (qtype_id, question_type, has_choices) VAL
 (1, 'Text', FALSE),
 (2, 'YesNo', FALSE),
 (3, 'MultipleChoice', TRUE),
-(4, 'SelectOne', TRUE);
+(4, 'SelectOne', TRUE),
+(5, 'TextArea', FALSE);
 
 -- Default assessment questions
 INSERT IGNORE INTO assessment_questions (question_id, qtype_id, question_text, ordering) VALUES 
@@ -44,7 +45,8 @@ INSERT IGNORE INTO assessment_questions (question_id, qtype_id, question_text, o
 (2, 1, "List Instagram accounts you want to be tagged with:", 2),
 (3, 2, "Is this project part of an MSU class?", 3),
 (4, 1, "What course/project is this project associated with?", 4),
-(5, 3, "Is this project you are submitting associated with any of these items?", 5);
+(5, 3, "Is this project you are submitting associated with any of these items?", 5),
+(6, 5, "We would love to hear more about what you are working on. Please feel free to share any more details.", 6);
 
 -- Multiple choice / pick one answer choices
 INSERT IGNORE INTO assessment_q_mc_choices (option_id, question_id, option_text) VALUES

@@ -126,7 +126,7 @@ class ViewCart{
     *Function to get assessment questions
     */
     public function getQuestions(){
-        $questions = $this->dc->getAssessmentQuestions(); //getAssessmentQuestions currently retrives static questions
+        $questions = $this->dc->getAssessmentQuestions();
         return $questions;
     }
     /**

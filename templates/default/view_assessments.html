@@ -4,7 +4,7 @@
     <div class="card prime_long_card" >
         <div class="prime_card_solid_form" >
             <div class="card-header prime_background_teal">
-                Question #{{question['question_id']}}
+                Question #{{question['ordering']}} (order)
                 <a href="#" class="btn btn-outline-light prime_icon_btn workflow_edit  edit_btn" id="edit_assessment_{{question['question_id']}}" aria-label="Edit assessment question"i data-toggle="tooltip" data-placement="top" title="Edit assessment question"><i data-feather="edit-2"></i></a>
             </div>
             <div class="card-body row">
@@ -14,7 +14,7 @@
                     </small>
                     {{question['question_text']}}
                 </div>
-                <div class="col-md-9 prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
+                <div class="col-md-6 prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
                     <small class="text-muted" style="display:block">
                         Question Type
                     </small>
@@ -25,6 +25,12 @@
                         Order
                     </small>
                     {{ question['ordering'] }}
+                </div>
+                <div class="col-md-3 prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
+                    <small  class="text-muted" style="display:block">
+                        Question ID
+                    </small>
+                    {{ question['question_id'] }}
                 </div>
                 {% if question['choices']%}
                 <div class="prime_borderbottom_lightgrey prime_paddingbottom10px">
@@ -55,7 +61,7 @@
             <input type="hidden" name="question_id" value="{{ question['question_id'] }}">
 
             <div class="card-header prime_background_teal">
-                Question #{{question['question_id']}}
+                Question #{{question['ordering']}} (order)
                 <a href="#" class="btn btn-outline-light prime_icon_btn workflow_edit  edit_btn" id="edit_assessment_{{question['question_id']}}" aria-label="Edit assessment question"i data-toggle="tooltip" data-placement="top" title="Edit assessment question"><i data-feather="edit-2"></i></a>
             </div>
 

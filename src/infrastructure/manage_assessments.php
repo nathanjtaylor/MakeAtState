@@ -145,16 +145,16 @@ class ManageAssessments{
 	* @param array all_q_types: all question types from assessment_q_types table 
 	*/
 	public function prepareAssessmentQuestionsForDisplay($q_rows){
-		foreach($q_rows as $key=>$step){
+		foreach($q_rows as $key=>$question){
 			foreach($this->assessment_types as $k=>$type){
-				if($step['qtype_id'] == $type['qtype_id']){
-					$step['question_type'] = $type['question_type'];
+				if($question['qtype_id'] == $type['qtype_id']){
+					$question['question_type'] = $type['question_type'];
 					if ($type['has_choices'] == '1') {
-						$step['choices'] = $this->dc->getQuestionChoices($step['question_id']);
+						$question['choices'] = $this->dc->getQuestionChoices($question['question_id']);
 					}
 				}
 			}
-			$this->assessment_questions[$key] = $step;
+			$this->assessment_questions[$key] = $question;
 		}
 	}
 

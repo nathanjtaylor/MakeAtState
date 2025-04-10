@@ -711,23 +711,26 @@ ORDER BY created;";
     * currently hardcoded for testing purposes
     */
     public function getAssessmentQuestions() {
-        return [
-            ['qid' => 'q1', 'text' => 'Can MSU Libraries post a picture of your work on its Social Media accounts?', 'type' => "2"],
-            ['qid' => 'q2', 'text' => 'List Instagram accounts you want to be tagged with:', 'type' => "1"],
-            ['qid' => 'q3', 'text' => 'Is this project part of an MSU class?', 'type' => "2"],
-            ['qid' => 'q4', 'text' => 'What class or course# or section# is the project associated with?', 'type' => "1"],
-            ['qid' => 'q5', 'text' => 'Is the project you are submitting associated with any of these items?', 'type' => "3", 'options' => [
-                                                                                            ['option_text' => 'This is a gift, for fun, or personal project', 'oid' => 'o1'], 
-                                                                                            ['option_text' => 'This is a homework assignment', 'oid' => 'o2'], 
-                                                                                            ['option_text' => 'Part of a graduate thesis or dissertation', 'oid' => 'o3'],
-                                                                                            ['option_text' => 'Research related', 'oid' => 'o4'],
-                                                                                            ['option_text' => 'A work-related job or task (e.g. exhibition, promotions or giveaways)', 'oid' => 'o5'],
-                                                                                            ['option_text' => 'Prototyping for Business or Entrepreneurship', 'oid' => 'o6'],
-                                                                                            ['option_text' => 'Other', 'oid' => 'o7'],
-                                                                                            ['option_text' => 'I prefer not to say', 'oid' => 'o8']
-                                                                                            ]],
-            ['qid' => 'q6', 'text' => 'We would love to hear more about what you are working on. Please feel free to share more details.', 'type' => "4"]
-        ];
+
+        $output = array();
+
+        $types = $this->getAllAssessmentQuestionTypes();
+        $questions = $this->getAllAssessmentQuestions();
+
+        foreach($questions as $k=>$question) {
+            // Determine if question has options
+            foreach($types as $k=>$type) {
+                if ($question['qtype_id'] == $type['qtype_id']) {
+                    $question['question_type'] = $type['question_type'];
+                    if ($type['has_choices'] == '1') {
+                        $question['choices'] = $this->getQuestionChoices($question['question_id']);
+                    }
+                }
+            }
+            // $output[$k] = $question;
+            array_push($output, $question);
+        }
+        return $output;
     }
 
     /**
