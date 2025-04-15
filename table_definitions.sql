@@ -430,7 +430,7 @@ CREATE TABLE IF NOT EXISTS assessment_answers (
     answer_text VARCHAR(255) NOT NULL,
     PRIMARY KEY (answer_id),
     CONSTRAINT fk_question_id FOREIGN KEY (question_id) REFERENCES assessment_questions (question_id),
-    CONSTRAINT fk_project_id FOREIGN KEY (project_id) REFERENCES projects (project_id)
+    CONSTRAINT fk_ans_project_id FOREIGN KEY (project_id) REFERENCES projects (project_id)
 )
 CHARACTER SET utf8mb4
 ENGINE = InnoDB;
