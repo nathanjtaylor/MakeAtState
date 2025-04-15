@@ -234,7 +234,6 @@ class ProcessWorkflow extends WorkflowSteps{
             foreach ($question_ids as $question_id) {
                 if (isset($_POST[$question_id]) and !empty($_POST[$question_id])) {
                     $answer = ['question_id' => $question_id,
-                                'user_id' => $this->user_id,
                                 'project_id' => $this->project_id,
                                 'answer' => $_POST[$question_id]];
                     array_push($assessment_answers, $answer);

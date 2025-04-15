@@ -150,6 +150,7 @@ class  InitialStep extends WorkflowSteps {
         if(!empty($wRow)){
             $jData = array("user_id"=>$job_data['user_id'], "project_id"=>$this->project_id ,"curr_work_step_id" => $wRow[0]['work_step_id'] , "job_updated" => "NOW()");
             $jRow = $this->dc->insertJobs($jData);
+            $this->insertAssessment($job_data['assessment_answers'] ?? []);
             if(!empty($jRow)){
                 $sData = array("job_id"=>$jRow, "work_step_id"=> $wRow[0]['work_step_id'], "completed"=> date('Y-m-d H:i:s'), "completed_user_id"=> $job_data['user_id']);
                 $sRow = $this->dc->insertJobSteps($sData);
@@ -164,6 +165,14 @@ class  InitialStep extends WorkflowSteps {
             }
         }
         return $jRow;
+    }
+
+    public function insertAssessment($assessment_answers){
+        if(!empty($assessment_answers)){
+            $this->dc->insertAssessmentAnswers($assessment_answers);
+        } else {
+            return;
+        }
     }
 }
 ?>

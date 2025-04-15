@@ -1433,6 +1433,11 @@ ORDER BY created;";
         $iRows = $this->insertIntoTable($sTable, $wData);
         return $iRows;
     }
+
+    public function insertAssessmentAnswers($assessment_answers) {
+        // Not sure how to write this function
+    }
+
     /*
     * Remove onetime token after password reset and confirmation and update verified timestamp
     * @param int $user_id : user id for the expiration date
