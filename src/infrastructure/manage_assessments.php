@@ -51,9 +51,6 @@ class ManageAssessments{
 				$update_values['ordering'] = UserData::create('ordering')->getInt();
 				$this->updateAssessment($update_values);
 			}
-			elseif ($pTarget == 'update_assessment_questions') {
-				// Logic to update assessment question choices for multichoice and radio options
-			}
 			elseif ($pTarget == "add_assessment") {
 				$add_values = array();
 				$add_values['question_text'] = UserData::create('question_text')->getString();

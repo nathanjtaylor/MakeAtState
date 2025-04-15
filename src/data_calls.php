@@ -126,12 +126,36 @@ class DataCalls{
     /**
     * Get all assessment questions
     */
+    public function getAssessmentQuestionbyID($question_id){
+        $pQuery = 
+            "SELECT * FROM assessment_questions
+             WHERE question_id = ".$question_id.
+            " ORDER BY ordering";
+        $question = $this->db->query($pQuery);
+        return $question;
+    }
+
+    /**
+    * Get all assessment questions
+    */
+    public function getAssessmentChoicesbyQuestionID($question_id){
+        $pQuery = 
+            "SELECT * FROM assessment_q_mc_choices
+             WHERE question_id = ".$question_id.
+            " ORDER BY ordering";
+        $question = $this->db->query($pQuery);
+        return $question;
+    }
+
+    /**
+    * Get all assessment questions
+    */
     public function getQuestionChoices($question_id){
         $pQuery = "SELECT * FROM assessment_q_mc_choices 
             WHERE question_id =".$question_id."  
             ORDER BY option_id";
-        $steps = $this->db->query($pQuery);
-        return $steps;
+        $choices = $this->db->query($pQuery);
+        return $choices;
     }
 
     /**
@@ -708,7 +732,6 @@ ORDER BY created;";
     }
     /**
     * get assessment questions
-    * currently hardcoded for testing purposes
     */
     public function getAssessmentQuestions() {
 

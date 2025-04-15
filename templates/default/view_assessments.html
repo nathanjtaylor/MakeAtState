@@ -4,7 +4,7 @@
     <div class="card prime_long_card" >
         <div class="prime_card_solid_form" >
             <div class="card-header prime_background_teal">
-                Question #{{question['ordering']}} (order)
+                Question #{{question['question_id']}}
                 <a href="#" class="btn btn-outline-light prime_icon_btn workflow_edit  edit_btn" id="edit_assessment_{{question['question_id']}}" aria-label="Edit assessment question"i data-toggle="tooltip" data-placement="top" title="Edit assessment question"><i data-feather="edit-2"></i></a>
             </div>
             <div class="card-body row">
@@ -61,7 +61,7 @@
             <input type="hidden" name="question_id" value="{{ question['question_id'] }}">
 
             <div class="card-header prime_background_teal">
-                Question #{{question['ordering']}} (order)
+                Question #{{question['question_id']}}
                 <a href="#" class="btn btn-outline-light prime_icon_btn workflow_edit  edit_btn" id="edit_assessment_{{question['question_id']}}" aria-label="Edit assessment question"i data-toggle="tooltip" data-placement="top" title="Edit assessment question"><i data-feather="edit-2"></i></a>
             </div>
 
@@ -108,16 +108,17 @@
                 </div>
             </div>
 
-            <!-- TODO: Add editing for assessment question choices if type['has_choices'] -->
+            <!-- Assessment choice form (separate) -->
             {% for type in assessment_types %}
-                {% if type['qtype_id'] == question['qtype_id'] and type['has_choices'] %}
-                <p>add question choice editing here.</p>
-                {% endif %}
+            {% if type['qtype_id'] == question['qtype_id'] and type['has_choices'] %}
+            <div class="prime_textalign_center prime_paddingbottom10px">
+                <a href="/?t=manage_assessment_choices&question_id={{question['question_id']}}">Manage Choices (directs you to new page)</a>
+            </div>
+            {% endif %}
             {% endfor %}
-            
             <div class="card-footer">
                 <input type="button" class="btn btn-danger cancel_edit_status back_btn" id="back_assessment_{{ question['question_id']}} "value="Cancel">
-                <input type="submit" class="btn btn-success prime_float_right prime_workflow_step_validate_btn" id="prime_assessment_validate_btn_{{ loop.index }}" value="Update">
+                <input type="submit" class="btn btn-success prime_float_right prime_workflow_step_validate_btn" id="prime_assessment_validate_btn_{{ loop.index }}" value="Update Question">
             </div>
         </form>
     </div>

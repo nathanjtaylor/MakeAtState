@@ -210,6 +210,14 @@ class Url{
 				require_once __DIR__."/infrastructure/manage_assessments.php";
 				$assessment_manage = new ManageAssessments($this->oTemplate);
 				break;
+			case 'manage_assessment_choices':
+			case 'edit_assessment_choices':
+			case 'add_assessment_choices':
+			case 'remove_assessment_choices':
+			case 'undo_remove_assessment_choices':
+				require_once __DIR__."/infrastructure/manage_assessment_choices.php";
+				$assessment_manage = new ManageAssessmentChoices($this->oTemplate);
+				break;
 			case 'manage_printers':
 			case 'update_printer':
 			case 'remove_printer':

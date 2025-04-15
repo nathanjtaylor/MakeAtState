@@ -440,6 +440,9 @@ CREATE TABLE IF NOT EXISTS assessment_q_mc_choices (
     option_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     question_id INTEGER UNSIGNED NOT NULL,
     option_text VARCHAR(255) NOT NULL,
+    choice_removed datetime DEFAULT NULL,
+    ordering INTEGER NOT NULL, 
+    INDEX idx_qchoice_ordering (ordering),
     PRIMARY KEY (option_id),
     CONSTRAINT fk_mcq_question_id FOREIGN KEY (question_id) REFERENCES assessment_questions (question_id)
 )

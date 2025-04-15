@@ -1,0 +1,78 @@
+{% for choice in assessment_choices %}
+<div id="assessment_{{ choice['option_id']}}" >
+
+    <div class="card prime_long_card" >
+        <div class="prime_card_solid_form" >
+            <div class="card-header prime_background_teal">
+                Choice #{{choice['option_id']}}
+                <a href="#" class="btn btn-outline-light prime_icon_btn workflow_edit  edit_btn" id="edit_assessment_{{choice['option_id']}}" aria-label="Edit assessment choice"i data-toggle="tooltip" data-placement="top" title="Edit assessment choice"><i data-feather="edit-2"></i></a>
+            </div>
+            <div class="card-body row">
+                <div class="col-md-8 prime_borderbottom_lightgrey prime_paddingbottom10px">
+                    <small class="prime_textalign_center text-muted" style="display:block">
+                        Choice Text
+                    </small>
+                    {{choice['option_text']}}
+                </div>
+                <div class="col-md-2 prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
+                    <small  class="text-muted" style="display:block">
+                        Order
+                    </small>
+                    {{ choice['ordering'] }}
+                </div>
+                <div class="col-md-2 prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
+                    <small  class="text-muted" style="display:block">
+                        Choice ID
+                    </small>
+                    {{ choice['option_id'] }}
+                </div>
+
+            </div>
+            
+            <div class="card-footer">
+                <a 
+                    href="/?t=remove_assessment_choices&question_id={{question['question_id']}}&option_id={{choice['option_id']}}"  
+                    class="btn btn-danger prime_white_text" aria-label="Delete assessment choice" data-toggle="tooltip" data-placement="top" title="Delete assessment choice"><i data-feather="trash-2"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card prime_long_card prime_card_hidden_form">
+        <form action="/" style="margin: 0;">
+            <input type="hidden" name="t" value="edit_assessment_choices">
+            <input type="hidden" name="question_id" value="{{question['question_id']}}">
+            <input type="hidden" name="option_id" value="{{choice['option_id']}}">
+
+            <div class="card-header prime_background_teal">
+                Choice #{{choice['option_id']}}
+                <a href="#" class="btn btn-outline-light prime_icon_btn workflow_edit  edit_btn" id="edit_assessment_{{choice['option_id']}}" aria-label="Edit assessment choice"i data-toggle="tooltip" data-placement="top" title="Edit assessment choice"><i data-feather="edit-2"></i></a>
+            </div>
+
+            <div class="card-body row">
+                <div class="col-md-10 prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
+                    <small class="text-muted" style="display:block">
+                        Choice Text
+                    </small>
+                    <input type="text" name="option_text" class="form-control" aria-label="choice text" value="{{choice['option_text']}}" required>
+                    <div class ="invalid-feedback">
+                        Choice text cannot be empty
+                    </div>
+                </div>
+                <div class="col-md-2 prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
+                    <small  class="text-muted" style="display:block">
+                        Order
+                    </small>
+                    <input type="number" min="1" max="999" name="ordering" class="form-control" aria-label="step order"  name="order"  maxlength="3" pattern="^[1-9][0-9]*$" value="{{choice['ordering']}}" required>
+                    <div class ="invalid-feedback">
+                        Invalid order. Order should be a number between 1-999
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <input type="button" class="btn btn-danger cancel_edit_status back_btn" id="back_assessment_{{ choice['option_id']}} "value="Cancel">
+                <input type="submit" class="btn btn-success prime_float_right prime_workflow_step_validate_btn" id="prime_assessment_validate_btn_{{ loop.index }}" value="Update Choice">
+            </div>
+        </form>
+    </div>
+</div>
+{% endfor %}
