@@ -232,10 +232,17 @@ class ProcessWorkflow extends WorkflowSteps{
             $question_ids = explode(',', $_POST['question_ids']);
             $assessment_answers = array();
             foreach ($question_ids as $question_id) {
-                if (isset($_POST[$question_id]) and !empty($_POST[$question_id])) {
+                $response = $_POST[$question_id];
+                if (is_array($response)) { // handle multiple choice questions by turing answers into "|" seperated strings
+                    $response = implode('|', $response);
+                } else {
+                    $response = htmlspecialchars($response);
+                }
+
+                if (isset($response) and !empty($response)) {
                     $answer = ['question_id' => $question_id,
                                 'project_id' => $this->project_id,
-                                'answer' => $_POST[$question_id]];
+                                'answer' => $response];
                     array_push($assessment_answers, $answer);
                 }
             }
