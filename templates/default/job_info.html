@@ -142,10 +142,8 @@
         {% include 'skip_to_step.html' %}
     {% endif %}
 
-    {% include 'assessment_display.html' %}
-    <!-- {% if assessment_questions %} -->
-
-
-    <!-- {% endif %} -->
+    {% if questions %}
+        {% include 'assessment_display.html' %}
+    {% endif %}
 </div>
 {% endblock %}

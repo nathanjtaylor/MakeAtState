@@ -768,6 +768,10 @@ class WorkFlowSteps {
         $questions = $this->dc->getAssessmentQuestions();
         $answers = $this->dc->getAssessmentAnswersByProjectId($this->job_id);
 
+        if (empty($answers)){
+            return [];
+        }
+
         $answer_text_lookup = [];
         foreach ($answers as $answer) {
             $answer_text_lookup[$answer['question_id']] = $answer['answer_text'];
@@ -775,8 +779,15 @@ class WorkFlowSteps {
         $question_answer = [];
         foreach ($questions as $question) {
             if (isset($answer_text_lookup[$question["question_id"]])){
-                $question["answer_text"] = $answer_text_lookup[$question["question_id"]];
-                $question_answer[] = $question;
+                if ($question["question_type"] == "MultipleChoice" | $question["question_type"] == "SelectOne"){
+                    // If the question is a multiple choice question, split the answer text into an array by |
+                    $question["answer_text"] = explode("|", $answer_text_lookup[$question["question_id"]]);
+                    $question_answer[] = $question;
+                } else {
+                    $question["answer_text"] = $answer_text_lookup[$question["question_id"]];
+                    $question_answer[] = $question;
+                }
+
             }
         }
         return $question_answer;
