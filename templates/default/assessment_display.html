@@ -8,12 +8,12 @@
                 {% if question['question_type'] == 'Text' %} <!-- text input -->
                 <fieldset class="{{question['question_id']}}-block form-group ms-1 mt-1 row">
                     <label class="col-md-4 col-form-label" for="{{question['question_id']}}">{{ question['question_text'] }}</label>
-                    <input class="col-md-8" type="text" id="{{question['question_id']}}" name="{{question['question_id']}}" value="{{question['answer']}}" disabled>
+                    <input class="col-md-8" type="text" id="{{question['question_id']}}" name="{{question['question_id']}}" value="{{question['answer_text']}}" disabled>
                 </fieldset>
                 {% elseif question['question_type'] == 'YesNo' %}  <!-- yes/no input -->
                 <fieldset class="{{question['question_id']}}-block form-group ms-3 mt-3">
                     <p>{{ question['question_text'] }}</p>
-                    {% if question['answer'] == 'Yes' %}
+                    {% if question['answer_text'] == 'Yes' %}
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" id="{{question['question_id']}}-yes" name="{{question['question_id']}}" value="yes" checked disabled>
                             <label class="form-check-label" for="{{question['question_id']}}-yes">Yes</label>
@@ -37,7 +37,7 @@
                 <fieldset class="{{question['question_id']}}-block form-group ms-3 mt-3">
                     <p>{{ question['question_text'] }}</p>
                     {% for option in question['choices'] %}  
-                        {% if option['option_text'] in question['answer'] %}
+                        {% if option['option_text'] in question['answer_text'] %}
                             <div class="form-check">
                                 <input type="checkbox" id="{{question['question_id']}}-{{option['option_id']}}" name="{{question['question_id']}}[]" value="{{option['option_id']}}" checked disabled>
                                 <label for="{{question['question_id']}}-{{option['option_id']}}">{{ option['option_text'] }}</label>
@@ -54,7 +54,7 @@
                 <fieldset class="{{question['question_id']}}-block form-group ms-3 mt-3">
                     <p>{{ question['question_text'] }}</p>
                     {% for option in question['choices'] %}  
-                        {% if option['option_text'] in question['answer'] %}
+                        {% if option['option_text'] in question['answer_text'] %}
                             <div class="form-check">
                                 <input type="radio" id="{{question['question_id']}}-{{option['option_id']}}" name="{{question['question_id']}}[]" value="{{option['option_id']}}" checked disabled>
                                 <label for="{{question['question_id']}}-{{option['option_id']}}">{{ option['option_text'] }}</label>
@@ -70,7 +70,7 @@
                 {% elseif question['question_type'] == 'TextArea' %}  <!-- textarea input -->
                 <fieldset class="{{question['question_id']}}-block form-group mt-3 mb-3">
                     <label for="{{question['question_id']}}">{{ question['question_text'] }}</label><br>
-                    <textarea id="{{question['question_id']}}" name="{{question['question_id']}}" class="form-control" rows="8" disabled>{{question['answer']}}</textarea>                            
+                    <textarea id="{{question['question_id']}}" name="{{question['question_id']}}" class="form-control" rows="8" disabled>{{question['answer_text']}}</textarea>                            
                 </fieldset>
                 {% endif %}
                 {% endfor %}

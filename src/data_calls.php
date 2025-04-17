@@ -135,6 +135,17 @@ class DataCalls{
     }
 
     /**
+    * Get all assessment answers by project ID
+    */
+    public function getAssesmentAnswersByProjectId($project_id) {
+        $pQuery = "SELECT * FROM assessment_answers
+            WHERE project_id = ".$project_id."
+            ORDER BY answer_id";
+        
+        return $this->db->query($pQuery);
+    }
+
+    /**
     * adjust ordeing of steps
     * when an order number in the step is increased , increase the following step's order # by 1
     * @param int order_num : order number that needs to be adjusted
@@ -708,7 +719,6 @@ ORDER BY created;";
     }
     /**
     * get assessment questions
-    * currently hardcoded for testing purposes
     */
     public function getAssessmentQuestions() {
 

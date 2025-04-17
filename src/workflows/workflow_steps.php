@@ -109,6 +109,8 @@ class WorkFlowSteps {
         $this->wTemplate->setVariables('user_held', $this->user_held);
         $this->wTemplate->setVariables('group_id', $this->group_id);
         $this->wTemplate->setVariables('cancellation_reasons', $this->cancellation_reasons);
+        $this->wTemplate->setVariables('questions', $this->getQuestions());
+
         $this->wTemplate->generate();
 
     }
@@ -757,6 +759,27 @@ class WorkFlowSteps {
             $gaRow = $this->dc->getGroupAdminEmail($this->group_id);
             $this->admin_email = $gaRow['admin_email'];
         }
+    }
+
+    /**
+    *Function to get assessment questions
+    */
+    private function getQuestions(){
+        $questions = $this->dc->getAssessmentQuestions();
+        $answers = $this->dc->getAssessmentAnswersByProjectId($this->job_id);
+
+        $answer_text_lookup = [];
+        foreach ($answers as $answer) {
+            $answer_text_lookup[$answer['question_id']] = $answer['answer_text'];
+        }
+        $question_answer = [];
+        foreach ($questions as $question) {
+            if (isset($answer_text_lookup[$question["question_id"]])){
+                $question["answer_text"] = $answer_text_lookup[$question["question_id"]];
+                $question_answer[] = $question;
+            }
+        }
+        return $question_answer;
     }
 }
 
