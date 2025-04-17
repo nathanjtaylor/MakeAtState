@@ -50,21 +50,19 @@ class ManageAssessmentChoices {
 				$update_values['option_text'] = UserData::create('option_text')->getString();
 				$update_values['ordering'] = UserData::create('ordering')->getInt();
 				APP::printVar($update_values);
-
-				// $this->updateAssessment($update_values, $q_choices);
+				$this->updateChoice($update_values);
 			}
 			elseif ($pTarget == "add_assessment_choices") {
 				$add_values = array();
 				$add_values['option_text'] = UserData::create('option_text')->getString();
 				$add_values['ordering'] = UserData::create('ordering')->getInt();
-				APP::printVar($add_values);
-				// $this->addAssessment($add_values);
+				$this->addChoice($add_values);
 			}
 			elseif ($pTarget == "remove_assessment_choices") {
-				// $this->deleteAssessment();
+				$this->deleteChoice();
 			}
 			elseif ($pTarget == "undo_remove_assessment_choices") {
-				// $this->undoDeleteAssessment();
+				$this->undoDeleteChoice();
 			}
 			else {
 				$this->processAssessmentChoiceOptions();
@@ -129,7 +127,6 @@ class ManageAssessmentChoices {
 
         $this->question = $this->dc->getAssessmentQuestionbyID($this->question_id)[0];
         $this->assessment_choices = $this->dc->getAssessmentChoicesbyQuestionID($this->question_id);
-		APP::printVar($this->question);
         $this->renderManageAssessmentOptionsTemplate();
 	}
 
@@ -137,161 +134,166 @@ class ManageAssessmentChoices {
 	* Update workflow steps in a workflow , workflw_id and printer name must be valid
 	* @param array update_steps: array of values from the edit form
 	*/
-// 	public function updateAssessment($update_values, $q_choices){
-// 		$error_messages = array();
-// 		$success_messages = array();
-// 		$adjust_order_question_id = false;
+	public function updateChoice($update_values){
+		$error_messages = array();
+		$success_messages = array();
+		$adjust_order_option_id = false;
 
-// 		//check if the work_step_id is available
-// 		$sData = array("question_id"=> $update_values['question_id'], "question_removed"=>null);
-// 		// get db row for this step
-// 		$sRow = $this->dc->getRowsById("assessment_questions", $sData);
-// 		// get db rows for all steps 
-//         $allQsRows = $this->dc->getAllAssessmentQuestions();
-// 		if(!empty($sRow) && !empty($allQsRows)){
-// 			// check if order needs updating	
-// 			foreach($allQsRows as $k=>$question){
-// 				if(
-// 					($question['ordering'] == $update_values['ordering']) && 
-// 					($update_values['question_id'] !== $question['question_id'])
-// 					) {
-// 					$adjust_order_question_id = $question['ordering'];
-// 				}
-// 			}
+		//check if the option_id is available
+		$sData = array("option_id"=> $update_values['option_id'], "choice_removed"=>null);
+		$sRow = $this->dc->getRowsById("assessment_q_mc_choices", $sData);
+        $allQsRows = $this->dc->getAssessmentChoicesbyQuestionID($this->question_id);
+		if(!empty($sRow) && !empty($allQsRows)){
+			// check if order needs updating	
+			foreach($allQsRows as $k=>$option){
+				if(
+					($option['ordering'] == $update_values['ordering']) && 
+					($update_values['option_id'] !== $option['option_id'])
+					) {
+					$adjust_order_option_id = $option['ordering'];
+				}
+			}
 
-// 			$this->dc->transactionStart();
-// 			// if the ordering needs adjustment 
-// 			if(!empty($adjust_order_question_id)){
-// 				$adjustRows = $this->dc->adjustQuestionOrder($adjust_order_question_id);
-// 				if(empty($adjustRows)){
-// 					$error_messages[] = "Sorry, we are unable to adjust the ordering of the questions.";
-// 				}
-// 			}
-// 			// update the step in db
-// 			$updateQuestionData = array();
-// 			foreach($update_values as $dbColName => $value){
-// 				$updateQuestionData[$dbColName] = empty($value)?'0':$value;
-// 			}
-// 			$updated = $this->dc->updateUsingPrimaryKey('assessment_questions', 'question_id', $updateQuestionData);
+			$this->dc->transactionStart();
+			// if the ordering needs adjustment 
+			if(!empty($adjust_order_option_id)){
+				$adjustRows = $this->dc->adjustChoiceOrder($adjust_order_option_id, $this->question_id);
+				if(empty($adjustRows)){
+					$error_messages[] = "Sorry, we are unable to adjust the ordering of the choices.";
+				}
+			}
+			// update the step in db
+			$updateChoiceData = array();
+			foreach($update_values as $dbColName => $value){
+				$updateChoiceData[$dbColName] = empty($value)?'0':$value;
+			}
+			$updated = $this->dc->updateUsingPrimaryKey('assessment_q_mc_choices', 'option_id', $updateChoiceData);
 
-// 			// if success set success message else set error message 
-// 			(!empty($updated)) ?$success_messages[] = "Successfully updated assessment question": $error_messages[]= "Sorry, we are unable to update the assessment question";
+			// if success set success message else set error message 
+			(!empty($updated)) ?$success_messages[] = "Successfully updated assessment choice": $error_messages[]= "Sorry, we are unable to update the assessment choice";
 
-// 		}else{
-// 			$error_messages[] = "Sorry, unable to update question, please try again";
-// 		}
-// 		if(!empty($error_messages)){
-// 			$this->dc->transactionRollback();
-// 			Alerts::setErrorMessages($error_messages);
-// 		}
-// 		else if(!empty($success_messages)){
-// 			$this->dc->transactionCommit();
-// 			Alerts::setSuccessMessages($success_messages);
-// 		}
-// 		header('Location: /?t=manage_assessments');
-// 	}
+		}else{
+			$error_messages[] = "Sorry, unable to update question, please try again";
+		}
+		if(!empty($error_messages)){
+			$this->dc->transactionRollback();
+			Alerts::setErrorMessages($error_messages);
+		}
+		else if(!empty($success_messages)){
+			$this->dc->transactionCommit();
+			Alerts::setSuccessMessages($success_messages);
+		}
+		header('Location: /?t=manage_assessment_choices&question_id='.$this->question_id);
+	}
 
-// 	/**
-// 	* Function to add a new  workflow step
-// 	* @param array add_step : array of values to be added for a new step, obtained from the form
-// 	*/
-// 	public function addAssessment($add_values){
-// 		$error_messages = array();
-// 		$success_messages = array();
-// 		$adjust_order_question_id = false;
+	/**
+	* Function to add a new choice
+	* @param array add_choice : array of values to be added for a new choice
+	*/
+	public function addChoice($add_choice){
+		$error_messages = array();
+		$success_messages = array();
+		$adjust_order_choice_id = false;
 
-//         // get db rows for all steps 
-//         $allQsRows = $this->dc->getAllAssessmentQuestions();
+		if (!isset($this->question_id))
+		{
+			$error_messages[] = "Sorry, we cannot process this request.";
+			header('Location: /?t=manage_assessments');
+		}
+
+        // get db rows for all steps 
+        $allQsRows = $this->dc->getAssessmentChoicesbyQuestionID($this->question_id);
 		
-//         foreach($allQsRows as $k=>$question){
-//             if(  ($question['ordering'] == $add_values['ordering']) && ($add_values['question_id'] !== $question['question_id'])  ){
-//                 $adjust_order_question_id  = $question['ordering'];
-//             }
-//         }
+        foreach($allQsRows as $k=>$option){
+            if(($option['ordering'] == $add_choice['ordering']) && ($add_choice['option_id'] !== $option['option_id'])  ){
+                $adjust_order_choice_id = $option['ordering'];
+            }
+        }
 
-// 		$this->dc->transactionStart();
-// 		// if the ordering needs adjustment 
-// 		if(!empty($adjust_order_question_id)){
-// 			$adjustRows = $this->dc->adjustQuestionOrder($adjust_order_question_id);
-// 			if(empty($adjustRows)){
-// 				$error_messages[] = "Sorry , we are unbale to adjust the ordering of the steps.";
-// 			}
-// 		}
-// 		// update the step in db
-// 		$addQuestionData = array();
-// 		foreach($add_values as $dbColName => $value){
-// 			$addQuestionData[$dbColName] = empty($value)?'0':$value;
-// 		}
-// 		$updated = $this->dc->insertAssessmentQuestion($addQuestionData);
+		$this->dc->transactionStart();
+		// if the ordering needs adjustment 
+		if(!empty($adjust_order_choice_id)){
+			$adjustRows = $this->dc->adjustChoiceOrder($adjust_order_choice_id, $this->question_id);
+			if(empty($adjustRows)){
+				$error_messages[] = "Sorry, we are unable to adjust the ordering of the steps.";
+			}
+		}
+		// update the step in db
+		$addChoiceData = array();
+		foreach($add_choice as $dbColName => $value){
+			$addChoiceData[$dbColName] = empty($value)?'0':$value;
+		}
+		$addChoiceData['question_id'] = $this->question_id;
+		$updated = $this->dc->insertAssessmentChoice($addChoiceData);
 
-// 		// if success set success message else set error message 
-// 		(!empty($updated)) ?$success_messages[] = "Successfully added a new assessment question.": $error_messages[]= "Sorry, we are unable to add a new assessment question.";
+		// if success set success message else set error message 
+		(!empty($updated)) ?$success_messages[] = "Successfully added a new assessment choice.": $error_messages[]= "Sorry, we are unable to add a new assessment choice.";
 
-// 		if(!empty($error_messages)){
-// 			$this->dc->transactionRollback();
-// 			Alerts::setErrorMessages($error_messages);
-// 		}
-// 		else if(!empty($success_messages)){
-// 			$this->dc->transactionCommit();
-// 			Alerts::setSuccessMessages($success_messages);
-// 		}
-// 		header('Location: /?t=manage_assessments');
-// 	}
+		if(!empty($error_messages)){
+			$this->dc->transactionRollback();
+			Alerts::setErrorMessages($error_messages);
+		}
+		else if(!empty($success_messages)){
+			$this->dc->transactionCommit();
+			Alerts::setSuccessMessages($success_messages);
+		}
+		header('Location: /?t=manage_assessment_choices&question_id='.$this->question_id);
+	}
 
-// 	/**
-// 	* Function to delete the assessment question.
-// 	*/
-// 	public function deleteAssessment(){
-// 		$error_messages = array();
-// 		$success_messages = array();
-// 		// check if and question_id is set
-// 		if(isset($this->question_id)){
-// 			// update question_removed in assessment_questions table for this question_id
-// 			$this->dc->transactionStart();
-// 			$sConditionsCol = array('question_id');
-// 			$sData = array('question_id'=>$this->question_id, 'question_removed'=>date('Y-m-d:H:i:s'));
-// 			$dRow = $this->dc->updateUsingConditions('assessment_questions', $sConditionsCol, $sData);	
-// 			(!empty($dRow)) ?$success_messages[] = 'Successfully deleted step from the workflow. <a href = "/?t=undo_assessment_delete&question_id='.$this->question_id.'">Undo</a>':$error_messages[] = "Sorry, we are unable to perform a delete operation";
-// 		}else{
-// 			$error_messages[] = "Sorry, we are unable to perform a delete operation";
-// 		}
-// 		if(!empty($error_messages)){
-// 			$this->dc->transactionRollback();
-// 			Alerts::setErrorMessages($error_messages);
-// 		}
-// 		else if(!empty($success_messages)){
-// 			$this->dc->transactionCommit();
-// 			Alerts::setSuccessMessages($success_messages);
-// 		}
-// 		header('Location: /?t=manage_assessments');
-// 	}
+	/**
+	* Function to delete the assessment choice.
+	*/
+	public function deleteChoice(){
+		$error_messages = array();
+		$success_messages = array();
+		// check if and option_id is set
+		if(isset($this->option_id)){
+			// update choice_removed in assessment_q_mc_choices table for this option_id
+			$this->dc->transactionStart();
+			$sConditionsCol = array('option_id');
+			$sData = array('option_id'=>$this->option_id, 'choice_removed'=>date('Y-m-d:H:i:s'));
+			$dRow = $this->dc->updateUsingConditions('assessment_q_mc_choices', $sConditionsCol, $sData);	
+			(!empty($dRow)) ?$success_messages[] = 'Successfully deleted question choice. <a href = "/?t=undo_remove_assessment_choices&question_id='.$this->question_id.'&option_id='.$this->option_id.'">Undo</a>':$error_messages[] = "Sorry, we are unable to perform a delete operation";
+		}else{
+			$error_messages[] = "Sorry, we are unable to perform a delete operation";
+		}
+		if(!empty($error_messages)){
+			$this->dc->transactionRollback();
+			Alerts::setErrorMessages($error_messages);
+		}
+		else if(!empty($success_messages)){
+			$this->dc->transactionCommit();
+			Alerts::setSuccessMessages($success_messages);
+		}
+		header('Location: /?t=manage_assessment_choices&question_id='.$this->question_id);
+	}
 
-// 	/**
-// 	* Function to undo deletion of an assessment question
-// 	*/
-// 	public function undoDeleteAssessment(){
-// 		$error_messages = array();
-// 		$success_messages = array();
-// 		// check if question_id is set
-// 		if(isset($this->question_id)){
-// 			$this->dc->transactionStart();
-// 			$sConditionsCol = array('question_id');
-// 			$sData = array('question_id'=>$this->question_id, 'question_removed'=>null);
-// 			$dRow = $dRow = $dRow = $dRow = $this->dc->updateUsingConditions('assessment_questions', $sConditionsCol, $sData);	
-// 			(!empty($dRow)) ?$success_messages[] = 'Undo operation successful':$error_messages[] = "Sorry, we are unable to perform a undo operation";
-// 		}else{
-// 			$error_messages[] = "Sorry, we are unable to perform a undo operation";
-// 		}
-// 		if(!empty($error_messages)){
-// 			$this->dc->transactionRollback();
-// 			Alerts::setErrorMessages($error_messages);
-// 		}
-// 		else if(!empty($success_messages)){
-// 			$this->dc->transactionCommit();
-// 			Alerts::setSuccessMessages($success_messages);
-// 		}
-// 		header('Location: /?t=manage_assessments');
-// 	}
+	/**
+	* Function to undo deletion of an assessment choice
+	*/
+	public function undoDeleteChoice(){
+		$error_messages = array();
+		$success_messages = array();
+		// check if option_id is set
+		if(isset($this->option_id)){
+			$this->dc->transactionStart();
+			$sConditionsCol = array('option_id');
+			$sData = array('option_id'=>$this->option_id, 'choice_removed'=>null);
+			$dRow = $this->dc->updateUsingConditions('assessment_q_mc_choices', $sConditionsCol, $sData);	
+			(!empty($dRow)) ?$success_messages[] = 'Undo operation successful':$error_messages[] = "Sorry, we are unable to perform a undo operation";
+		}else{
+			$error_messages[] = "Sorry, we are unable to perform a undo operation";
+		}
+		if(!empty($error_messages)){
+			$this->dc->transactionRollback();
+			Alerts::setErrorMessages($error_messages);
+		}
+		else if(!empty($success_messages)){
+			$this->dc->transactionCommit();
+			Alerts::setSuccessMessages($success_messages);
+		}
+		header('Location: /?t=manage_assessment_choices&question_id='.$this->question_id);
+	}
 
 }
 

@@ -142,7 +142,8 @@ class DataCalls{
         $pQuery = 
             "SELECT * FROM assessment_q_mc_choices
              WHERE question_id = ".$question_id.
-            " ORDER BY ordering";
+            " AND choice_removed IS NULL
+             ORDER BY ordering";
         $question = $this->db->query($pQuery);
         return $question;
     }
@@ -178,6 +179,17 @@ class DataCalls{
     public function adjustQuestionOrder($order_num){
         $aQuery = "UPDATE assessment_questions set ordering = ordering+1 where ordering >=".$order_num." AND question_removed IS NULL";
         #APP::printVar($this->db->queryDump($aQuery, $aValues));
+        $aRows = $this->db->query($aQuery);
+        return $aRows;
+    }
+
+    /**
+    * adjust ordering of assessment choices
+    * @param int order_num : order number that needs to be adjusted
+    */
+    public function adjustChoiceOrder($order_num, $question_id){
+        $aQuery = "UPDATE assessment_q_mc_choices set ordering = ordering+1 where ordering >=".$order_num." AND choice_removed IS NULL AND question_id = ".$question_id;
+        // APP::printVar($this->db->queryDump($aQuery, $aValues));
         $aRows = $this->db->query($aQuery);
         return $aRows;
     }
@@ -1252,7 +1264,7 @@ ORDER BY created;";
                 }
                 $aValues[] = $colValue;
             }
-            //APP::printVar($this->db->queryDump($query, $aValues));
+            APP::printVar($this->db->queryDump($query, $aValues));
             $iUpdated =  $this->db->query($query, $aValues);
             $rUpdated = ($iUpdated >= 1);
             }
@@ -1446,13 +1458,25 @@ ORDER BY created;";
         $iRows = $this->insertIntoTable($sTable, $wData);
         return $iRows;
     }
+
     /*
-    * Insert new workflow step into the workflow  step  table
+    * Insert new question into the questions table
     * @param $wData  Array of column names and values
              array("column_name"=> value)
     */
     public function insertAssessmentQuestion($wData){
         $sTable = "assessment_questions";
+        $iRows = $this->insertIntoTable($sTable, $wData);
+        return $iRows;
+    }
+
+    /*
+    * Insert new assessment choice into the choices table
+    * @param $wData  Array of column names and values
+             array("column_name"=> value)
+    */
+    public function insertAssessmentChoice($wData){
+        $sTable = "assessment_q_mc_choices";
         $iRows = $this->insertIntoTable($sTable, $wData);
         return $iRows;
     }
