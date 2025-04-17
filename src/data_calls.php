@@ -153,7 +153,8 @@ class DataCalls{
     */
     public function getQuestionChoices($question_id){
         $pQuery = "SELECT * FROM assessment_q_mc_choices 
-            WHERE question_id =".$question_id."  
+            WHERE question_id =".$question_id. 
+            " AND choice_removed IS NULL 
             ORDER BY option_id";
         $choices = $this->db->query($pQuery);
         return $choices;
