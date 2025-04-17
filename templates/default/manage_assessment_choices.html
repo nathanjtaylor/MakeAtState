@@ -3,69 +3,56 @@
 {% block content %}
 
 <div class="jumbotron">
-	<h1 class="display-4">View assessments</h1>
-  	<p class="lead">View all the assessment questions. Use edit option to edit the questions. </p>
+	<h1 class="display-4">View assessment question options</h1>
+  	<p class="lead">View all the assessment question options.</p>
   	<hr class="my-4">
-  	<p>Add new questions using the "Add" button.</p>
-
+  	<p>Add new question choices using the "Add" button.</p>
+	<p>Current Question: <span class="text-muted">{{question['question_text']}}</span></p>
+	
+    <a href="/?t=manage_assessments">&lt; Return to Manage Assessments</a>
 </div>
 {% include 'prime_alerts.html' %}
+
 <div class="row justify-content-center prime_margintop20px">
-	<div class="col-md-6 ">
-		{%if workflow_step_alerts %}
-			{% include 'workflow_step_alerts.html' %}
-		{% endif %}
 
-	</div>
 	<div class="col-md-9 ">
-		{% if assessment_questions %}
-			{% include 'view_assessments.html' %}
+		{% if assessment_choices %}
+			{% include 'view_assessment_choices.html' %}
+		{% else %}
+			<p>There are no choices for this question. Add one below.</p>
 		{% endif %}
-
-
+		
 		<div class="card prime_long_card prime_long_add_card">
-
 			<div class="card-body prime_textalign_center">
 				<i data-feather="plus-square" class ="prime_card_add_icon" style="width:75px;height:75px;"></i>
-				<p class="prime_add_card_text">Add question</p>
+				<p class="prime_add_card_text">Add choice</p>
 			</div>
-
 		</div>
-
+		
 		<div class="card prime_long_card prime_add_hidden_card" id="workflow_{{ workflow['workflow_id']}}">
-			<form action="/" enctype="multipart/form-data" method="POST" id="prime_validate_form"  novalidate>
-			<input type="hidden" name="t" value="add_assessment">
+			<form action="/" enctype="multipart/form-data" method="POST" id="prime_validate_form" style="margin: 0;"  novalidate>
+			<input type="hidden" name="t" value="add_assessment_choices">
+			<input type="hidden" name="question_id" value="{{question['question_id']}}">
 
 				<div class="card-header prime_background_teal">
-					Add New Question
+					Add New Choice
 				</div>
 
 				<div class="card-body row">
 					<div class="prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
 						<small class="text-muted" style="display:block">
-							Question Text
+							Option Text
 						</small>    
 						<textarea 
 							class="form-control" 
-							aria-label="Assessment text" 
-							type="text" maxlength="250" rows="4" 
-							name="question_text" required
+							aria-label="Assessment choice text" 
+							type="text" maxlength="250" rows="2" 
+							name="option_text" required
 							style="resize: none;"
 						></textarea>
 						<div class ="invalid-feedback">
-							Assessment text cannot be empty
+							Assessment choice text cannot be empty
 						</div>
-					</div>
-
-					<div class="col-md-3 prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
-						<small class="text-muted" style="display:block">
-							Question Type
-						</small>
-					<select name="qtype_id" aria-label="Question type" class="form-select" style="width:300px">
-					    {% for type in assessment_types %}
-						<option value="{{ type['qtype_id'] }}" >{{ type['question_type'] }}</option>
-					    {% endfor %}
-					</select>
 					</div>
 
 					<div class="col-md-3 prime_textalign_center prime_borderbottom_lightgrey prime_paddingbottom10px">
@@ -77,24 +64,17 @@
 							Invalid order. order should be a number between 1-999
 						</div>
 					</div>
-
 				</div>
 
 				<div class="card-footer">
 					<input type="button" class="btn btn-danger cancel_edit_status add_back_btn" aria-label="Cancel" id="back_assessment_{{ workflow_step['work_step_id']}} "value="Cancel">
 					<input type="submit" class="btn btn-success prime_float_right prime_validate_btn" aria-label="Add" value="Add">
 				</div>
-
 			</form>
-
-
 		</div>
 
-	<!--  End of add workflow card -->
 	</div>
 
 </div>
 
 {% endblock %}
-
-

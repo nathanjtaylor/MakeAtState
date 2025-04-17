@@ -49,11 +49,11 @@ INSERT IGNORE INTO assessment_questions (question_id, qtype_id, question_text, o
 (6, 5, "We would love to hear more about what you are working on. Please feel free to share any more details.", 6);
 
 -- Multiple choice / pick one answer choices
-INSERT IGNORE INTO assessment_q_mc_choices (option_id, question_id, option_text) VALUES
-(1, 5, "This is a gift, for fun, or personal project"),
-(2, 5, "This is a homework assignment"),
-(3, 5, "Part of a graduate thesis or dissertation"),
-(4, 5, "Research-related"),
-(5, 5, "A work-related job or task (e.g. exhibition, promotions, or giveaways)"),
-(6, 5, "Prototyping for business or entrepreneurship"),
-(7, 5, "I prefer not to say");
+INSERT IGNORE INTO assessment_q_mc_choices (option_id, question_id, option_text, ordering) VALUES
+(1, 5, "This is a gift, for fun, or personal project", 1),
+(2, 5, "This is a homework assignment", 2),
+(3, 5, "Part of a graduate thesis or dissertation", 3),
+(4, 5, "Research-related", 4),
+(5, 5, "A work-related job or task (e.g. exhibition, promotions, or giveaways)", 5),
+(6, 5, "Prototyping for business or entrepreneurship", 6),
+(7, 5, "I prefer not to say", 7);
