@@ -163,7 +163,7 @@ class DataCalls{
     /**
     * Get all assessment answers by project ID
     */
-    public function getAssesmentAnswersByProjectId($project_id) {
+    public function getAssessmentAnswersByProjectId($project_id) {
         $pQuery = "SELECT * FROM assessment_answers
             WHERE project_id = ".$project_id."
             ORDER BY answer_id";
@@ -1494,7 +1494,9 @@ ORDER BY created;";
     }
 
     public function insertAssessmentAnswers($assessment_answers) {
-        // Not sure how to write this function
+        $sTable = "assessment_answers";
+        $iRows = $this->insertIntoTable($sTable, $assessment_answers);
+        return $iRows;
     }
 
     /*

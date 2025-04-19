@@ -114,15 +114,9 @@
                     </fieldset>
                     {% endif %}
                  {% endfor %}
-                <!-- to get an array of question ids -->
-                 {% set qids = [] %}
-                 {% for question in questions %}
-                     {% set qids = qids | merge([question['qid']]) %}
-                 {% endfor %} 
-                 <input type="hidden" name="question_ids" value="{{ qids | join(',') }}">
                  <div>
                     <a href = "/?t=remove_cart_item&rpid={{ project_id }}" class="btn btn-danger prime_white_text mt-3 d-inline" aria-label = "Delete item" style="width: max-content;">Remove</a>
-                    <button type="submit" name="submit" class="btn btn-success d-inline" aria-label = "Submit item" style="width: max-content;">Submit Project</button>
+                    <button type="submit" class="btn btn-success d-inline" aria-label = "Submit item" style="width: max-content;">Submit Project</button>
                 </div>
                 </form>
                 <!-- Form Markup End -->

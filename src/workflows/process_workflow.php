@@ -228,11 +228,8 @@ class ProcessWorkflow extends WorkflowSteps{
     * Get the answers to assessment answers
     */
     public function processAssessmentAnswers() {
-        if (!empty($_POST['question_ids'])) { //if there are questions
-            $question_ids = explode(',', $_POST['question_ids']);
             $assessment_answers = array();
-            foreach ($question_ids as $question_id) {
-                $response = $_POST[$question_id];
+            foreach ($_POST as $question_id => $response){
                 if (is_array($response)) { // handle multiple choice questions by turing answers into "|" seperated strings
                     $response = implode('|', $response);
                 } else {
@@ -246,9 +243,8 @@ class ProcessWorkflow extends WorkflowSteps{
                     array_push($assessment_answers, $answer);
                 }
             }
+            return $assessment_answers;
         }
-        return $assessment_answers;
-    }
 
     /**
     * Determines the next step in the workflow
