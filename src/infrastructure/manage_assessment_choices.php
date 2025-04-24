@@ -49,7 +49,7 @@ class ManageAssessmentChoices {
 				$update_values['option_id'] = $this->option_id;
 				$update_values['option_text'] = UserData::create('option_text')->getString();
 				$update_values['ordering'] = UserData::create('ordering')->getInt();
-				APP::printVar($update_values);
+				// APP::printVar($update_values);
 				$this->updateChoice($update_values);
 			}
 			elseif ($pTarget == "add_assessment_choices") {

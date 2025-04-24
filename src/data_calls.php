@@ -1217,7 +1217,7 @@ ORDER BY created;";
             # Primary key where clause
             $query .= "WHERE " . $this->db->escapeIdentifier($sPrimaryKeyCol). " = ?";
             $aValues[] = $iPrimaryKeyVal;
-            APP::printVar($this->db->queryDump($query, $aValues));
+            // APP::printVar($this->db->queryDump($query, $aValues));
             $iUpdated =  $this->db->query($query, $aValues);
             $rUpdated = ($iUpdated >= 1);
         }
@@ -1276,7 +1276,7 @@ ORDER BY created;";
                 }
                 $aValues[] = $colValue;
             }
-            APP::printVar($this->db->queryDump($query, $aValues));
+            // APP::printVar($this->db->queryDump($query, $aValues));
             $iUpdated =  $this->db->query($query, $aValues);
             $rUpdated = ($iUpdated >= 1);
             }
@@ -1533,7 +1533,7 @@ ORDER BY created;";
                 $iValues[] = $value;
             }
         }
-        APP::printVar($this->db->queryDump($query, $iValues));
+        // APP::printVar($this->db->queryDump($query, $iValues));
         $iRows = $this->db->query($query, $iValues);
         return $iRows;
     }
